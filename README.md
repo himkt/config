@@ -3,6 +3,9 @@
 [![macOS](https://img.shields.io/github/actions/workflow/status/himkt/dotfiles/macos.yml?label=macOS&logo=apple)](https://github.com/himkt/dotfiles/actions/workflows/macos.yml)
 [![NixOS](https://img.shields.io/github/actions/workflow/status/himkt/dotfiles/nixos.yml?label=NixOS&logo=nixos&logoColor=white)](https://github.com/himkt/dotfiles/actions/workflows/nixos.yml)
 
+> [!IMPORTANT]
+> People who are interested in Claude Code config, please visit [modules/claude-code](./home/modules/claude-code/files).
+
 Unified Nix-based configuration for macOS (nix-darwin) and NixOS.
 
 ## Structure
