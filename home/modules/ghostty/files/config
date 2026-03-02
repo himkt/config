@@ -18,7 +18,7 @@ background-blur-radius = 20
 # font config
 font-family  = Jetbrains Mono
 font-family = Noto Sans Mono CJK JP
-font-size    = 11
+font-size    = 12
 font-feature = -calt, -liga, -dlig
 keybind = shift+enter=text:\n
 keybind = super+t=new_tab
