@@ -30,12 +30,12 @@ dotfiles/
 2. Clone this repository to `~/dotfiles`
 3. Apply the nix-darwin configuration:
    ```
-   make macos-switch
+   make switch
    ```
 4. Install Homebrew packages:
    ```
-   make macos-brew
-   make macos-brew-gui
+   make brew
+   make brew-gui
    ```
 
 ### NixOS
@@ -43,25 +43,21 @@ dotfiles/
 1. Clone this repository to `~/dotfiles`
 2. Apply the NixOS configuration:
    ```
-   make nixos-switch
+   make switch
    ```
 
 ## Makefile Targets
 
+All Nix targets automatically detect the platform (macOS / NixOS) and run the appropriate command.
+
 | Target | Description |
 |--------|-------------|
-| `macos-build` | Build nix-darwin configuration (dry run) |
-| `macos-switch` | Apply nix-darwin + Home Manager configuration |
-| `macos-brew-install` | Install Homebrew |
-| `macos-brew` | Install base Homebrew packages |
-| `macos-brew-gui` | Install GUI Homebrew packages |
-| `macos-brew-optional` | Install optional Homebrew packages |
-| `macos-brew-himkt` | Install personal Homebrew packages |
-| `macos-update` | Update flake inputs |
-| `macos-clean` | Delete old macOS generations (keep last 7) |
-| `macos-gc` | Run Nix garbage collection |
-| `nixos-build` | Build NixOS configuration (dry run) |
-| `nixos-switch` | Apply NixOS + Home Manager configuration |
-| `nixos-update` | Update flake inputs |
-| `nixos-clean` | Delete old NixOS generations (keep last 7) |
-| `nixos-gc` | Run Nix garbage collection |
+| `build` | Build system configuration (dry run) |
+| `switch` | Apply system + Home Manager configuration |
+| `update` | Update flake inputs |
+| `gc` | Delete old generations (keep last 7) and run garbage collection |
+| `brew-install` | Install Homebrew |
+| `brew` | Install base Homebrew packages |
+| `brew-gui` | Install GUI Homebrew packages |
+| `brew-optional` | Install optional Homebrew packages |
+| `brew-himkt` | Install personal Homebrew packages |
