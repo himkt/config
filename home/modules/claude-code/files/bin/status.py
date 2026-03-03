@@ -48,10 +48,6 @@ def gradient_color(position: float) -> str:
     return f"\x1b[38;2;{rgb[0]};{rgb[1]};{rgb[2]}m"
 
 
-def strip_ansi(s: str) -> str:
-    return re.sub(r"\x1b\[[0-9;]*m", "", s)
-
-
 def build_context_bar(
     current_usage: int,
     context_window_size: int,
@@ -100,28 +96,29 @@ def main() -> None:
     elements = [
         f"{DIM}{model}{RESET}",
         f"{ICON_FOLDER} {cwd}",
-        f"{ICON_DOLLAR} ${cost:.4f}",
+        f"{ICON_DOLLAR} {cost:.4f}",
     ]
 
     bar_text = None
-    buffer_offset = 0
-    usable_space = 0
     try:
         tokens = sum(data["context_window"]["current_usage"].values())
         window_size = data["context_window"]["context_window_size"]
         bar_text, buffer_offset, usable_space = build_context_bar(tokens, window_size, max_output_tokens)
-        elements.append(bar_text)
     except Exception:
         pass  # NOTE(himkt): usage metrics not available on startup.
 
-    line1 = f" {DIM}|{RESET} ".join(elements)
-    print(line1)
+    if bar_text is not None:
+        elements.append(bar_text)
+    print(f" {DIM}|{RESET} ".join(elements))
 
     if bar_text is not None:
-        prefix_len = len(strip_ansi(line1)) - len(strip_ansi(bar_text))
-        marker_pos = prefix_len + buffer_offset
+        sep = f" {DIM}|{RESET} "
+        prefix = sep.join(elements[:-1]) + sep
+        prefix_width = len(re.sub(r"\x1b\[[0-9;]*m", "", prefix))
+        total_pad = prefix_width + buffer_offset
         usable_label = format_tokens(usable_space)
-        print(f"{' ' * marker_pos}{ACCENT}▲ autocompact ({usable_label}){RESET}")
+        pad = "\u2800" * total_pad
+        print(f"{pad}{ACCENT}▲ autocompact ({usable_label}){RESET}")
 
 
 if __name__ == "__main__":
