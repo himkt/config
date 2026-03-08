@@ -1,3 +1,2 @@
 brew 'binutils'
-brew 'krew'
 brew 'libpq'
