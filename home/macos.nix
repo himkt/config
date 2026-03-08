@@ -9,10 +9,8 @@ in
 {
   imports = [
     ./modules/claude-code
-    ./modules/gcc
     ./modules/ghostty
     ./modules/git
-    ./modules/java
     ./modules/mise
     ./modules/nvim
     ./modules/sheldon

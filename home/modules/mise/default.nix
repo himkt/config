@@ -30,6 +30,7 @@ in
         "aqua:kubernetes/kubernetes/kubectl" = "latest";
         "aqua:openai/codex" = "latest";
         "asdf:mise-plugins/mise-gcloud" = "latest";
+        "core:java" = "latest";
         "core:node" = "latest";
       };
       settings = {
