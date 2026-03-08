@@ -8,19 +8,17 @@ in
 
 {
   imports = [
-    # Shared modules (same 7 as NixOS)
-    ./modules/zsh
-    ./modules/sheldon
-    ./modules/tmux
-    ./modules/nvim
-    ./modules/git
-    ./modules/uv
-    ./modules/ghostty
     ./modules/claude-code
     ./modules/gcc
+    ./modules/ghostty
+    ./modules/git
     ./modules/java
-    # macOS-specific modules
     ./modules/mise
+    ./modules/nvim
+    ./modules/sheldon
+    ./modules/tmux
+    ./modules/uv
+    ./modules/zsh
   ];
 
   home.username = "himkt";
@@ -35,10 +33,12 @@ in
   };
 
   home.packages = with pkgs; [
-    ghq
+    # CLI
     python3
     rustup
     tree
+
+    # Custom packages
     himkt_pkgs.pathfinder
   ];
 

@@ -12,21 +12,20 @@ in
 
 {
   imports = [
-    # Shared modules
-    ./modules/zsh
+    ./modules/claude-code
+    ./modules/gcc
+    ./modules/ghostty
+    ./modules/git
+    ./modules/java
+    ./modules/mise
+    ./modules/nvim
     ./modules/sheldon
     ./modules/tmux
-    ./modules/nvim
-    ./modules/git
     ./modules/uv
-    ./modules/ghostty
-    ./modules/claude-code
-    # NixOS-only modules
-    ./modules/gcc
-    ./modules/java
-    ./modules/gpg
+    ./modules/zsh
+    # NixOS specific
     ./modules/fcitx5
-    ./modules/mise
+    ./modules/gpg
   ];
 
   home.username = "himkt";
@@ -50,18 +49,8 @@ in
     unstable.vscode
 
     # CLI
-    bazelisk
-    btop
     file
-    gh
-    ghq
-    google-cloud-sdk
     gnumake
-    jq
-    kubectl
-    kubectx
-    kustomize
-    k9s
     postgresql
     python3
     rustup
@@ -169,18 +158,5 @@ in
   programs.zsh.shellAliases = {
     open = "xdg-open";
   };
-
-  programs.mise.globalConfig = {
-    tools = {
-      "aqua:anthropics/claude-code" = "latest";
-      "core:node" = "latest";
-    };
-    settings = {
-      all_compile = false;
-      experimental = true;
-      disable_backends = [ "asdf" ];
-    };
-  };
-
   programs.home-manager.enable = true;
 }
