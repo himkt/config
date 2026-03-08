@@ -20,7 +20,8 @@ in
       tools = {
         "aqua:ahmetb/kubectx" = "latest";
         "aqua:anthropics/claude-code" = "latest";
-        "aqua:aristocratos/btop" = "latest";
+        # FIXME(himkt): btop does not release binaries for macOS
+        # "aqua:aristocratos/btop" = "latest";
         "aqua:bazelbuild/bazelisk" = "latest";
         "aqua:cli/cli" = "latest";
         "aqua:derailed/k9s" = "latest";

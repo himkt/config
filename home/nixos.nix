@@ -49,6 +49,7 @@ in
     unstable.vscode
 
     # CLI
+    btop
     file
     gnumake
     postgresql

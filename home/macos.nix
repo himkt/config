@@ -34,6 +34,7 @@ in
 
   home.packages = with pkgs; [
     # CLI
+    btop
     python3
     rustup
     tree
