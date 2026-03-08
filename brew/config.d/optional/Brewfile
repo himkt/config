@@ -1,8 +1,3 @@
-brew 'bazelisk'
 brew 'binutils'
-brew 'btop'
 brew 'krew'
-brew 'kubernetes-cli'
 brew 'libpq'
-tap  'derailed/k9s'
-brew 'derailed/k9s/k9s'
