@@ -10,7 +10,7 @@
   },
   "permissions": {
     "allow": [
-      "Read(~/.claude/skills/**)",
+      "Read(/skills/**)",
       "Bash(gh api repos/*/*/pulls/*/comments)",
       "Bash(gh api repos/*/*/pulls/*/comments *)",
       "Bash(gh api repos/*/*/pulls/*/reviews)",
