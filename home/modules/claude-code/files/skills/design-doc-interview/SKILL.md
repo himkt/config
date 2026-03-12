@@ -7,22 +7,22 @@ description: >-
   Use after /design-doc-create and before /design-doc-execute.
   Takes document path as argument.
   Do NOT use this to create or execute design documents — use the dedicated skills instead.
-allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Task
+allowed-tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Agent
 ---
 
 # Design Doc Interview
 
-Validate a design document through structured, fine-grained Q&A across multiple sessions. The Interviewer (main Claude) drives the conversation, while an Analyzer subagent (Explore type via Task tool) handles document analysis and question generation. Discrepancies produce inline `COMMENT(claude)` annotations. Multi-session splitting prevents context compaction for large interviews.
+Validate a design document through structured, fine-grained Q&A across multiple sessions. The Interviewer (main Claude) drives the conversation, while an Analyzer subagent (Explore type via Agent tool) handles document analysis and question generation. Discrepancies produce inline `COMMENT(claude)` annotations. Multi-session splitting prevents context compaction for large interviews.
 
 | Aspect | Detail |
 |:--|:--|
 | **Interviewer** | Main Claude — orchestrates session, drives Q&A, annotates findings |
-| **Analyzer** | Subagent (Explore type via Task tool) — reads document, generates question list |
+| **Analyzer** | Subagent (Explore type via Agent tool) — reads document, generates question list |
 | **Input** | Design document path (required argument via `$ARGUMENTS`) |
 | **Output** | Inline `# COMMENT(claude)` annotations, progress update, session report |
 | **Interaction** | ALL Analyzer questions asked via `AskUserQuestion` (4 per call, minimized rounds) |
 | **Scale** | All Analyzer questions asked — up to 100 across multiple sessions |
-| **Allowed tools** | Read, Write, Edit, Glob, Grep, AskUserQuestion, Task |
+| **Allowed tools** | Read, Write, Edit, Glob, Grep, AskUserQuestion, Agent |
 
 ## Context Management Strategy
 
@@ -66,7 +66,7 @@ Progress is tracked via `question.md` in the design document's directory (e.g., 
 
 ### Step 2: Analyze Document (Subagent)
 
-Spawn an Analyzer subagent (Explore type via Task tool) with:
+Spawn an Analyzer subagent (Explore type via Agent tool) with:
 
 - The design document path
 - The list of already-reviewed sections (if any)

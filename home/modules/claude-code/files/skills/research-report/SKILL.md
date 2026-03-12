@@ -1,7 +1,7 @@
 ---
 name: research-report
 description: Create a comprehensive research report with folder-based output using agent teams. Researchers write findings to individual files, Manager compiles report.md, Director reviews. Output goes to design-docs/{topic-slug}/. After report approval, offers to chain into /research-presentation for slides and transcript. Teammates must always load skills using the Skill tool, not by reading skill files directly. Requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS enabled. Do NOT do a quick web search and summarize — invoke this skill for thorough, multi-source research.
-allowed-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Task
+allowed-tools: Read, Write, Edit, Glob, Grep, WebSearch, WebFetch, Agent
 ---
 
 # Research Report (Agent Teams Edition)
