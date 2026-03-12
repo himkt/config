@@ -15,7 +15,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Use latest kernel to avoid xe driver regression in 6.12.75
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.luks.devices."luks-8e3f8068-90b0-4614-a514-98ae63db54ab".device = "/dev/disk/by-uuid/8e3f8068-90b0-4614-a514-98ae63db54ab";
