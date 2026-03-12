@@ -15,7 +15,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  boot.initrd.luks.devices."luks-f47715a3-2a66-448c-9e93-7268419de718".device = "/dev/disk/by-uuid/f47715a3-2a66-448c-9e93-7268419de718";
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  boot.initrd.luks.devices."luks-8e3f8068-90b0-4614-a514-98ae63db54ab".device = "/dev/disk/by-uuid/8e3f8068-90b0-4614-a514-98ae63db54ab";
   networking.hostName = "neptune"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
