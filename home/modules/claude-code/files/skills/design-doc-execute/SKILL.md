@@ -1,7 +1,7 @@
 ---
 name: design-doc-execute
 description: Implement features based on a design document with automatic validation and fixing. Use when the user asks to implement or execute a design document. Takes document path as argument. Teammates must always load skills using the Skill tool, not by reading skill files directly. Do NOT implement a design document by reading it and coding manually — always invoke this skill instead.
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task, WebSearch, WebFetch
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Agent, WebSearch, WebFetch
 ---
 
 # Design Doc Execute (Agent Teams Edition)
