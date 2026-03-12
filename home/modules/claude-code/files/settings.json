@@ -3,7 +3,8 @@
   "respectGitignore": false,
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "6400"
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "12800",
+    "CLAUDE_CODE_EFFORT_LEVEL": "high"
   },
   "attribution": {
     "commit": ""
