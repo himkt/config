@@ -2,6 +2,7 @@
 "aqua:ahmetb/kubectx" = "latest"
 "aqua:ajeetdsouza/zoxide" = "latest"
 "aqua:anthropics/claude-code" = "latest"
+"aqua:astral-sh/uv" = "latest"
 # FIXME(himkt): btop does not release binaries for macOS
 # "aqua:aristocratos/btop" = "latest"
 "aqua:bazelbuild/bazelisk" = "latest"
@@ -11,12 +12,12 @@
 "aqua:junegunn/fzf" = "latest"
 "aqua:kubernetes-sigs/kustomize" = "latest"
 "aqua:kubernetes/kubernetes/kubectl" = "latest"
+"aqua:neovim/neovim" = "latest"
 "aqua:openai/codex" = "latest"
-"aqua:tmux/tmux" = "latest"
+"aqua:tmux/tmux-builds" = "latest"
 "asdf:mise-plugins/mise-gcloud" = "latest"
 "core:java" = "latest"
 "core:node" = "latest"
-gcloud = "latest"
 
 [settings]
 all_compile = false
