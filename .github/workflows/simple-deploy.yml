@@ -1,4 +1,4 @@
-name: simple-deploy check
+name: Ubuntu (non-Nix) build check
 on:
   push:
     branches:
