@@ -162,6 +162,10 @@ if command -v fzf > /dev/null; then
 fi
 
 
+if command -v bazelisk > /dev/null; then
+  alias bazel=bazelisk
+fi
+
 if command -v nvim > /dev/null; then
   alias vim=nvim
   export EDITOR=nvim
