@@ -1,0 +1,22 @@
+name: Ubuntu (non-Nix) build check
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  simple-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.9"
+      - name: Deploy
+        run: make simple-deploy
+      - name: Verify symlinks exist (re-deploy should fail)
+        run: "! make simple-deploy"
+      - name: Unlink
+        run: make simple-unlink
+      - name: Verify unlink (deploy again should succeed)
+        run: make simple-deploy
