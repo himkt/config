@@ -6,8 +6,11 @@
 }:
 
 {
-  programs.tmux = {
-    enable = true;
-    extraConfig = builtins.readFile ./files/tmux.conf;
+  home.packages = with pkgs; [
+    tmux
+  ];
+
+  xdg.configFile."tmux/tmux.conf" = {
+    source = ./files/tmux.conf;
   };
 }
