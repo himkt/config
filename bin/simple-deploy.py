@@ -57,21 +57,23 @@ def preflight_check(pairs: list[tuple[Path, Path]]) -> list[str]:
 
 
 def deploy(pairs: list[tuple[Path, Path]], dry_run: bool) -> None:
+    for source_abs, dest_abs in pairs:
+        print(f"LINK  {dest_abs} -> {source_abs}")
+
+    if dry_run:
+        return
+
     conflicts = preflight_check(pairs)
     if conflicts:
-        print("ERROR: Cannot deploy. The following conflicts were found:\n")
+        print("\nERROR: Cannot deploy. The following conflicts were found:\n")
         for conflict in conflicts:
             print(conflict)
         print("\nResolve these conflicts manually, then re-run.")
         sys.exit(1)
 
     for source_abs, dest_abs in pairs:
-        if dry_run:
-            print(f"LINK  {dest_abs} -> {source_abs}")
-        else:
-            dest_abs.parent.mkdir(parents=True, exist_ok=True)
-            dest_abs.symlink_to(source_abs)
-            print(f"LINK  {dest_abs} -> {source_abs}")
+        dest_abs.parent.mkdir(parents=True, exist_ok=True)
+        dest_abs.symlink_to(source_abs)
 
 
 def unlink(pairs: list[tuple[Path, Path]], home: Path, dry_run: bool) -> None:
