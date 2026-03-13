@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-"""Deploy dotfiles via symlinks for non-Nix environments."""
-
 import argparse
 import os
 import sys
