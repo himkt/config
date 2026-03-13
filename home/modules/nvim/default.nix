@@ -1,26 +1,8 @@
+{ pkgs, ... }:
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-
-{
-  programs.neovim = {
-    enable = true;
-    viAlias = true;
-    vimAlias = true;
-
-    plugins = with pkgs.vimPlugins; [
-      vim-easymotion
-      tabular
-      fzf-vim
-      vim-indent-guides
-      vim-anzu
-      vim-airline
-      vim-polyglot
-    ];
-  };
+  home.packages = with pkgs; [
+    neovim
+  ];
 
   xdg.configFile."nvim/init.vim" = {
     source = ./files/init.vim;
