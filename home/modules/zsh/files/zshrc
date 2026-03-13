@@ -150,6 +150,10 @@ PROMPT+=$'\n'
 PROMPT+='> '
 SPROMPT="${fg[red]}%r$reset_color is correct? [y, n, a, e]:"
 
+if command -v mise > /dev/null; then
+  eval "$(mise activate zsh)"
+fi
+
 if command -v fzf > /dev/null; then
   source <(fzf --zsh)
 fi

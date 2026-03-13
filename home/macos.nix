@@ -45,15 +45,5 @@ in
     EDITOR = "nvim";
   };
 
-  # macOS-specific platform overrides
-  programs.mise.globalConfig = {
-    tools = {
-      gcloud = "latest";
-    };
-    settings = {
-      idiomatic_version_file_enable_tools = [];
-    };
-  };
-
   programs.home-manager.enable = true;
 }

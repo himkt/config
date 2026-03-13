@@ -1,0 +1,23 @@
+[tools]
+"aqua:ahmetb/kubectx" = "latest"
+"aqua:ajeetdsouza/zoxide" = "latest"
+"aqua:anthropics/claude-code" = "latest"
+# FIXME(himkt): btop does not release binaries for macOS
+# "aqua:aristocratos/btop" = "latest"
+"aqua:bazelbuild/bazelisk" = "latest"
+"aqua:cli/cli" = "latest"
+"aqua:derailed/k9s" = "latest"
+"aqua:jqlang/jq" = "latest"
+"aqua:junegunn/fzf" = "latest"
+"aqua:kubernetes-sigs/kustomize" = "latest"
+"aqua:kubernetes/kubernetes/kubectl" = "latest"
+"aqua:openai/codex" = "latest"
+"asdf:mise-plugins/mise-gcloud" = "latest"
+"core:java" = "latest"
+"core:node" = "latest"
+gcloud = "latest"
+
+[settings]
+all_compile = false
+experimental = true
+idiomatic_version_file_enable_tools = []
