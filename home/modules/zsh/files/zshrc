@@ -43,11 +43,6 @@ function git-home () {
   cd `git rev-parse --show-toplevel`
 }
 
-# Source home-manager session variables
-if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
-  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
-fi
-
 # tier1
 export EDITOR=vim
 export FZF_DEFAULT_OPTS='--height 50% --reverse --border'
@@ -155,6 +150,8 @@ PROMPT='$(current_timestamp)$(current_context)$(current_path)$(current_git_statu
 PROMPT+=$'\n'
 PROMPT+='> '
 SPROMPT="${fg[red]}%r$reset_color is correct? [y, n, a, e]:"
+
+export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 if command -v mise > /dev/null; then
   eval "$(mise activate zsh)"

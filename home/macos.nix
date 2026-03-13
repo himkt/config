@@ -41,9 +41,5 @@ in
     himkt_pkgs.pathfinder
   ];
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-  };
-
   programs.home-manager.enable = true;
 }
