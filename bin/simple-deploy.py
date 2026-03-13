@@ -55,8 +55,7 @@ def deploy(pairs: list[tuple[Path, Path]], dry_run: bool) -> None:
     for src, dest in pairs:
         print(f"LINK  {dest} -> {src}")
 
-    conflicts = preflight_check(pairs)
-    if conflicts:
+    if conflicts := preflight_check(pairs):
         print("\nERROR: Cannot deploy. The following conflicts were found:\n")
         print("\n".join(conflicts))
         sys.exit("\nResolve these conflicts manually, then re-run.")
