@@ -1,3 +1,10 @@
+[user]
+	name = himkt
+	email = himkt@klis.tsukuba.ac.jp
+
+[credential "https://github.com"]
+	helper = !gh auth git-credential
+
 [pull]
 	rebase = false
 

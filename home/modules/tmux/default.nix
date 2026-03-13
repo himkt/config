@@ -1,13 +1,6 @@
+{ ... }:
 {
-  config,
-  pkgs,
-  lib,
-  ...
-}:
-
-{
-  programs.tmux = {
-    enable = true;
-    extraConfig = builtins.readFile ./files/tmux.conf;
+  xdg.configFile."tmux/tmux.conf" = {
+    source = ./files/tmux.conf;
   };
 }

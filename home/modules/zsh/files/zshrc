@@ -2,6 +2,8 @@
 # .zshrc - The zsh configuration
 #
 
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
 if command -v tmux > /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ] && [[ $- == *i* ]]; then
   tmux attach-session 2>/dev/null || tmux new-session
 fi
@@ -79,6 +81,7 @@ Darwin*)
   ;;
 Linux*)
   export HOMEBREW_ROOT=/home/linuxbrew/.linuxbrew
+  alias open="xdg-open"
   ;;
 esac
 
@@ -150,10 +153,18 @@ PROMPT+=$'\n'
 PROMPT+='> '
 SPROMPT="${fg[red]}%r$reset_color is correct? [y, n, a, e]:"
 
+if command -v mise > /dev/null; then
+  eval "$(mise activate zsh)"
+fi
+
 if command -v fzf > /dev/null; then
   source <(fzf --zsh)
 fi
 
+
+if command -v bazelisk > /dev/null; then
+  alias bazel=bazelisk
+fi
 
 if command -v nvim > /dev/null; then
   alias vim=nvim

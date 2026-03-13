@@ -154,9 +154,5 @@ in
     };
   };
 
-  # NixOS-specific platform overrides
-  programs.zsh.shellAliases = {
-    open = "xdg-open";
-  };
   programs.home-manager.enable = true;
 }

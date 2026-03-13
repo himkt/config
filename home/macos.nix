@@ -41,28 +41,5 @@ in
     himkt_pkgs.pathfinder
   ];
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-  };
-
-  # macOS-specific platform overrides
-  programs.git.settings.credential."https://github.com".helper =
-    lib.mkForce "!/opt/homebrew/bin/gh auth git-credential";
-
-  programs.tmux.extraConfig = lib.mkAfter ''
-    # macOS clipboard integration
-    bind-key -T copy-mode-vi y     send -X copy-selection-and-cancel\; run "tmux save -|pbcopy"
-    bind-key -T copy-mode-vi Enter send -X copy-selection-and-cancel\; run "tmux save -|pbcopy"
-  '';
-
-  programs.mise.globalConfig = {
-    tools = {
-      gcloud = "latest";
-    };
-    settings = {
-      idiomatic_version_file_enable_tools = [];
-    };
-  };
-
   programs.home-manager.enable = true;
 }
