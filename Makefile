@@ -40,7 +40,6 @@ brew-optional:
 brew-himkt:
 	brew bundle --verbose --file=$(PWD)/brew/config.d/himkt/Brewfile
 
-# Simple deploy targets (non-Nix environments)
 simple-deploy:
 	python3 bin/simple-deploy.py --dry-run
 	python3 bin/simple-deploy.py
