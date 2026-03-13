@@ -46,9 +46,6 @@ in
   };
 
   # macOS-specific platform overrides
-  programs.git.settings.credential."https://github.com".helper =
-    lib.mkForce "!/opt/homebrew/bin/gh auth git-credential";
-
   programs.tmux.extraConfig = lib.mkAfter ''
     # macOS clipboard integration
     bind-key -T copy-mode-vi y     send -X copy-selection-and-cancel\; run "tmux save -|pbcopy"
