@@ -2,6 +2,8 @@
 # .zshrc - The zsh configuration
 #
 
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
 if command -v tmux > /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ] && [[ $- == *i* ]]; then
   tmux attach-session 2>/dev/null || tmux new-session
 fi
@@ -150,8 +152,6 @@ PROMPT='$(current_timestamp)$(current_context)$(current_path)$(current_git_statu
 PROMPT+=$'\n'
 PROMPT+='> '
 SPROMPT="${fg[red]}%r$reset_color is correct? [y, n, a, e]:"
-
-export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 if command -v mise > /dev/null; then
   eval "$(mise activate zsh)"
