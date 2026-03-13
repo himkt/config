@@ -43,6 +43,11 @@ function git-home () {
   cd `git rev-parse --show-toplevel`
 }
 
+# Source home-manager session variables
+if [ -f "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh" ]; then
+  . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
 # tier1
 export EDITOR=vim
 export FZF_DEFAULT_OPTS='--height 50% --reverse --border'
@@ -79,6 +84,7 @@ Darwin*)
   ;;
 Linux*)
   export HOMEBREW_ROOT=/home/linuxbrew/.linuxbrew
+  alias open="xdg-open"
   ;;
 esac
 
