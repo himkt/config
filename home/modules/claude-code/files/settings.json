@@ -57,6 +57,7 @@
       "mcp__pathfinder-python__definition"
     ],
     "deny": [
+      "Bash(find *)",
       "Bash(ls *)",
       "Bash(mkdir *)",
       "Bash(touch *)",
