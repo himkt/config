@@ -63,6 +63,7 @@
       "Bash(find *)",
       "Bash(grep *)",
       "Bash(head *)",
+      "Bash(ls)",
       "Bash(ls *)",
       "Bash(mkdir *)",
       "Bash(printf *)",
@@ -70,6 +71,7 @@
       "Bash(sed *)",
       "Bash(tail *)",
       "Bash(touch *)",
+      "Bash(tree)",
       "Bash(tree *)"
     ]
   },
