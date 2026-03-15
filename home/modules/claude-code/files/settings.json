@@ -57,9 +57,18 @@
       "mcp__pathfinder-python__definition"
     ],
     "deny": [
+      "Bash(awk *)",
+      "Bash(cat *)",
+      "Bash(echo *)",
       "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(head *)",
       "Bash(ls *)",
       "Bash(mkdir *)",
+      "Bash(printf *)",
+      "Bash(rg *)",
+      "Bash(sed *)",
+      "Bash(tail *)",
       "Bash(touch *)",
       "Bash(tree *)"
     ]
