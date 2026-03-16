@@ -1,0 +1,18 @@
+{
+  "name": "himkt-marketplace",
+  "version": "0.0.1",
+  "owner": {
+    "name": "himkt"
+  },
+  "metadata": {
+    "description": "Local marketplace vendoring external Claude Code skills via git submodules."
+  },
+  "plugins": [
+    {
+      "name": "slidev-plugin",
+      "source": "./slidev/skills/slidev",
+      "description": "Slidev presentation skill — web-based slides with Markdown, Vue components, code highlighting, and animations.",
+      "version": "52.12.0"
+    }
+  ]
+}
