@@ -1,11 +1,11 @@
 ---
 name: my-slidev
-description: Create Slidev presentations using the custom theme with cover, bullets, two-cols, and blank layouts. Use when generating presentations from research reports, outlines, or other content. References /slidev for syntax details.
+description: Create Slidev presentations using the custom theme with cover, bullets, two-cols, and blank layouts. Use when generating presentations from research reports, outlines, or other content. References /slidev-plugin:slidev for syntax details.
 ---
 
 # Custom Slidev Theme Presentation Guide
 
-This skill provides guidelines for generating Slidev presentations using the custom theme located at `skills/my-slidev/theme`. For Slidev syntax and features, refer to /slidev.
+This skill provides guidelines for generating Slidev presentations using the custom theme located at `skills/my-slidev/theme`. For Slidev syntax and features, refer to /slidev-plugin:slidev.
 
 ## Headmatter Template
 
