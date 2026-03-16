@@ -25,6 +25,18 @@ Skills are reusable prompt templates that Claude Code can invoke as slash comman
 
 Agents are specialized subagent definitions written in Markdown with YAML frontmatter. They extend Claude Code with domain-specific capabilities such as document creation, test generation, and web research.
 
+### External Skills
+
+External skills managed via Claude Code's plugin marketplace system. The `external-skills/` directory contains a marketplace manifest (`.claude-plugin/marketplace.json`) and git submodules pointing to upstream skill repositories.
+
+```bash
+# Register the local marketplace (one-time)
+/plugin marketplace add ./external-skills
+
+# Install a plugin
+/plugin install slidev-plugin@himkt-marketplace
+```
+
 ### Bin
 
 Executable scripts used by Claude Code features. For example, the status line script provides contextual information in the terminal.
