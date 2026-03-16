@@ -22,6 +22,7 @@ dotfiles/
 │   ├── macos.nix      # macOS Home Manager entry point
 │   └── modules/       # Shared and platform-specific modules
 ├── brew/              # Homebrew Brewfiles (macOS)
+├── external-skills/   # Plugin marketplace for external skills
 └── secrets/           # sops-nix encrypted secrets
 ```
 

@@ -27,5 +27,5 @@ When a task matches a skill below, you MUST invoke it via the Skill tool BEFORE 
 - `design-docs/` - Design documents in `{slug}/design-doc.md` subdirectories (source of truth for implementation, not tracked by git)
 - `projects/` - Project-specific settings and session transcripts
 - `settings.json` - Global Claude Code settings
-- `vendor/` - Third-party repositories managed as git submodules (e.g., `vendor/slidev`)
+- `external-skills/` - Plugin marketplace for external skills (submodules + marketplace manifest, not deployed by Nix)
 - `rules/` - User-level rules auto-loaded for all projects
