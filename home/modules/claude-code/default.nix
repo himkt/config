@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  inputs,
   ...
 }:
 
@@ -20,6 +19,5 @@ in
     ".claude/bin".source = src + "/bin";
     ".claude/rules".source = src + "/rules";
     ".claude/skills" = { source = src + "/skills"; recursive = true; };
-    ".claude/skills/slidev".source = inputs.slidev-src + "/skills/slidev";
   };
 }
