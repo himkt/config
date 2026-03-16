@@ -14,7 +14,7 @@ This repository tracks reusable customizations — skills, agents, scripts, and 
 ├── agents/            # Custom agent definitions
 ├── skills/            # Skills (slash commands invoked via the Skill tool)
 ├── bin/               # Utility scripts (e.g., status line)
-└── vendor/            # Third-party dependencies (git submodules)
+└── external-skills/   # Plugin marketplace for external skills
 ```
 
 ### Skills

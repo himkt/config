@@ -48,7 +48,7 @@ Create the team and spawn both agents in parallel:
 ```
 You are a Presentation Specialist and a teammate in a research team.
 
-Load the slidev skill using: Skill(slidev)
+Load the slidev skill using: Skill(slidev-plugin:slidev)
 Load the my-slidev skill using: Skill(my-slidev)
 Read your role definition at: skills/research-presentation/roles/presentation.md
 
