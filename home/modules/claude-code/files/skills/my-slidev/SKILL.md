@@ -5,7 +5,8 @@ description: Create Slidev presentations using the custom theme with cover, bull
 
 # Custom Slidev Theme Presentation Guide
 
-This skill provides guidelines for generating Slidev presentations using the custom theme located at `skills/my-slidev/theme`. For Slidev syntax and features, refer to /slidev.
+This skill provides guidelines for generating Slidev presentations using the custom theme located at `skills/my-slidev/theme`.
+For Slidev syntax and features, refer to the skill /slidev or /external-skills:slidev. **NEVER READ FILES DIRECTLY**.
 
 ## Headmatter Template
 
