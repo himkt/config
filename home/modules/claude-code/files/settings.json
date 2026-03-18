@@ -22,6 +22,7 @@
   "permissions": {
     "allow": [
       "Read(/skills/**)",
+      "Read(/plugins/**)",
       "Bash(gh api repos/*/*/pulls/*/comments)",
       "Bash(gh api repos/*/*/pulls/*/comments *)",
       "Bash(gh api repos/*/*/pulls/*/reviews)",
