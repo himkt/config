@@ -12,7 +12,6 @@ in
 
 {
   imports = [
-    ./modules/claude-code
     ./modules/gcc
     ./modules/ghostty
     ./modules/git

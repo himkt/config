@@ -8,7 +8,6 @@ in
 
 {
   imports = [
-    ./modules/claude-code
     ./modules/ghostty
     ./modules/git
     ./modules/mise
