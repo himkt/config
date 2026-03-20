@@ -80,24 +80,7 @@
         "nix-darwin": "nix-darwin",
         "nixpkgs": "nixpkgs",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "slidev-src": "slidev-src",
         "sops-nix": "sops-nix"
-      }
-    },
-    "slidev-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1773273298,
-        "narHash": "sha256-bl7+2J0rveB+ldYvHJrOsGPR+oViPNWFi/dvQ2FdEhI=",
-        "owner": "slidevjs",
-        "repo": "slidev",
-        "rev": "d76850db564ee03afbc4652b36f1bfe3e5602225",
-        "type": "github"
-      },
-      "original": {
-        "owner": "slidevjs",
-        "repo": "slidev",
-        "type": "github"
       }
     },
     "sops-nix": {
