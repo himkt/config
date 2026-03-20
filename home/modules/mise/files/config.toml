@@ -18,6 +18,7 @@
 "asdf:mise-plugins/mise-gcloud" = "latest"
 "core:java" = "latest"
 "core:node" = "latest"
+"core:bun" = "latest"
 
 [settings]
 all_compile = false
