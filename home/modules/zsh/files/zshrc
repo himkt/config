@@ -2,6 +2,10 @@
 # .zshrc - The zsh configuration
 #
 
+if [ -f "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh" ]; then
+  . "/etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh"
+fi
+
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 if command -v tmux > /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ] && [[ $- == *i* ]]; then
