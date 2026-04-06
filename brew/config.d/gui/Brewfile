@@ -1,5 +1,3 @@
-cask 'claude-code'
-cask 'codex'
 cask 'ghostty'
 cask 'google-chrome'
 cask 'netron'
