@@ -123,6 +123,8 @@ in
     GLFW_IM_MODULE = "ibus";
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
     PLAYWRIGHT_MCP_EXECUTABLE_PATH = "/etc/profiles/per-user/himkt/bin/google-chrome-stable";
+    AGENT_BROWSER_EXECUTABLE_PATH = "/etc/profiles/per-user/himkt/bin/google-chrome-stable";
+    LD_LIBRARY_PATH = "/run/current-system/sw/share/nix-ld/lib";
   };
 
   dconf.settings = {
