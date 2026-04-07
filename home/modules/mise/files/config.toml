@@ -8,6 +8,7 @@
 "aqua:bazelbuild/bazelisk" = "latest"
 "aqua:cli/cli" = "latest"
 "aqua:derailed/k9s" = "latest"
+"aqua:git-lfs/git-lfs" = "latest"
 "aqua:jqlang/jq" = "latest"
 "aqua:junegunn/fzf" = "latest"
 "aqua:kubernetes-sigs/kustomize" = "latest"
