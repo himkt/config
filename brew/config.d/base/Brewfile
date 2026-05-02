@@ -1,1 +1,3 @@
+brew 'binutils'
 brew 'coreutils'
+brew 'libpq'
