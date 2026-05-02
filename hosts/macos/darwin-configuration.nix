@@ -1,6 +1,18 @@
 { pkgs, ... }:
 
 {
+  # TODO: Remove once NixOS/nix#15638 is released.
+  # https://github.com/NixOS/nixpkgs/issues/511265
+  nixpkgs.overlays = [
+    (final: prev: {
+      python3Packages = prev.python3Packages.overrideScope (pfinal: pprev: {
+        ffmpeg-python = pprev.ffmpeg-python.overridePythonAttrs {
+          doCheck = false;
+        };
+      });
+    })
+  ];
+
   fonts = {
     packages = with pkgs; [
       jetbrains-mono
