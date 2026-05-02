@@ -75,10 +75,12 @@ in
       # CLI
       btop
       file
+      git
       gnumake
       postgresql
       python3
       rustup
+      sheldon
       tree
       unzip
 

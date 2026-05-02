@@ -25,8 +25,10 @@ in
     packages      = with pkgs; [
       # CLI
       btop
+      git
       python3
       rustup
+      sheldon
       tree
       # Custom packages
       himkt_pkgs.pathfinder
