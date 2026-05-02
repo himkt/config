@@ -15,6 +15,7 @@
 "aqua:kubernetes/kubernetes/kubectl" = "latest"
 "aqua:neovim/neovim" = "latest"
 "aqua:openai/codex" = "latest"
+"aqua:suzuki-shunsuke/pinact" = "latest"
 "aqua:tmux/tmux-builds" = "latest"
 "asdf:mise-plugins/mise-gcloud" = "latest"
 "core:java" = "latest"

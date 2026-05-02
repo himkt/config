@@ -18,27 +18,31 @@ in
     ./modules/zsh
   ];
 
-  home.username = "himkt";
-  home.homeDirectory = "/Users/himkt";
-  home.stateVersion = "25.11";
-
-  xdg = {
-    enable = true;
-    configHome = "${config.home.homeDirectory}/.config";
-    cacheHome = "${config.home.homeDirectory}/.cache";
-    dataHome = "${config.home.homeDirectory}/.local/share";
+  home = {
+    homeDirectory = "/Users/himkt";
+    stateVersion  = "25.11";
+    username      = "himkt";
+    packages      = with pkgs; [
+      # CLI
+      btop
+      git
+      python3
+      rustup
+      sheldon
+      tree
+      # Custom packages
+      himkt_pkgs.pathfinder
+    ];
   };
 
-  home.packages = with pkgs; [
-    # CLI
-    btop
-    python3
-    rustup
-    tree
+  programs = {
+    home-manager.enable = true;
+  };
 
-    # Custom packages
-    himkt_pkgs.pathfinder
-  ];
-
-  programs.home-manager.enable = true;
+  xdg = {
+    enable     = true;
+    configHome = "${config.home.homeDirectory}/.config";
+    cacheHome  = "${config.home.homeDirectory}/.cache";
+    dataHome   = "${config.home.homeDirectory}/.local/share";
+  };
 }
