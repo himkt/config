@@ -8,9 +8,9 @@ fi
 
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 
-#if command -v tmux > /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ] && [[ $- == *i* ]]; then
-#  tmux attach-session 2>/dev/null || tmux new-session
-#fi
+if command -v tmux > /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_INJECTION" ] && [[ $- == *i* ]]; then
+  tmux attach-session 2>/dev/null || tmux new-session
+fi
 
 bindkey -e
 
