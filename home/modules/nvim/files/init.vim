@@ -30,14 +30,6 @@ endif
 hi Normal guibg=NONE ctermbg=NONE
 hi Visual guibg=gray
 
-" vim-easymotion
-let g:EasyMotion_do_mapping = 0
-nmap // <Plug>(easymotion-sn)
-
-" fzf
-nnoremap <silent> <C-p> :call fzf#vim#files('', fzf#vim#with_preview('right')) <CR>
-nnoremap <silent> <C-x> :Commands <CR>
-
 " tabular
 vnoremap tr :<C-u> Tabularize /
 

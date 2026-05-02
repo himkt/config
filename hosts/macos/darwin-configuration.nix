@@ -1,38 +1,44 @@
 { pkgs, ... }:
 
 {
-  # System-level settings (replaces darwin/bin/setup.sh)
-  system.defaults = {
-    NSGlobalDomain = {
-      KeyRepeat = 2;
-      InitialKeyRepeat = 20;
-      ApplePressAndHoldEnabled = false;
-      "com.apple.keyboard.fnState" = false;
-    };
-    trackpad.Clicking = true;
-    dock = {
-      orientation = "left";
-      autohide = true;
-    };
+  fonts = {
+    packages = with pkgs; [
+      jetbrains-mono
+      noto-fonts-cjk-sans
+    ];
   };
 
-  system.primaryUser = "himkt";
-
-  users.users.himkt = {
-    home = "/Users/himkt";
+  nix = {
+    settings.experimental-features = [ "nix-command" "flakes" ];
   };
 
-  # Enable Touch ID for sudo
-  security.pam.services.sudo_local.touchIdAuth = true;
+  security = {
+    pam.services.sudo_local.touchIdAuth = true;
+  };
 
-  fonts.packages = with pkgs; [
-    jetbrains-mono
-    noto-fonts-cjk-sans
-  ];
+  system = {
+    defaults = {
+      dock = {
+        orientation = "left";
+        autohide = true;
+      };
+      trackpad.Clicking = true;
+      NSGlobalDomain = {
+        KeyRepeat = 2;
+        InitialKeyRepeat = 20;
+        ApplePressAndHoldEnabled = false;
+        "com.apple.keyboard.fnState" = false;
+      };
+    };
+    primaryUser = "himkt";
+    # Note: verify this value before first activation.
+    # See https://daiderd.com/nix-darwin/manual/ for stateVersion documentation.
+    stateVersion = 5;
+  };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Note: verify this value before first activation.
-  # See https://daiderd.com/nix-darwin/manual/ for stateVersion documentation.
-  system.stateVersion = 5;
+  users = {
+    users.himkt = {
+      home = "/Users/himkt";
+    };
+  };
 }

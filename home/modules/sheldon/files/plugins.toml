@@ -1,13 +1,5 @@
 shell = "zsh"
 
-[templates]
-macos_source = '''
-if [[ "$OSTYPE" = darwin* ]]; then
-  {{ hooks?.pre | nl }}{% for file in files %}source "{{ file }}"
-  {% endfor %}{{ hooks?.post | nl }}
-fi
-'''
-
 [plugins.zsh-autosuggestions]
 github = 'zsh-users/zsh-autosuggestions'
 apply = ['source']
