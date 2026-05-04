@@ -28,7 +28,7 @@ gc:
 brew-install:
 	$(PWD)/brew/bin/setup.sh
 
-brew:
+brew-base:
 	brew bundle --verbose --file=$(PWD)/brew/config.d/base/Brewfile
 
 brew-gui:

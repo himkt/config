@@ -22,17 +22,6 @@ in
     homeDirectory = "/Users/himkt";
     stateVersion  = "25.11";
     username      = "himkt";
-    packages      = with pkgs; [
-      # CLI
-      btop
-      git
-      python3
-      rustup
-      sheldon
-      tree
-      # Custom packages
-      himkt_pkgs.pathfinder
-    ];
   };
 
   programs = {
