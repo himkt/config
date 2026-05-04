@@ -11,7 +11,7 @@
       systemd-boot.enable      = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_6_19;
+    kernelPackages = pkgs.linuxPackages_6_18;
     initrd.luks.devices."luks-8e3f8068-90b0-4614-a514-98ae63db54ab".device = "/dev/disk/by-uuid/8e3f8068-90b0-4614-a514-98ae63db54ab";
   };
 
