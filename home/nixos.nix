@@ -65,6 +65,7 @@ in
 
     packages = with pkgs; [
       # GUI
+      ghostty
       google-chrome
       inkscape
       insomnia
@@ -74,6 +75,7 @@ in
 
       # CLI
       btop
+      bubblewrap
       file
       git
       gnumake
@@ -83,6 +85,7 @@ in
       sheldon
       tree
       unzip
+      unstable.mise
 
       # Custom packages
       himkt_pkgs.pathfinder

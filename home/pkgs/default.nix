@@ -1,4 +1,6 @@
-{ pkgs }:
+{
+  pkgs
+}:
 
 {
   pathfinder = pkgs.callPackage ./pathfinder { };

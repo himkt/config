@@ -1,4 +1,7 @@
-{ ... }:
+{
+  ...
+}:
+
 {
   xdg.configFile."nvim/init.vim" = {
     source = ./files/init.vim;
