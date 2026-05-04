@@ -8,7 +8,7 @@ else
   NIX_SWITCH_CMD := sudo nixos-rebuild switch --flake .\#nixos
 endif
 
-.PHONY: build switch update gc brew-install brew brew-gui brew-himkt simple-deploy simple-unlink
+.PHONY: build switch update gc brew brew-base brew-gui brew-himkt simple-deploy simple-unlink
 
 # Nix targets (platform-aware)
 build:
@@ -25,7 +25,7 @@ gc:
 	sudo nix-collect-garbage -d
 
 # Homebrew targets (macOS only)
-brew-install:
+brew:
 	$(PWD)/brew/bin/setup.sh
 
 brew-base:
