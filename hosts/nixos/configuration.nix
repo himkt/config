@@ -68,6 +68,7 @@
       ];
     };
     zsh.enable = true;
+    ssh.startAgent = true;
   };
 
   security = {
@@ -98,6 +99,7 @@
     };
     gnome = {
       gnome-keyring.enable = true;
+      gcr-ssh-agent.enable = false;
     };
     pipewire = {
       enable            = true;
