@@ -5,12 +5,12 @@ import sys
 from pathlib import Path
 
 DEPLOY_MAP = [
-    ("home/modules/claude-code/files", ".claude"),
-    ("home/modules/git/files", ".config/git"),
-    ("home/modules/mise/files", ".config/mise"),
-    ("home/modules/nvim/files", ".config/nvim"),
-    ("home/modules/tmux/files", ".config/tmux"),
-    ("home/modules/uv/files", ".config/uv"),
+    ("home/modules/claude/files", ".claude", True),
+    ("home/modules/git/files", ".config/git", False),
+    ("home/modules/mise/files", ".config/mise", False),
+    ("home/modules/nvim/files", ".config/nvim", False),
+    ("home/modules/tmux/files", ".config/tmux", False),
+    ("home/modules/uv/files", ".config/uv", False),
 ]
 
 
@@ -21,9 +21,11 @@ def get_repo_root() -> Path:
     return root
 
 
-def expand_map(repo_root: Path, home: Path) -> list[tuple[Path, Path]]:
+def expand_map(repo_root: Path, home: Path, nix_unsupported_only: bool) -> list[tuple[Path, Path]]:
     pairs = []
-    for source_dir, dest_dir in DEPLOY_MAP:
+    for source_dir, dest_dir, nix_supported in DEPLOY_MAP:
+        if nix_unsupported_only and not nix_supported:
+            continue
         src = repo_root / source_dir
         if not src.is_dir():
             continue
@@ -92,11 +94,12 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Deploy dotfiles via symlinks for non-Nix environments.")
     parser.add_argument("--unlink", action="store_true", help="Remove symlinks created by this script")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be done without making changes")
+    parser.add_argument("--nix-unsupported-only", action="store_true", help="Process only files that are not managed by Nix")
     args = parser.parse_args()
 
     repo_root = get_repo_root()
     home = Path.home()
-    pairs = expand_map(repo_root, home)
+    pairs = expand_map(repo_root, home, args.nix_unsupported_only)
 
     if args.unlink:
         unlink(pairs, home, args.dry_run)
