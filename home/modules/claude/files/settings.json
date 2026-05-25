@@ -7,7 +7,6 @@
   "permissions": {
     "allow": [
       "Edit",
-      "Bash(find *)",
       "Bash(gh api repos/*/*/issues/*/comments)",
       "Bash(gh api repos/*/*/issues/*/comments *)",
       "Bash(gh api repos/*/*/issues/*/comments/* *)",
@@ -90,8 +89,10 @@
     ],
     "deny": [
       "Bash(awk *)",
+      "Bash(cat *)",
       "Bash(curl *)",
       "Bash(echo *)",
+      "Bash(find *)",
       "Bash(git -C *)",
       "Bash(kill *)",
       "Bash(mkdir *)",
