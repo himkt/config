@@ -7,7 +7,6 @@
   "permissions": {
     "allow": [
       "Edit",
-      "Bash(find *)",
       "Bash(gh api repos/*/*/issues/*/comments)",
       "Bash(gh api repos/*/*/issues/*/comments *)",
       "Bash(gh api repos/*/*/issues/*/comments/* *)",
@@ -75,23 +74,25 @@
       "Skill(slidev:slidev)",
       "Skill(update-config)",
       "Bash(cafleet *)",
-      "Skill(cafleet:agent-team-monitoring)",
-      "Skill(cafleet:agent-team-supervision)",
-      "Skill(cafleet:base-dir)",
-      "Skill(cafleet:cafleet)",
-      "Skill(cafleet:create-figure)",
-      "Skill(cafleet:design-doc)",
-      "Skill(cafleet:design-doc-create)",
-      "Skill(cafleet:design-doc-execute)",
-      "Skill(cafleet:design-doc-interview)",
-      "Skill(cafleet:my-slidev)",
-      "Skill(cafleet:research-presentation)",
-      "Skill(cafleet:research-report)"
+      "Skill(cafleet)",
+      "Skill(cafleet-agent-team-monitoring)",
+      "Skill(cafleet-agent-team-supervision)",
+      "Skill(cafleet-base-dir)",
+      "Skill(cafleet-create-figure)",
+      "Skill(cafleet-design-doc)",
+      "Skill(cafleet-design-doc-create)",
+      "Skill(cafleet-design-doc-execute)",
+      "Skill(cafleet-design-doc-interview)",
+      "Skill(cafleet-my-slidev)",
+      "Skill(cafleet-research-presentation)",
+      "Skill(cafleet-research-report)"
     ],
     "deny": [
       "Bash(awk *)",
+      "Bash(cat *)",
       "Bash(curl *)",
       "Bash(echo *)",
+      "Bash(find *)",
       "Bash(git -C *)",
       "Bash(kill *)",
       "Bash(mkdir *)",
@@ -140,22 +141,13 @@
   },
   "enabledPlugins": {
     "agent-browser@himkt-marketplace": true,
-    "slidev@himkt-marketplace": true,
-    "cafleet@cafleet": true
+    "slidev@himkt-marketplace": true
   },
   "extraKnownMarketplaces": {
     "himkt-marketplace": {
       "source": {
         "source": "github",
         "repo": "himkt/himkt-marketplace"
-      },
-      "autoUpdate": true
-    },
-    "cafleet": {
-      "source": {
-        "source": "directory",
-        "repo": "himkt/cafleet",
-        "path": "/home/himkt/work/himkt/cafleet"
       },
       "autoUpdate": true
     }
