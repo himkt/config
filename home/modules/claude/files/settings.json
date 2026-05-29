@@ -67,6 +67,7 @@
       "Write",
       "Write(//tmp/claude-code/**)",
       "mcp__pathfinder-python__definition",
+      "Skill(agent-browser)",
       "Skill(github-cli)",
       "Skill(nixos-boot-troubleshoot)",
       "Skill(pathfinder-explain)",
