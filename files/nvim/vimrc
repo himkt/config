@@ -139,11 +139,11 @@ autocmd FileType python nnoremap <C-t> :sp <bar> :exec ':term if [ -e ./.venv ] 
 autocmd FileType rust   nnoremap <C-t> :sp <bar> :exec ':term cargo run --bin ' . expand('%:t:r') <CR>
 
 " templates
-autocmd BufNewFile *.cc      0r $HOME/dotfiles/home/modules/nvim/files/template.d/cc/template.cc
-autocmd BufNewFile *.go      0r $HOME/dotfiles/home/modules/nvim/files/template.d/go/template.go
-autocmd BufNewFile setup.cfg 0r $HOME/dotfiles/home/modules/nvim/files/template.d/python/setup.cfg
+autocmd BufNewFile *.cc      0r $HOME/dotfiles/files/nvim/template.d/cc/template.cc
+autocmd BufNewFile *.go      0r $HOME/dotfiles/files/nvim/template.d/go/template.go
+autocmd BufNewFile setup.cfg 0r $HOME/dotfiles/files/nvim/template.d/python/setup.cfg
 
 if $ATC != ""
-  autocmd BufNewFile *.rs 0r $HOME/dotfiles/home/modules/nvim/files/template.d/rs/atcoder.rs
+  autocmd BufNewFile *.rs 0r $HOME/dotfiles/files/nvim/template.d/rs/atcoder.rs
   autocmd FileType rust   nnoremap <C-t> :sp <bar> :exec ':term rustc % && ./' . expand('%:t:r') . ' && rm ' . expand('%:t:r') <CR>
 endif
