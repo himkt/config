@@ -7,16 +7,7 @@ let
 in
 
 {
-  imports = [
-    ./modules/ghostty
-    ./modules/git
-    ./modules/mise
-    ./modules/nvim
-    ./modules/sheldon
-    ./modules/tmux
-    ./modules/uv
-    ./modules/zsh
-  ];
+  imports = [ ];
 
   home = {
     homeDirectory = "/Users/himkt";

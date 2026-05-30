@@ -41,9 +41,5 @@ simple-deploy:
 	python3 bin/simple-deploy.py --dry-run
 	python3 bin/simple-deploy.py
 
-simple-deploy-nix-unsupported-only:
-	python3 bin/simple-deploy.py --nix-unsupported-only --dry-run
-	python3 bin/simple-deploy.py --nix-unsupported-only
-
 simple-unlink:
 	python3 bin/simple-deploy.py --unlink
