@@ -13,14 +13,6 @@ in
 {
   imports = [
     ./modules/gcc
-    ./modules/ghostty
-    ./modules/git
-    ./modules/mise
-    ./modules/nvim
-    ./modules/sheldon
-    ./modules/tmux
-    ./modules/uv
-    ./modules/zsh
     # NixOS specific
     ./modules/fcitx5
     ./modules/gpg
