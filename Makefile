@@ -8,7 +8,7 @@ else
   NIX_SWITCH_CMD := sudo nixos-rebuild switch --flake .\#nixos
 endif
 
-.PHONY: build switch update gc brew brew-base brew-gui brew-himkt simple-deploy simple-unlink
+.PHONY: build switch update gc brew brew-base brew-gui brew-himkt deploy unlink
 
 # Nix targets (platform-aware)
 build:
@@ -37,9 +37,9 @@ brew-gui:
 brew-himkt:
 	brew bundle --verbose --file=$(PWD)/brew/config.d/himkt/Brewfile
 
-simple-deploy:
-	python3 bin/simple-deploy.py --dry-run
-	python3 bin/simple-deploy.py
+deploy:
+	python3 bin/deploy.py --dry-run
+	python3 bin/deploy.py
 
-simple-unlink:
-	python3 bin/simple-deploy.py --unlink
+unlink:
+	python3 bin/deploy.py --unlink

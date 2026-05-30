@@ -10,7 +10,8 @@ Unified Nix-based configuration for macOS (nix-darwin) and NixOS.
 ```
 dotfiles/
 ├── flake.nix          # Unified flake (NixOS + nix-darwin)
-├── Makefile           # Build and setup targets
+├── Makefile           # Build and deploy targets
+├── bin/               # deploy.py — working-tree symlink deployer
 ├── hosts/
 │   ├── nixos/         # NixOS system configuration
 │   └── macos/         # nix-darwin system configuration
@@ -19,7 +20,16 @@ dotfiles/
 │   ├── macos.nix      # macOS Home Manager entry point
 │   └── modules/       # Shared and platform-specific modules
 ├── brew/              # Homebrew Brewfiles (macOS)
-└── secrets/           # sops-nix encrypted secrets
+├── secrets/           # sops-nix encrypted secrets
+├── claude/            # dotfile source → ~/.claude
+├── ghostty/           # dotfile source → ~/.config/ghostty
+├── git/               # dotfile source → ~/.config/git
+├── mise/              # dotfile source → ~/.config/mise
+├── nvim/              # dotfile source → ~/.config/nvim
+├── sheldon/           # dotfile source → ~/.config/sheldon
+├── tmux/              # dotfile source → ~/.config/tmux
+├── uv/                # dotfile source → ~/.config/uv
+└── zsh/               # dotfile source → ~/.zshrc (zsh/zshrc)
 ```
 
 ## Setup
@@ -34,7 +44,7 @@ dotfiles/
    ```
 4. Deploy dotfiles as working-tree symlinks:
    ```
-   make simple-deploy
+   make deploy
    ```
 5. Install Homebrew packages:
    ```
@@ -51,12 +61,12 @@ dotfiles/
    ```
 3. Deploy dotfiles as working-tree symlinks:
    ```
-   make simple-deploy
+   make deploy
    ```
 
-> **Dotfiles deployment.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, sheldon, zsh, and `~/.claude`) are deployed separately by `make simple-deploy`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild.
+> **Dotfiles deployment.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, sheldon, zsh, and `~/.claude`) are deployed separately by `make deploy`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild.
 >
-> **Migrating an existing machine.** If these files were previously managed by Home Manager (symlinks into `/nix/store`), run `make switch` first — Home Manager removes the old store symlinks on activation — then `make simple-deploy`. `simple-deploy` is strict: it aborts if a destination already exists. Resolve any reported conflicts and re-run. Use `make simple-unlink` to remove the symlinks.
+> **Migrating an existing machine.** If these files were previously managed by Home Manager (symlinks into `/nix/store`), run `make switch` first — Home Manager removes the old store symlinks on activation — then `make deploy`. `deploy` is strict: it aborts if a destination already exists. Resolve any reported conflicts and re-run. Use `make unlink` to remove the symlinks.
 
 ## Makefile Targets
 
@@ -66,8 +76,8 @@ All Nix targets automatically detect the platform (macOS / NixOS) and run the ap
 |--------|-------------|
 | `build` | Build system configuration (dry run) |
 | `switch` | Apply system + Home Manager configuration |
-| `simple-deploy` | Deploy dotfiles as working-tree symlinks (run after `switch`) |
-| `simple-unlink` | Remove the dotfile symlinks created by `simple-deploy` |
+| `deploy` | Deploy dotfiles as working-tree symlinks (run after `switch`) |
+| `unlink` | Remove the dotfile symlinks created by `deploy` |
 | `update` | Update flake inputs |
 | `gc` | Delete old generations (keep last 7) and run garbage collection |
 | `brew-install` | Install Homebrew |

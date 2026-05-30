@@ -5,15 +5,15 @@ import sys
 from pathlib import Path
 
 DEPLOY_MAP = [
-    ("files/claude", ".claude"),
-    ("files/git", ".config/git"),
-    ("files/ghostty", ".config/ghostty"),
-    ("files/mise", ".config/mise"),
-    ("files/nvim", ".config/nvim"),
-    ("files/sheldon", ".config/sheldon"),
-    ("files/tmux", ".config/tmux"),
-    ("files/uv", ".config/uv"),
-    ("files/zsh/zshrc", ".zshrc"),
+    ("claude", ".claude"),
+    ("git", ".config/git"),
+    ("ghostty", ".config/ghostty"),
+    ("mise", ".config/mise"),
+    ("nvim", ".config/nvim"),
+    ("sheldon", ".config/sheldon"),
+    ("tmux", ".config/tmux"),
+    ("uv", ".config/uv"),
+    ("zsh/zshrc", ".zshrc"),
 ]
 
 
