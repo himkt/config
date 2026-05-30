@@ -32,7 +32,11 @@ dotfiles/
    ```
    make switch
    ```
-4. Install Homebrew packages:
+4. Deploy dotfiles as working-tree symlinks:
+   ```
+   make simple-deploy
+   ```
+5. Install Homebrew packages:
    ```
    make brew
    make brew-gui
@@ -45,6 +49,14 @@ dotfiles/
    ```
    make switch
    ```
+3. Deploy dotfiles as working-tree symlinks:
+   ```
+   make simple-deploy
+   ```
+
+> **Dotfiles deployment.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, sheldon, zsh, and `~/.claude`) are deployed separately by `make simple-deploy`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild.
+>
+> **Migrating an existing machine.** If these files were previously managed by Home Manager (symlinks into `/nix/store`), run `make switch` first — Home Manager removes the old store symlinks on activation — then `make simple-deploy`. `simple-deploy` is strict: it aborts if a destination already exists. Resolve any reported conflicts and re-run. Use `make simple-unlink` to remove the symlinks.
 
 ## Makefile Targets
 
@@ -54,6 +66,8 @@ All Nix targets automatically detect the platform (macOS / NixOS) and run the ap
 |--------|-------------|
 | `build` | Build system configuration (dry run) |
 | `switch` | Apply system + Home Manager configuration |
+| `simple-deploy` | Deploy dotfiles as working-tree symlinks (run after `switch`) |
+| `simple-unlink` | Remove the dotfile symlinks created by `simple-deploy` |
 | `update` | Update flake inputs |
 | `gc` | Delete old generations (keep last 7) and run garbage collection |
 | `brew-install` | Install Homebrew |
