@@ -10,7 +10,8 @@ Unified Nix-based configuration for macOS (nix-darwin) and NixOS.
 ```
 dotfiles/
 ├── flake.nix          # Unified flake (NixOS + nix-darwin)
-├── Makefile           # Build and setup targets
+├── Makefile           # Build and deploy targets
+├── bin/               # deploy.py — working-tree symlink deployer
 ├── hosts/
 │   ├── nixos/         # NixOS system configuration
 │   └── macos/         # nix-darwin system configuration
@@ -19,7 +20,16 @@ dotfiles/
 │   ├── macos.nix      # macOS Home Manager entry point
 │   └── modules/       # Shared and platform-specific modules
 ├── brew/              # Homebrew Brewfiles (macOS)
-└── secrets/           # sops-nix encrypted secrets
+├── secrets/           # sops-nix encrypted secrets
+├── claude/            # dotfile source → ~/.claude
+├── ghostty/           # dotfile source → ~/.config/ghostty
+├── git/               # dotfile source → ~/.config/git
+├── mise/              # dotfile source → ~/.config/mise
+├── nvim/              # dotfile source → ~/.config/nvim
+├── sheldon/           # dotfile source → ~/.config/sheldon
+├── tmux/              # dotfile source → ~/.config/tmux
+├── uv/                # dotfile source → ~/.config/uv
+└── zsh/               # dotfile source → ~/.zshrc (zsh/zshrc)
 ```
 
 ## Setup
