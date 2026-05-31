@@ -19,8 +19,8 @@ DEPLOY_MAP = [
 
 def get_repo_root() -> Path:
     root = Path(__file__).resolve().parent.parent
-    if not (root / "home" / "modules").is_dir():
-        sys.exit(f"ERROR: Cannot determine repo root. Expected 'home/modules/' at {root}")
+    if not (root / "flake.nix").is_file():
+        sys.exit(f"ERROR: Cannot determine repo root. Expected 'flake.nix' at {root}")
     return root
 
 

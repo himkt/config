@@ -35,13 +35,13 @@
         system = "x86_64-linux";
         specialArgs = { inherit inputs; username = "himkt"; };
         modules = [
-          ./hosts/nixos/configuration.nix
+          ./nix/hosts/nixos/configuration.nix
           inputs.sops-nix.nixosModules.sops
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.himkt = import ./home/nixos.nix;
+            home-manager.users.himkt = import ./nix/home/nixos.nix;
             home-manager.extraSpecialArgs = {
               inherit inputs;
               username = "himkt";
@@ -55,12 +55,12 @@
         system = "aarch64-darwin";
         specialArgs = { inherit inputs; username = "himkt"; };
         modules = [
-          ./hosts/macos/darwin-configuration.nix
+          ./nix/hosts/macos/darwin-configuration.nix
           home-manager.darwinModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.himkt = import ./home/macos.nix;
+            home-manager.users.himkt = import ./nix/home/macos.nix;
             home-manager.extraSpecialArgs = {
               inherit inputs;
               username = "himkt";

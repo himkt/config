@@ -12,15 +12,16 @@ dotfiles/
 ├── flake.nix          # Unified flake (NixOS + nix-darwin)
 ├── Makefile           # Build and deploy targets
 ├── bin/               # deploy.py — working-tree symlink deployer
-├── hosts/
-│   ├── nixos/         # NixOS system configuration
-│   └── macos/         # nix-darwin system configuration
-├── home/
-│   ├── nixos.nix      # NixOS Home Manager entry point
-│   ├── macos.nix      # macOS Home Manager entry point
-│   └── modules/       # Shared and platform-specific modules
+├── nix/               # All Nix-managed system + Home Manager config
+│   ├── hosts/
+│   │   ├── nixos/     # NixOS system configuration
+│   │   └── macos/     # nix-darwin system configuration
+│   ├── home/
+│   │   ├── nixos.nix  # NixOS Home Manager entry point
+│   │   ├── macos.nix  # macOS Home Manager entry point
+│   │   └── modules/   # Shared and platform-specific modules
+│   └── secrets/       # sops-nix encrypted secrets
 ├── brew/              # Homebrew Brewfiles (macOS)
-├── secrets/           # sops-nix encrypted secrets
 ├── claude/            # dotfile source → ~/.claude
 ├── ghostty/           # dotfile source → ~/.config/ghostty
 ├── git/               # dotfile source → ~/.config/git
