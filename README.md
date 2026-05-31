@@ -10,8 +10,8 @@ Unified Nix-based configuration for macOS (nix-darwin) and NixOS.
 ```
 dotfiles/
 ├── flake.nix          # Unified flake (NixOS + nix-darwin)
-├── Makefile           # Build and deploy targets
-├── bin/               # deploy.py — working-tree symlink deployer
+├── Makefile           # Build and link targets
+├── bin/               # link.py — creates working-tree symlinks
 ├── nix/               # All Nix-managed system + Home Manager config
 │   ├── hosts/
 │   │   ├── nixos/     # NixOS system configuration
@@ -43,9 +43,9 @@ dotfiles/
    ```
    make switch
    ```
-4. Deploy dotfiles as working-tree symlinks:
+4. Link dotfiles as working-tree symlinks:
    ```
-   make deploy
+   make link
    ```
 5. Install Homebrew packages:
    ```
@@ -60,14 +60,14 @@ dotfiles/
    ```
    make switch
    ```
-3. Deploy dotfiles as working-tree symlinks:
+3. Link dotfiles as working-tree symlinks:
    ```
-   make deploy
+   make link
    ```
 
-> **Dotfiles deployment.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, sheldon, zsh, and `~/.claude`) are deployed separately by `make deploy`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild.
+> **Dotfiles linking.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, sheldon, zsh, and `~/.claude`) are linked separately by `make link`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild.
 >
-> **Migrating an existing machine.** If these files were previously managed by Home Manager (symlinks into `/nix/store`), run `make switch` first — Home Manager removes the old store symlinks on activation — then `make deploy`. `deploy` is strict: it aborts if a destination already exists. Resolve any reported conflicts and re-run. Use `make unlink` to remove the symlinks.
+> **Migrating an existing machine.** If these files were previously managed by Home Manager (symlinks into `/nix/store`), run `make switch` first — Home Manager removes the old store symlinks on activation — then `make link`. `link` is strict: it aborts if a destination already exists. Resolve any reported conflicts and re-run. Use `make unlink` to remove the symlinks.
 
 ## Makefile Targets
 
@@ -77,8 +77,8 @@ All Nix targets automatically detect the platform (macOS / NixOS) and run the ap
 |--------|-------------|
 | `build` | Build system configuration (dry run) |
 | `switch` | Apply system + Home Manager configuration |
-| `deploy` | Deploy dotfiles as working-tree symlinks (run after `switch`) |
-| `unlink` | Remove the dotfile symlinks created by `deploy` |
+| `link` | Link dotfiles as working-tree symlinks (run after `switch`) |
+| `unlink` | Remove the dotfile symlinks created by `link` |
 | `update` | Update flake inputs |
 | `gc` | Delete old generations (keep last 7) and run garbage collection |
 | `brew-install` | Install Homebrew |

@@ -5,18 +5,18 @@ on:
       - main
   pull_request:
 jobs:
-  deploy:
+  link:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: "3.9"
-      - name: Deploy
-        run: make deploy
-      - name: Verify symlinks exist (re-deploy should fail)
-        run: "! make deploy"
+      - name: Link
+        run: make link
+      - name: Verify symlinks exist (re-link should fail)
+        run: "! make link"
       - name: Unlink
         run: make unlink
-      - name: Verify unlink (deploy again should succeed)
-        run: make deploy
+      - name: Verify unlink (link again should succeed)
+        run: make link
