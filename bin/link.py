@@ -4,7 +4,7 @@ import os
 import sys
 from pathlib import Path
 
-DEPLOY_MAP = [
+LINK_MAP = [
     ("claude", ".claude"),
     ("git", ".config/git"),
     ("ghostty", ".config/ghostty"),
@@ -26,7 +26,7 @@ def get_repo_root() -> Path:
 
 def expand_map(repo_root: Path, home: Path) -> list[tuple[Path, Path]]:
     pairs = []
-    for source, dest in DEPLOY_MAP:
+    for source, dest in LINK_MAP:
         src = repo_root / source
         if src.is_dir():
             for dirpath, _, filenames in os.walk(src):
@@ -54,12 +54,12 @@ def preflight_check(pairs: list[tuple[Path, Path]]) -> list[str]:
     return conflicts
 
 
-def deploy(pairs: list[tuple[Path, Path]], dry_run: bool) -> None:
+def link(pairs: list[tuple[Path, Path]], dry_run: bool) -> None:
     for src, dest in pairs:
         print(f"LINK  {dest} -> {src}")
 
     if conflicts := preflight_check(pairs):
-        print("\nERROR: Cannot deploy. The following conflicts were found:\n")
+        print("\nERROR: Cannot link. The following conflicts were found:\n")
         print("\n".join(conflicts))
         sys.exit("\nResolve these conflicts manually, then re-run.")
 
@@ -94,7 +94,7 @@ def unlink(pairs: list[tuple[Path, Path]], home: Path, dry_run: bool) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Deploy dotfiles via symlinks into the working tree.")
+    parser = argparse.ArgumentParser(description="Link dotfiles via symlinks into the working tree.")
     parser.add_argument("--unlink", action="store_true", help="Remove symlinks created by this script")
     parser.add_argument("--dry-run", action="store_true", help="Show what would be done without making changes")
     args = parser.parse_args()
@@ -106,7 +106,7 @@ def main() -> None:
     if args.unlink:
         unlink(pairs, home, args.dry_run)
     else:
-        deploy(pairs, args.dry_run)
+        link(pairs, args.dry_run)
 
 
 if __name__ == "__main__":
