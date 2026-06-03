@@ -3,7 +3,6 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../modules/keyd
   ];
 
   boot = {
@@ -94,30 +93,63 @@
     desktopManager = {
       gnome.enable = true;
     };
+
     displayManager = {
       gdm.enable = true;
     };
+
     gnome = {
       gnome-keyring.enable = true;
       gcr-ssh-agent.enable = false;
     };
+
+    keyd = {
+      enable = true;
+      keyboards = {
+        default = {
+          settings = {
+            main = {
+              capslock = "leftcontrol";
+            };
+            control = {
+              left = "home";
+              right = "end";
+              up = "C-home";
+              down = "C-end";
+            };
+            "meta+control" = {
+              left = "M-pageup";
+              right = "M-pagedown";
+            };
+            meta = {
+              q = "A-f4";
+            };
+          };
+        };
+      };
+    };
+
     pipewire = {
       enable            = true;
       alsa.enable       = true;
       alsa.support32Bit = true;
       pulse.enable      = true;
     };
+
     printing = {
       enable = true;
     };
+
     pulseaudio = {
       enable = false;
     };
+
     resolved = {
       enable      = true;
       dnsovertls  = "true";
       fallbackDns = [];
     };
+
     xserver = {
       enable = true;
       xkb    = {

@@ -1,22 +1,27 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, ... }:
 
 let
   himkt_pkgs = import ./pkgs {
     inherit pkgs;
   };
+
 in
-
 {
-  imports = [ ];
-
   home = {
     homeDirectory = "/Users/himkt";
     stateVersion  = "25.11";
     username      = "himkt";
+
+    packages = [
+      # Custom packages
+      himkt_pkgs.pathfinder
+    ];
   };
 
   programs = {
-    home-manager.enable = true;
+    home-manager = {
+      enable = true;
+    };
   };
 
   xdg = {
