@@ -155,7 +155,7 @@
   },
   "language": "Use professional English",
   "alwaysThinkingEnabled": true,
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "autoMemoryEnabled": false,
   "autoCompactEnabled": false,
   "agentPushNotifEnabled": true,
