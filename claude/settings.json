@@ -69,6 +69,7 @@
       "mcp__pathfinder-python__definition",
       "Skill(agent-browser)",
       "Skill(github-cli)",
+      "Skill(loop)",
       "Skill(nixos-boot-troubleshoot)",
       "Skill(pathfinder-explain)",
       "Skill(review-claude-config)",
