@@ -1,7 +1,7 @@
 [tools]
 "aqua:ahmetb/kubectx" = "v0.11.0"
 "aqua:ajeetdsouza/zoxide" = "v0.9.9"
-"aqua:anthropics/claude-code" = "v2.1.156"
+"aqua:anthropics/claude-code" = "v2.1.170"
 "aqua:astral-sh/uv" = "0.11.16"
 # FIXME(himkt): btop does not release binaries for macOS
 # "aqua:aristocratos/btop" = "latest"
