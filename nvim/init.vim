@@ -16,7 +16,7 @@ set mouse=
 let g:python3_host_prog=$PYTHONSYSTEMPATH
 
 "" load basic vim configuration
-source $XDG_CONFIG_HOME/nvim/vimrc
+source $HOME/.config/nvim/vimrc
 
 " material.vim
 if (has('nvim'))
