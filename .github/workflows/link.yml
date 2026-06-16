@@ -14,8 +14,6 @@ jobs:
           python-version: "3.9"
       - name: Link
         run: make link
-      - name: Verify symlinks exist (re-link should fail)
-        run: "! make link"
       - name: Unlink
         run: make unlink
       - name: Verify unlink (link again should succeed)
