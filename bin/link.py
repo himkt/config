@@ -41,9 +41,13 @@ def expand_map(repo_root: Path, home: Path) -> list[tuple[Path, Path]]:
 
 def preflight_check(pairs: list[tuple[Path, Path]]) -> list[str]:
     conflicts = []
-    for _, dest in pairs:
-        if dest.exists() or dest.is_symlink():
-            conflicts.append(f"  EXISTS  {dest}{' (symlink)' if dest.is_symlink() else ''}")
+    for src, dest in pairs:
+        if dest.is_symlink():
+            # A symlink already pointing at our own src is correct; only a different target conflicts.
+            if dest.resolve() != src.resolve():
+                conflicts.append(f"  EXISTS  {dest} (symlink -> {os.readlink(dest)})")
+        elif dest.exists():
+            conflicts.append(f"  EXISTS  {dest}")
         else:
             for parent in dest.parents:
                 if parent == dest.parent.root:
@@ -55,20 +59,19 @@ def preflight_check(pairs: list[tuple[Path, Path]]) -> list[str]:
 
 
 def link(pairs: list[tuple[Path, Path]], dry_run: bool) -> None:
-    for src, dest in pairs:
-        print(f"LINK  {dest} -> {src}")
-
     if conflicts := preflight_check(pairs):
-        print("\nERROR: Cannot link. The following conflicts were found:\n")
+        print("ERROR: Cannot link. The following conflicts were found:\n")
         print("\n".join(conflicts))
         sys.exit("\nResolve these conflicts manually, then re-run.")
 
-    if dry_run:
-        return
-
     for src, dest in pairs:
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.symlink_to(src)
+        if dest.is_symlink() and dest.resolve() == src.resolve():
+            print(f"OK    {dest} -> {src} (already linked)")
+            continue
+        print(f"LINK  {dest} -> {src}")
+        if not dry_run:
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.symlink_to(src)
 
 
 def unlink(pairs: list[tuple[Path, Path]], home: Path, dry_run: bool) -> None:
