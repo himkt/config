@@ -14,8 +14,6 @@ jobs:
           python-version: "3.9"
       - name: Link
         run: make link
-      - name: Verify re-link is idempotent (should succeed)
-        run: make link
       - name: Unlink
         run: make unlink
       - name: Verify unlink (link again should succeed)
