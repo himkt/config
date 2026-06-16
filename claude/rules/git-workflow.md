@@ -9,3 +9,7 @@ Rules for consistent, clean git commit history across all projects.
 - Use conventional commit prefixes: feat, fix, chore, refactor, docs
 - NEVER use `git add -f` or `git add --force`. If a file is gitignored, it is gitignored for a reason. Do not force-stage it under any circumstances
 - NEVER commit files from `design-docs/` or `researches/` directories. They are gitignored (globally) and must stay out of version control
+
+## Pull requests
+
+- ALWAYS create PRs with `gh pr create --fill` per the `/github-cli` skill. Use `--title` / `--body-file` ONLY when the user explicitly asks for a custom title or body.
