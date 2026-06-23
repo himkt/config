@@ -76,6 +76,7 @@ in
       tree
       unzip
       unstable.mise
+      wget
 
       # Custom packages
       himkt_pkgs.pathfinder
