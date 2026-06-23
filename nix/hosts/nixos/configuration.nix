@@ -146,8 +146,12 @@
 
     resolved = {
       enable      = true;
-      dnsovertls  = "true";
-      fallbackDns = [];
+      settings = {
+        Resolve = {
+          DNSOverTLS  = "true";
+          FallbackDNS = [];
+        };
+      };
     };
 
     xserver = {
