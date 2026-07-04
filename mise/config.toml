@@ -3,7 +3,7 @@
 "aqua:anomalyco/opencode" = "v1.16.2"
 "aqua:ajeetdsouza/zoxide" = "v0.9.9"
 "aqua:anthropics/claude-code" = "v2.1.170"
-"aqua:astral-sh/uv" = "0.11.16"
+"aqua:astral-sh/uv" = "0.11.25"
 # FIXME(himkt): btop does not release binaries for macOS
 # "aqua:aristocratos/btop" = "latest"
 "aqua:cli/cli" = "v2.92.0"
