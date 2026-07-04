@@ -16,3 +16,5 @@ jobs:
       - uses: renovatebot/github-action@v46.1.17
         with:
           token: '${{ steps.github-app-token.outputs.token }}'
+        env:
+          RENOVATE_REPOSITORIES: '${{ github.repository }}'
