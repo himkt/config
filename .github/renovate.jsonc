@@ -3,9 +3,5 @@
   "extends": [
     "config:recommended"
   ],
-  "packageRules": [
-    {
-      "minimumReleaseAge": "7 days"
-    }
-  ]
+  "minimumReleaseAge": "7 days"
 }
