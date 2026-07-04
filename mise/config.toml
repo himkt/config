@@ -12,7 +12,7 @@
 "aqua:jqlang/jq" = "1.8.1"
 "aqua:junegunn/fzf" = "v0.72.0"
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
-"aqua:kubernetes/kubernetes/kubectl" = "v1.36.1"
+"aqua:kubernetes/kubernetes/kubectl" = "v1.36.2"
 "aqua:neovim/neovim" = "v0.12.3"
 "aqua:openai/codex" = "v0.134.0"
 "aqua:suzuki-shunsuke/pinact" = "v3.10.1"
