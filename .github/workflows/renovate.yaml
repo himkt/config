@@ -1,0 +1,17 @@
+name: cpu.renovate
+on:
+  schedule:
+    - cron: '0/15 * * * *'
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - id: get_token
+        uses: actions/create-github-app-token@v3.2.0
+        with:
+          private-key: ${{ secrets.private_key }}
+          app-id: ${{ secrets.app_id }}
+      - uses: actions/checkout@v7.0.0
+      - uses: renovatebot/github-action@v46.1.17
+        with:
+          token: '${{ steps.get_token.outputs.token }}'
