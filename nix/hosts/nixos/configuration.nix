@@ -146,8 +146,12 @@
 
     resolved = {
       enable      = true;
-      dnsovertls  = "true";
-      fallbackDns = [];
+      settings = {
+        Resolve = {
+          DNSOverTLS  = "true";
+          FallbackDNS = [];
+        };
+      };
     };
 
     xserver = {
@@ -182,7 +186,7 @@
   };
 
   system = {
-    stateVersion = "25.11";
+    stateVersion = "26.05";
   };
 
   time = {
