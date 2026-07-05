@@ -15,7 +15,7 @@
 "aqua:kubernetes/kubernetes/kubectl" = "v1.36.2"
 "aqua:neovim/neovim" = "v0.12.3"
 "aqua:openai/codex" = "v0.134.0"
-"aqua:suzuki-shunsuke/pinact" = "v3.10.1"
+"aqua:suzuki-shunsuke/pinact" = "v4.1.0"
 "aqua:tmux/tmux-builds" = "v3.6a"
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
