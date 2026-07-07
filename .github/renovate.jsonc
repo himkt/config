@@ -8,6 +8,21 @@
     {
       "matchManagers": ["mise"],
       "groupName": "mise"
+    },
+    {
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["openai/codex"],
+      "extractVersion": "^rust-(?<version>v.+)$"
+    },
+    {
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["jqlang/jq"],
+      "extractVersion": "^jq-(?<version>.+)$"
+    },
+    {
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["kubernetes-sigs/kustomize"],
+      "extractVersion": "^kustomize/(?<version>v.+)$"
     }
   ]
 }
