@@ -15,7 +15,6 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 bindkey -e
 
 autoload -Uz compinit && compinit
-autoload -Uz colors   && colors
 autoload -Uz zmv      && alias zmv='noglob zmv -W'
 
 setopt auto_cd           # cd without cd
@@ -127,15 +126,15 @@ function current_context () {
     return
   fi
 
-  echo "[$fg_bold[blue]$current_context$reset_color]"
+  echo "[%B%F{blue}$current_context%f%b]"
 }
 
 function current_path () {
-  echo "[$fg_bold[yellow]%~$reset_color]"
+  echo "[%B%F{yellow}%~%f%b]"
 }
 
 function current_timestamp () {
-  echo "[$fg_bold[red]$(date +'%H:%M:%S')$reset_color]"
+  echo "[%B%F{red}%*%f%b]"
 }
 
 function current_git_status () {
@@ -145,17 +144,16 @@ function current_git_status () {
   fi
 
   UNTRACK_STATUS=""
-  UNTRACK_STATUS+="$fg_bold[red]$(git ls-files --other --exclude-standard | wc -l | awk '{print $1}')$reset_color"
-  UNTRACK_STATUS+="$fg_bold[yellow]$(git diff --name-only | wc -l | awk '{print $1}')$reset_color"
-  UNTRACK_STATUS+="$fg_bold[green]$(git diff --name-only --staged | wc -l | awk '{print $1}')$reset_color"
-  BRANCH_NAME="$fg_bold[red]$git_branch$reset_color"
-  echo "[$UNTRACK_STATUS$fg_bold[gray]@$BRANCH_NAME$reset_color]"
+  UNTRACK_STATUS+="%B%F{red}$(git ls-files --other --exclude-standard | wc -l | awk '{print $1}')%f%b"
+  UNTRACK_STATUS+="%B%F{yellow}$(git diff --name-only | wc -l | awk '{print $1}')%f%b"
+  UNTRACK_STATUS+="%B%F{green}$(git diff --name-only --staged | wc -l | awk '{print $1}')%f%b"
+  BRANCH_NAME="%B%F{red}$git_branch%f%b"
+  echo "[$UNTRACK_STATUS@$BRANCH_NAME]"
 }
 
-PROMPT='$(current_timestamp)$(current_context)$(current_path)$(current_git_status)'
-PROMPT+=$'\n'
-PROMPT+='> '
-SPROMPT="${fg[red]}%r$reset_color is correct? [y, n, a, e]:"
+PROMPT='$(current_path) > '
+RPROMPT='$(current_git_status)$(current_timestamp)'
+SPROMPT="%F{red}%r%f is correct? [y, n, a, e]:"
 
 if command -v mise > /dev/null; then
   eval "$(mise activate zsh)"
