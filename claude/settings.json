@@ -99,7 +99,7 @@
       "Bash(git push)",
       "Bash(git push *)",
       "Bash(uv sync)",
-      "Bash(cafleet * member exec *)"
+      "Bash(cafleet member exec *)"
     ],
     "additionalDirectories": [
       "~/.claude"
