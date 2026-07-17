@@ -20,6 +20,7 @@
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
 "core:bun" = "v1.3.14"
+"core:zig" = "v0.15.2"
 "github:ogulcancelik/herdr" = "v0.7.3"
 
 [settings]
