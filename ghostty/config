@@ -9,7 +9,7 @@ window-padding-balance = true
 scrollback-limit = 18446744073709551615
 
 # color config
-theme = GitHub Dark Default
+theme = Aizen Dark
 
 # background config
 background-opacity     = 0.95
