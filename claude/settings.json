@@ -107,7 +107,7 @@
       "~/.claude"
     ]
   },
-  "model": "opus[1m]",
+  "model": "fable",
   "hooks": {
     "PreToolUse": [
       {
@@ -153,7 +153,7 @@
   "effortLevel": "high",
   "autoMemoryEnabled": false,
   "skipWorkflowUsageWarning": true,
+  "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "autoInstallIdeExtension": false,
-  "autoCompactEnabled": true
+  "autoInstallIdeExtension": false
 }
