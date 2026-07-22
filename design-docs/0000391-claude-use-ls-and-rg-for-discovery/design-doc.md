@@ -1,6 +1,6 @@
 # Use `ls` and `rg` for Claude Discovery
 
-**Status**: Approved
+**Status**: Complete
 **Progress**: 6/6 tasks complete
 **Last Updated**: 2026-07-22
 
@@ -96,3 +96,9 @@ This documentation-and-configuration change does not require a new automated tes
 
 - [x] Parse `claude/settings.json`, run the Bash validator self-tests, and perform scoped `rg` consistency checks against `claude/rules/`. <!-- completed: 2026-07-22T23:36 -->
 - [x] Run `git diff --check` and inspect the diff limited to `claude/settings.json` and `claude/rules/bash-command.md`. <!-- completed: 2026-07-22T23:36 -->
+
+---
+
+## Changelog
+
+- 2026-07-22: Implemented all six tasks, passed validation, received fresh Reviewer approval, and opened PR #393.
