@@ -1,7 +1,7 @@
 # Use `ls` and `rg` for Claude Discovery
 
 **Status**: Approved
-**Progress**: 1/6 tasks complete
+**Progress**: 4/6 tasks complete
 **Last Updated**: 2026-07-22
 
 ## Overview
@@ -88,9 +88,9 @@ This documentation-and-configuration change does not require a new automated tes
 
 ### Step 2: Revise the Bash Discovery Rule
 
-- [ ] Add positive, use-case-specific guidance for `ls`, `rg --files`, and `rg` to `claude/rules/bash-command.md`, including scoped-search and ignore/hidden-file behavior. <!-- completed: -->
-- [ ] Split the prohibited-command rows so `find`, `tree`, and `grep` retain their existing dedicated-tool substitutions while `ls` and `rg` are no longer prohibited. <!-- completed: -->
-- [ ] Update the broad-discovery fallback wording to reference `ls`/`rg` and verify all unrelated shell-safety and substitution rules are unchanged. <!-- completed: -->
+- [x] Add positive, use-case-specific guidance for `ls`, `rg --files`, and `rg` to `claude/rules/bash-command.md`, including scoped-search and ignore/hidden-file behavior. <!-- completed: 2026-07-22T23:31 -->
+- [x] Split the prohibited-command rows so `find`, `tree`, and `grep` retain their existing dedicated-tool substitutions while `ls` and `rg` are no longer prohibited. <!-- completed: 2026-07-22T23:31 -->
+- [x] Update the broad-discovery fallback wording to reference `ls`/`rg` and verify all unrelated shell-safety and substitution rules are unchanged. <!-- completed: 2026-07-22T23:31 -->
 
 ### Step 3: Verify the Change
 

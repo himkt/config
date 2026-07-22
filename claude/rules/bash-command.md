@@ -11,13 +11,23 @@ Using shell operators breaks pattern matching and triggers user approval prompts
 
 ## Tool Substitution
 
+Use shell-native commands for routine repository discovery:
+
+| Need | Preferred Command | Guidance |
+|------|-------------------|----------|
+| Inspect one directory | `ls [PATH]` | Use for a shallow view of immediate entries. |
+| Discover files recursively | `rg --files [PATH]` | Add a glob or path when the search can be narrowed. |
+| Search file contents | `rg PATTERN [PATH]` | Scope large searches with a path, file type, or glob. |
+
+`rg` follows its normal ignore rules by default. Add `--hidden` or `--no-ignore` only when the task requires searching hidden or ignored content. Quote paths and patterns that contain spaces or shell metacharacters.
+
 Use dedicated tools instead of the following Bash commands. These are denied in settings.json.
 
 | Prohibited Command | Use Instead | Notes |
 |-------------------|-------------|-------|
 | `find` | Glob | Pattern-based file search |
-| `ls`, `tree` | Glob | For directory listing. Use Read to inspect a single directory when needed |
-| `grep`, `rg` | Grep | Content search across files |
+| `tree` | Glob | For recursive directory listing |
+| `grep` | Grep | Content search across files |
 | `cat`, `head`, `tail` | Read | Read supports line offset and limit for partial reads |
 | `sed`, `awk` | Edit | Exact string replacement in files |
 | `mkdir`, `touch` | Write | Write auto-creates parent directories and can create empty files |
@@ -25,5 +35,5 @@ Use dedicated tools instead of the following Bash commands. These are denied in 
 | `curl`, `wget` | WebFetch (public URLs) or delegate to a Visual Reviewer / agent-browser teammate (local dev servers) | Never fetch HTTP yourself with curl/wget — for public URLs use the WebFetch tool, for local dev server diagnostics delegate to a teammate using the agent-browser CLI |
 
 Additional guidance:
-- Use Explore agent (Agent tool with subagent_type=Explore) for broader codebase navigation when simple Glob/Grep is insufficient
+- Use Explore agent (Agent tool with subagent_type=Explore) for broader codebase navigation when simple `ls`/`rg` discovery is insufficient
 - Exception for `mkdir`/`touch`: `.keep` files for directories needed before a non-Write tool writes to them
