@@ -7,6 +7,7 @@ from pathlib import Path
 LINK_MAP = [
     ("claude", ".claude"),
     ("git", ".config/git"),
+    ("herdr", ".config/herdr"),
     ("ghostty", ".config/ghostty"),
     ("mise", ".config/mise"),
     ("nvim", ".config/nvim"),
