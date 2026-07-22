@@ -1,0 +1,8 @@
+onboarding = false
+
+[theme]
+name = "one-dark"
+auto_switch = false
+
+[advanced]
+scrollback_limit_bytes = 100000000000  # 100,000,000,000 (100Gi)
