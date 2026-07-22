@@ -10,11 +10,11 @@ Update the Claude configuration so routine repository discovery uses `ls` for im
 
 ## Success Criteria
 
-- [ ] `claude/rules/bash-command.md` recommends `ls`, `rg --files`, and `rg` for their distinct discovery use cases and no longer classifies `ls` or `rg` as prohibited substitutions.
-- [ ] `claude/settings.json` explicitly allows both `Bash(rg)` and `Bash(rg *)`; the existing `ls` permissions remain valid.
-- [ ] Existing restrictions on shell chaining, redirects, command substitution, and unrelated prohibited commands remain unchanged.
-- [ ] Discovery guidance defines default ignore/hidden-file behavior and directs broad searches to use an explicit path or other narrowing arguments.
-- [ ] The edited settings file parses as JSON, the existing Bash validator self-tests pass, and repository checks find no contradictory generic Bash discovery guidance within `claude/rules/`.
+- [x] `claude/rules/bash-command.md` recommends `ls`, `rg --files`, and `rg` for their distinct discovery use cases and no longer classifies `ls` or `rg` as prohibited substitutions.
+- [x] `claude/settings.json` explicitly allows both `Bash(rg)` and `Bash(rg *)`; the existing `ls` permissions remain valid.
+- [x] Existing restrictions on shell chaining, redirects, command substitution, and unrelated prohibited commands remain unchanged.
+- [x] Discovery guidance defines default ignore/hidden-file behavior and directs broad searches to use an explicit path or other narrowing arguments.
+- [x] The edited settings file parses as JSON, the existing Bash validator self-tests pass, and repository checks find no contradictory generic Bash discovery guidance within `claude/rules/`.
 
 ---
 
