@@ -47,6 +47,8 @@
       "Bash(ls)",
       "Bash(ls *)",
       "Bash(printf *)",
+      "Bash(rg)",
+      "Bash(rg *)",
       "Bash(sleep)",
       "Bash(sleep *)",
       "Bash(stat *)",
