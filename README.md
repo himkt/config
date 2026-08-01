@@ -47,10 +47,15 @@ dotfiles/
    ```
    make link
    ```
-5. Install Homebrew packages:
+5. Install Homebrew and its packages:
    ```
    make brew
+   make brew-base
    make brew-gui
+   ```
+6. Install `himkt/tap` packages via mise:
+   ```
+   make bootstrap
    ```
 
 ### NixOS
@@ -81,8 +86,7 @@ All Nix targets automatically detect the platform (macOS / NixOS) and run the ap
 | `unlink` | Remove the dotfile symlinks created by `link` |
 | `update` | Update flake inputs |
 | `gc` | Delete old generations (keep last 7) and run garbage collection |
-| `brew-install` | Install Homebrew |
-| `brew` | Install base Homebrew packages |
+| `brew` | Install Homebrew |
+| `brew-base` | Install base Homebrew packages |
 | `brew-gui` | Install GUI Homebrew packages |
-| `brew-optional` | Install optional Homebrew packages |
-| `brew-himkt` | Install personal Homebrew packages |
+| `bootstrap` | Install `himkt/tap` packages via mise |

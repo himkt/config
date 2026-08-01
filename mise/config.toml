@@ -28,6 +28,15 @@
 "core:rust" = "1.97.1"
 "core:zig" = "v0.15.2"
 
+[bootstrap.brew.taps]
+"himkt/tap" = "https://github.com/himkt/homebrew-tap.git"
+
+[bootstrap.packages]
+"brew:himkt/tap/cafleet" = "latest"
+"brew:himkt/tap/pathfinder" = "latest"
+"brew:himkt/tap/tips-cli" = "latest"
+"brew-cask:himkt/tap/voicevox" = "latest"
+
 [settings]
 all_compile = false
 experimental = true
