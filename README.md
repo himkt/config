@@ -43,11 +43,15 @@ dotfiles/
    ```
    make switch
    ```
-4. Install Homebrew (`make brew`) and mise (`brew install mise`), then apply dotfiles:
+4. Install Homebrew (`make brew`) and mise (`brew install mise`), then apply dotfiles and macOS defaults:
    ```
    make bootstrap
    ```
-5. Install Homebrew packages:
+5. Enable Touch ID for sudo:
+   ```
+   make touchid-sudo
+   ```
+6. Install Homebrew packages:
    ```
    make brew-base
    make brew-gui
@@ -71,8 +75,9 @@ All Nix targets automatically detect the platform (macOS / NixOS) and run the ap
 |--------|-------------|
 | `build` | Build system configuration (dry run) |
 | `switch` | Apply system + Home Manager configuration |
-| `bootstrap` | Apply mise bootstrap (dotfiles) from `mise/config.toml` |
+| `bootstrap` | Apply mise bootstrap (dotfiles, macOS defaults) from `mise/config.toml` |
 | `bootstrap-check` | CI check: dotfiles apply plus config-wide dry-run |
+| `touchid-sudo` | Enable Touch ID for sudo (requires sudo; idempotent) |
 | `update` | Update flake inputs |
 | `gc` | Delete old generations (keep last 7) and run garbage collection |
 | `brew` | Install Homebrew |

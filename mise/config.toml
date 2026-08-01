@@ -12,6 +12,20 @@ min_version = "2026.7.18"
 "~/.config/uv" = "../uv"
 "~/.zshrc" = "../zsh/zshrc"
 
+[bootstrap.macos.dock]
+autohide = true
+orientation = "left"
+
+[bootstrap.macos.keyboard]
+key_repeat = 2
+initial_key_repeat = 20
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
+[bootstrap.macos.defaults]
+NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
+
 [tools]
 "aqua:ahmetb/kubectx" = "v0.11.0"
 "aqua:anomalyco/opencode" = "v1.18.4"

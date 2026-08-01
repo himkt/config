@@ -10,7 +10,7 @@ endif
 
 MISE_ENV := MISE_GLOBAL_CONFIG_FILE=$(CURDIR)/mise/config.toml
 
-.PHONY: build switch update gc brew brew-base brew-gui brew-himkt bootstrap bootstrap-check
+.PHONY: build switch update gc brew brew-base brew-gui brew-himkt bootstrap bootstrap-check touchid-sudo
 
 # mise bootstrap targets
 bootstrap:
@@ -21,6 +21,10 @@ bootstrap:
 bootstrap-check:
 	$(MISE_ENV) mise bootstrap dotfiles apply --force
 	$(MISE_ENV) mise bootstrap --dry-run --yes
+
+# Requires sudo; runs once per machine (idempotent).
+touchid-sudo:
+	$(PWD)/bin/setup-touchid-sudo.sh
 
 # Nix targets (platform-aware)
 build:
