@@ -2,7 +2,7 @@
 
 [![bootstrap](https://img.shields.io/github/actions/workflow/status/himkt/dotfiles/bootstrap.yml?label=bootstrap&logo=apple)](https://github.com/himkt/dotfiles/actions/workflows/bootstrap.yml)
 
-macOS configuration managed with [mise](https://mise.jdx.dev/) bootstrap: dotfiles, macOS defaults, and versioned dev tools from a single `mise/config.toml`.
+macOS configuration managed with [mise](https://mise.jdx.dev/) bootstrap: dotfiles, Homebrew packages, macOS defaults, and versioned dev tools from a single `mise/config.toml`.
 
 ## Structure
 
@@ -10,7 +10,7 @@ macOS configuration managed with [mise](https://mise.jdx.dev/) bootstrap: dotfil
 dotfiles/
 ├── Makefile           # Bootstrap and Homebrew targets
 ├── bin/               # setup-touchid-sudo.sh — enables Touch ID for sudo
-├── brew/              # Homebrew installer script and Brewfiles
+├── brew/              # Homebrew installer script and residual Brewfile
 ├── claude/            # dotfile source → ~/.claude
 ├── ghostty/           # dotfile source → ~/.config/ghostty
 ├── git/               # dotfile source → ~/.config/git
@@ -34,7 +34,7 @@ dotfiles/
    brew install mise
    ```
 3. Clone this repository to `~/dotfiles`
-4. Apply dotfiles and macOS defaults:
+4. Apply dotfiles, packages, and macOS defaults:
    ```
    make bootstrap
    ```
@@ -42,23 +42,23 @@ dotfiles/
    ```
    make touchid-sudo
    ```
-6. Install Homebrew packages:
+6. Install the residual Homebrew packages (himkt tap):
    ```
-   make brew-base
-   make brew-gui
-   make brew-himkt
+   make brew-residual
    ```
 
 > **Dotfiles.** Configuration files (git, mise, nvim, tmux, uv, ghostty, herdr, sheldon, zsh, and `~/.claude`) are applied by `make bootstrap` via the `[dotfiles]` section of `mise/config.toml`, which symlinks them directly to the working tree so edits take effect immediately. Re-running is safe: entries already in their desired state are skipped. mise refuses to replace files it does not manage — resolve any reported conflicts manually, then re-run. Check state anytime with `mise bootstrap dotfiles status`.
+>
+> **Packages.** Homebrew formulas and casks are declared in `[bootstrap.packages]` of `mise/config.toml` and installed by `make bootstrap` — mise fetches Homebrew API metadata itself and never shells out to `brew`, so formulas use canonical API names (e.g. `python@3.13`). `himkt/tap` packages (cafleet, pathfinder, tips-cli, voicevox) publish no Homebrew API metadata, so they live in `brew/Brewfile` and install via `make brew-residual`. Check state anytime with `mise bootstrap packages status`.
+>
+> **Removing packages.** NEVER run `mise bootstrap packages prune` here: it removes every linked formula outside the config's dependency closure — including brew-owned mise itself and the residual tap packages — with no keep-list. Removal is manual: after deleting the config entry, run `brew uninstall <formula>` for brew-installed formulas and residual-Brewfile packages, and delete the installed artifacts (e.g. the app bundle in `/Applications`) for mise-installed casks.
 
 ## Makefile Targets
 
 | Target | Description |
 |--------|-------------|
-| `bootstrap` | Apply mise bootstrap (dotfiles, macOS defaults) from `mise/config.toml` |
+| `bootstrap` | Apply mise bootstrap (dotfiles, packages, macOS defaults) from `mise/config.toml` |
 | `bootstrap-check` | CI check: dotfiles apply plus config-wide dry-run |
 | `touchid-sudo` | Enable Touch ID for sudo (requires sudo; idempotent) |
-| `brew` | Install Homebrew |
-| `brew-base` | Install base Homebrew packages |
-| `brew-gui` | Install GUI Homebrew packages |
-| `brew-himkt` | Install personal Homebrew packages |
+| `brew-install` | Install Homebrew |
+| `brew-residual` | Install residual Homebrew packages mise cannot (himkt tap) |

@@ -12,6 +12,35 @@ min_version = "2026.7.18"
 "~/.config/uv" = "../uv"
 "~/.zshrc" = "../zsh/zshrc"
 
+[bootstrap.packages]
+# CLI formulas; mise itself deliberately absent (single install owner: brew)
+"brew:binutils" = "latest"
+"brew:btop" = "latest"
+"brew:coreutils" = "latest"
+"brew:git" = "latest"
+"brew:libpq" = "latest"
+"brew:python@3.13" = "latest"
+"brew:rustup" = "latest"
+"brew:tree" = "latest"
+"brew:zsh" = "latest"
+# GUI casks
+"brew-cask:1password" = "latest"
+"brew-cask:ghostty" = "latest"
+"brew-cask:google-chrome" = "latest"
+"brew-cask:inkscape" = "latest"
+"brew-cask:insomnia" = "latest"
+"brew-cask:netron" = "latest"
+"brew-cask:notion" = "latest"
+"brew-cask:nvidia-nsight-systems" = "latest"
+"brew-cask:obs" = "latest"
+"brew-cask:quo" = "latest"
+"brew-cask:rancher" = "latest"
+"brew-cask:slack" = "latest"
+"brew-cask:visual-studio-code" = "latest"
+# Fonts (replacing nix-darwin fonts.packages); font artifact verified supported
+"brew-cask:font-jetbrains-mono" = "latest"
+"brew-cask:font-noto-sans-cjk" = "latest"
+
 [bootstrap.macos.dock]
 autohide = true
 orientation = "left"

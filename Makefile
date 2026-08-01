@@ -1,6 +1,6 @@
 MISE_ENV := MISE_GLOBAL_CONFIG_FILE=$(CURDIR)/mise/config.toml
 
-.PHONY: brew brew-base brew-gui brew-himkt bootstrap bootstrap-check touchid-sudo
+.PHONY: brew-install brew-residual bootstrap bootstrap-check touchid-sudo
 
 # mise bootstrap targets
 bootstrap:
@@ -17,14 +17,9 @@ touchid-sudo:
 	$(PWD)/bin/setup-touchid-sudo.sh
 
 # Homebrew targets
-brew:
+brew-install:
 	$(PWD)/brew/bin/setup.sh
 
-brew-base:
-	brew bundle --verbose --file=$(PWD)/brew/config.d/base/Brewfile
-
-brew-gui:
-	brew bundle --verbose --file=$(PWD)/brew/config.d/gui/Brewfile
-
-brew-himkt:
-	brew bundle --verbose --file=$(PWD)/brew/config.d/himkt/Brewfile
+# Residual packages mise bootstrap cannot install (himkt tap)
+brew-residual:
+	brew bundle --verbose --file=$(PWD)/brew/Brewfile
