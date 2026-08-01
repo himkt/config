@@ -1,3 +1,58 @@
+min_version = "2026.7.18"
+
+[dotfiles]
+"~/.claude" = { source = "../claude", mode = "symlink-each" }
+"~/.config/ghostty" = "../ghostty"
+"~/.config/git" = "../git"
+"~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
+"~/.config/mise" = "../mise"
+"~/.config/nvim" = "../nvim"
+"~/.config/sheldon" = "../sheldon"
+"~/.config/tmux" = "../tmux"
+"~/.config/uv" = "../uv"
+"~/.zshrc" = "../zsh/zshrc"
+
+[bootstrap.packages]
+# mise and himkt/tap packages are deliberately absent: brew owns them (brew/Brewfile)
+"brew:binutils" = "latest"
+"brew:btop" = "latest"
+"brew:coreutils" = "latest"
+"brew:git" = "latest"
+"brew:libpq" = "latest"
+"brew:python@3.13" = "latest"
+"brew:rustup" = "latest"
+"brew:tree" = "latest"
+"brew:zsh" = "latest"
+"brew-cask:1password" = "latest"
+"brew-cask:ghostty" = "latest"
+"brew-cask:google-chrome" = "latest"
+"brew-cask:inkscape" = "latest"
+"brew-cask:insomnia" = "latest"
+"brew-cask:netron" = "latest"
+"brew-cask:notion" = "latest"
+"brew-cask:nvidia-nsight-systems" = "latest"
+"brew-cask:obs" = "latest"
+"brew-cask:quo" = "latest"
+"brew-cask:rancher" = "latest"
+"brew-cask:slack" = "latest"
+"brew-cask:visual-studio-code" = "latest"
+"brew-cask:font-jetbrains-mono" = "latest"
+"brew-cask:font-noto-sans-cjk" = "latest"
+
+[bootstrap.macos.dock]
+autohide = true
+orientation = "left"
+
+[bootstrap.macos.keyboard]
+key_repeat = 2
+initial_key_repeat = 20
+
+[bootstrap.macos.trackpad]
+tap_to_click = true
+
+[bootstrap.macos.defaults]
+NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
+
 [tools]
 "aqua:ahmetb/kubectx" = "v0.11.0"
 "aqua:anomalyco/opencode" = "v1.18.4"

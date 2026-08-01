@@ -1,45 +1,21 @@
-UNAME := $(shell uname -s)
+MISE_ENV := MISE_GLOBAL_CONFIG_FILE=$(CURDIR)/mise/config.toml
 
-ifeq ($(UNAME),Darwin)
-  NIX_BUILD_CMD := nix build .\#darwinConfigurations.macos.system
-  NIX_SWITCH_CMD := sudo darwin-rebuild switch --flake .\#macos
-else
-  NIX_BUILD_CMD := nix build .\#nixosConfigurations.nixos.config.system.build.toplevel
-  NIX_SWITCH_CMD := sudo nixos-rebuild switch --flake .\#nixos
-endif
+.PHONY: brew-install brew-bundle bootstrap bootstrap-check touchid-sudo
 
-.PHONY: build switch update gc brew brew-base brew-gui brew-himkt link unlink
+bootstrap:
+	$(MISE_ENV) mise bootstrap --yes
 
-# Nix targets (platform-aware)
-build:
-	$(NIX_BUILD_CMD)
+# CI-oriented: --force because runner images ship stock dotfiles
+# (e.g. ~/.zshrc); never needed in the normal local flow.
+bootstrap-check:
+	$(MISE_ENV) mise bootstrap dotfiles apply --force
+	$(MISE_ENV) mise bootstrap --dry-run --yes
 
-switch:
-	$(NIX_SWITCH_CMD)
+touchid-sudo:
+	$(PWD)/bin/setup-touchid-sudo.sh
 
-update:
-	nix flake update
-
-gc:
-	sudo nix-env --delete-generations +7 --profile /nix/var/nix/profiles/system
-	sudo nix-collect-garbage -d
-
-# Homebrew targets (macOS only)
-brew:
+brew-install:
 	$(PWD)/brew/bin/setup.sh
 
-brew-base:
-	brew bundle --verbose --file=$(PWD)/brew/config.d/base/Brewfile
-
-brew-gui:
-	brew bundle --verbose --file=$(PWD)/brew/config.d/gui/Brewfile
-
-brew-himkt:
-	brew bundle --verbose --file=$(PWD)/brew/config.d/himkt/Brewfile
-
-link:
-	python3 bin/link.py --dry-run
-	python3 bin/link.py
-
-unlink:
-	python3 bin/link.py --unlink
+brew-bundle:
+	brew bundle --verbose --file=$(PWD)/brew/Brewfile
