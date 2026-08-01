@@ -23,6 +23,11 @@ min_version = "2026.7.18"
 "brew:rustup" = "latest"
 "brew:tree" = "latest"
 "brew:zsh" = "latest"
+# Personal tap; publishes Homebrew API metadata (himkt/homebrew-tap#8)
+"brew:himkt/tap/cafleet" = "latest"
+"brew:himkt/tap/pathfinder" = "latest"
+"brew:himkt/tap/tips-cli" = "latest"
+"brew-cask:himkt/tap/voicevox" = "latest"
 # GUI casks
 "brew-cask:1password" = "latest"
 "brew-cask:ghostty" = "latest"
