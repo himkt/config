@@ -13,7 +13,7 @@ min_version = "2026.7.18"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
-# mise itself is deliberately absent: brew owns its install
+# mise and himkt/tap packages are deliberately absent: brew owns them (brew/Brewfile)
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
 "brew:coreutils" = "latest"
@@ -23,10 +23,6 @@ min_version = "2026.7.18"
 "brew:rustup" = "latest"
 "brew:tree" = "latest"
 "brew:zsh" = "latest"
-"brew:himkt/tap/cafleet" = "latest"
-"brew:himkt/tap/pathfinder" = "latest"
-"brew:himkt/tap/tips-cli" = "latest"
-"brew-cask:himkt/tap/voicevox" = "latest"
 "brew-cask:1password" = "latest"
 "brew-cask:ghostty" = "latest"
 "brew-cask:google-chrome" = "latest"
