@@ -1,3 +1,17 @@
+min_version = "2026.7.18"
+
+[dotfiles]
+"~/.claude" = { source = "../claude", mode = "symlink-each" }
+"~/.config/ghostty" = "../ghostty"
+"~/.config/git" = "../git"
+"~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
+"~/.config/mise" = "../mise"
+"~/.config/nvim" = "../nvim"
+"~/.config/sheldon" = "../sheldon"
+"~/.config/tmux" = "../tmux"
+"~/.config/uv" = "../uv"
+"~/.zshrc" = "../zsh/zshrc"
+
 [tools]
 "aqua:ahmetb/kubectx" = "v0.11.0"
 "aqua:anomalyco/opencode" = "v1.18.4"

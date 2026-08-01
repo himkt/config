@@ -8,7 +8,19 @@ else
   NIX_SWITCH_CMD := sudo nixos-rebuild switch --flake .\#nixos
 endif
 
-.PHONY: build switch update gc brew brew-base brew-gui brew-himkt link unlink
+MISE_ENV := MISE_GLOBAL_CONFIG_FILE=$(CURDIR)/mise/config.toml
+
+.PHONY: build switch update gc brew brew-base brew-gui brew-himkt bootstrap bootstrap-check
+
+# mise bootstrap targets
+bootstrap:
+	$(MISE_ENV) mise bootstrap --yes
+
+# CI-oriented: --force because runner images ship stock dotfiles
+# (e.g. ~/.zshrc); never needed in the normal local flow.
+bootstrap-check:
+	$(MISE_ENV) mise bootstrap dotfiles apply --force
+	$(MISE_ENV) mise bootstrap --dry-run --yes
 
 # Nix targets (platform-aware)
 build:
@@ -36,10 +48,3 @@ brew-gui:
 
 brew-himkt:
 	brew bundle --verbose --file=$(PWD)/brew/config.d/himkt/Brewfile
-
-link:
-	python3 bin/link.py --dry-run
-	python3 bin/link.py
-
-unlink:
-	python3 bin/link.py --unlink

@@ -10,8 +10,7 @@ Unified Nix-based configuration for macOS (nix-darwin) and NixOS.
 ```
 dotfiles/
 ├── flake.nix          # Unified flake (NixOS + nix-darwin)
-├── Makefile           # Build and link targets
-├── bin/               # link.py — creates working-tree symlinks
+├── Makefile           # Build and bootstrap targets
 ├── nix/               # All Nix-managed system + Home Manager config
 │   ├── hosts/
 │   │   ├── nixos/     # NixOS system configuration
@@ -25,6 +24,7 @@ dotfiles/
 ├── claude/            # dotfile source → ~/.claude
 ├── ghostty/           # dotfile source → ~/.config/ghostty
 ├── git/               # dotfile source → ~/.config/git
+├── herdr/             # dotfile source → ~/.config/herdr
 ├── mise/              # dotfile source → ~/.config/mise
 ├── nvim/              # dotfile source → ~/.config/nvim
 ├── sheldon/           # dotfile source → ~/.config/sheldon
@@ -43,13 +43,13 @@ dotfiles/
    ```
    make switch
    ```
-4. Link dotfiles as working-tree symlinks:
+4. Install Homebrew (`make brew`) and mise (`brew install mise`), then apply dotfiles:
    ```
-   make link
+   make bootstrap
    ```
 5. Install Homebrew packages:
    ```
-   make brew
+   make brew-base
    make brew-gui
    ```
 
@@ -60,14 +60,8 @@ dotfiles/
    ```
    make switch
    ```
-3. Link dotfiles as working-tree symlinks:
-   ```
-   make link
-   ```
 
-> **Dotfiles linking.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, sheldon, zsh, and `~/.claude`) are linked separately by `make link`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild.
->
-> **Migrating an existing machine.** If these files were previously managed by Home Manager (symlinks into `/nix/store`), run `make switch` first — Home Manager removes the old store symlinks on activation — then `make link`. `link` is strict: it aborts if a destination already exists. Resolve any reported conflicts and re-run. Use `make unlink` to remove the symlinks.
+> **Dotfiles.** `make switch` manages packages and system settings only. Configuration files (git, mise, nvim, tmux, uv, ghostty, herdr, sheldon, zsh, and `~/.claude`) are applied by `make bootstrap` via the `[dotfiles]` section of `mise/config.toml`, which symlinks them directly to the working tree so edits take effect immediately without a rebuild. Re-running is safe: entries already in their desired state are skipped. mise refuses to replace files it does not manage — resolve any reported conflicts manually, then re-run. Check state anytime with `mise bootstrap dotfiles status`.
 
 ## Makefile Targets
 
@@ -77,12 +71,11 @@ All Nix targets automatically detect the platform (macOS / NixOS) and run the ap
 |--------|-------------|
 | `build` | Build system configuration (dry run) |
 | `switch` | Apply system + Home Manager configuration |
-| `link` | Link dotfiles as working-tree symlinks (run after `switch`) |
-| `unlink` | Remove the dotfile symlinks created by `link` |
+| `bootstrap` | Apply mise bootstrap (dotfiles) from `mise/config.toml` |
+| `bootstrap-check` | CI check: dotfiles apply plus config-wide dry-run |
 | `update` | Update flake inputs |
 | `gc` | Delete old generations (keep last 7) and run garbage collection |
-| `brew-install` | Install Homebrew |
-| `brew` | Install base Homebrew packages |
+| `brew` | Install Homebrew |
+| `brew-base` | Install base Homebrew packages |
 | `brew-gui` | Install GUI Homebrew packages |
-| `brew-optional` | Install optional Homebrew packages |
 | `brew-himkt` | Install personal Homebrew packages |

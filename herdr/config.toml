@@ -4,5 +4,8 @@ onboarding = false
 name = "one-dark"
 auto_switch = false
 
+[ui]
+agent_panel_sort = "spaces"
+
 [advanced]
 scrollback_limit_bytes = 100000000000  # 100,000,000,000 (100Gi)
