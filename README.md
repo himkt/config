@@ -25,11 +25,11 @@ dotfiles/
 
 ## Setup
 
-1. Install Homebrew:
+1. Clone this repository to `~/dotfiles`
+2. Install Homebrew:
    ```
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   make brew-install
    ```
-2. Clone this repository to `~/dotfiles`
 3. Install mise:
    ```
    make brew-bundle
