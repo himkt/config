@@ -12,9 +12,6 @@ min_version = "2026.7.18"
 "~/.config/uv" = "../uv"
 "~/.zshrc" = "../zsh/zshrc"
 
-[bootstrap.brew.taps]
-"himkt/tap" = "https://github.com/himkt/homebrew-tap.git"
-
 [bootstrap.packages]
 # mise itself is deliberately absent: brew owns its install (brew/Brewfile)
 "brew:binutils" = "latest"
@@ -26,11 +23,6 @@ min_version = "2026.7.18"
 "brew:rustup" = "latest"
 "brew:tree" = "latest"
 "brew:zsh" = "latest"
-# Personal tap; publishes Homebrew API metadata (himkt/homebrew-tap#10)
-"brew:himkt/tap/cafleet" = "latest"
-"brew:himkt/tap/pathfinder" = "latest"
-"brew:himkt/tap/tips-cli" = "latest"
-"brew-cask:himkt/tap/voicevox" = "latest"
 "brew-cask:1password" = "latest"
 "brew-cask:ghostty" = "latest"
 "brew-cask:google-chrome" = "latest"
