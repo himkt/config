@@ -1,0 +1,14 @@
+name: mise bootstrap check
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  bootstrap:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v7
+      - uses: jdx/mise-action@v2
+        with:
+          install: false  # only the mise binary is needed; [tools] are not CI's concern
+      - run: make bootstrap-check
