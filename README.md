@@ -9,6 +9,7 @@ macOS configuration managed with [mise](https://mise.jdx.dev/) bootstrap: dotfil
 ```
 dotfiles/
 ├── Makefile           # Bootstrap and Homebrew targets
+├── bash/              # dotfile source → ~/.bashrc (bash/bashrc)
 ├── bin/               # setup-touchid-sudo.sh — enables Touch ID for sudo
 ├── brew/              # Homebrew installer script and Brewfile (mise)
 ├── claude/            # dotfile source → ~/.claude
