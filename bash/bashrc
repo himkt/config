@@ -1,0 +1,24 @@
+#
+# .bashrc - The bash configuration
+#
+
+case "$(uname -s)" in
+  Darwin*)
+    export HOMEBREW_ROOT=/opt/homebrew
+    ;;
+  Linux*)
+    export HOMEBREW_ROOT=/home/linuxbrew/.linuxbrew
+    ;;
+esac
+
+if [ -d "$HOMEBREW_ROOT/bin" ]; then
+  case ":$PATH:" in
+    *":$HOMEBREW_ROOT/bin:"*) ;;
+    *) export PATH="$PATH:$HOMEBREW_ROOT/bin" ;;
+  esac
+fi
+
+if command -v brew > /dev/null; then
+  export HOMEBREW_NO_AUTO_UPDATE=1
+  eval "$(brew shellenv)"
+fi
