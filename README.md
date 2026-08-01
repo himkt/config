@@ -10,7 +10,7 @@ macOS configuration managed with [mise](https://mise.jdx.dev/) bootstrap: dotfil
 dotfiles/
 ├── Makefile           # Bootstrap and Homebrew targets
 ├── bin/               # setup-touchid-sudo.sh — enables Touch ID for sudo
-├── brew/              # Homebrew installer script
+├── brew/              # Homebrew installer script and Brewfile (mise)
 ├── claude/            # dotfile source → ~/.claude
 ├── ghostty/           # dotfile source → ~/.config/ghostty
 ├── git/               # dotfile source → ~/.config/git
@@ -29,11 +29,11 @@ dotfiles/
    ```
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
-2. Install mise:
+2. Clone this repository to `~/dotfiles`
+3. Install mise:
    ```
-   brew install mise
+   make brew-bundle
    ```
-3. Clone this repository to `~/dotfiles`
 4. Apply dotfiles, packages, and macOS defaults:
    ```
    make bootstrap
@@ -57,3 +57,4 @@ dotfiles/
 | `bootstrap-check` | CI check: dotfiles apply plus config-wide dry-run |
 | `touchid-sudo` | Enable Touch ID for sudo (requires sudo; idempotent) |
 | `brew-install` | Install Homebrew |
+| `brew-bundle` | Install brew-owned packages (mise) from `brew/Brewfile` |

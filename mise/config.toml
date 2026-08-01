@@ -13,7 +13,7 @@ min_version = "2026.7.18"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
-# CLI formulas; mise itself deliberately absent (single install owner: brew)
+# mise itself is deliberately absent: brew owns its install
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
 "brew:coreutils" = "latest"
@@ -23,12 +23,10 @@ min_version = "2026.7.18"
 "brew:rustup" = "latest"
 "brew:tree" = "latest"
 "brew:zsh" = "latest"
-# Personal tap; publishes Homebrew API metadata (himkt/homebrew-tap#8)
 "brew:himkt/tap/cafleet" = "latest"
 "brew:himkt/tap/pathfinder" = "latest"
 "brew:himkt/tap/tips-cli" = "latest"
 "brew-cask:himkt/tap/voicevox" = "latest"
-# GUI casks
 "brew-cask:1password" = "latest"
 "brew-cask:ghostty" = "latest"
 "brew-cask:google-chrome" = "latest"
@@ -42,7 +40,6 @@ min_version = "2026.7.18"
 "brew-cask:rancher" = "latest"
 "brew-cask:slack" = "latest"
 "brew-cask:visual-studio-code" = "latest"
-# Fonts (replacing nix-darwin fonts.packages); font artifact verified supported
 "brew-cask:font-jetbrains-mono" = "latest"
 "brew-cask:font-noto-sans-cjk" = "latest"
 
