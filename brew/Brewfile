@@ -1,5 +1,3 @@
 tap  'himkt/tap'
 brew 'mise'
-brew 'himkt/tap/pathfinder'
-brew 'himkt/tap/tips-cli'
 cask 'himkt/tap/voicevox'
