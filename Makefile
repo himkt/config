@@ -1,6 +1,12 @@
 MISE_ENV := MISE_GLOBAL_CONFIG_FILE=$(CURDIR)/mise/config.toml
 
-.PHONY: brew-install brew-bundle bootstrap bootstrap-check touchid-sudo
+.PHONY: bootstrap bootstrap-check brew brew-install brew-bundle mise touchid-sudo
+
+mise:
+	curl https://mise.run | sh
+
+brew:
+	$(PWD)/bin/setup-homebrew.sh
 
 bootstrap:
 	$(MISE_ENV) mise bootstrap --yes
@@ -13,9 +19,3 @@ bootstrap-check:
 
 touchid-sudo:
 	$(PWD)/bin/setup-touchid-sudo.sh
-
-brew-install:
-	$(PWD)/brew/bin/setup.sh
-
-brew-bundle:
-	brew bundle --verbose --file=$(PWD)/brew/Brewfile
