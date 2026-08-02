@@ -16,5 +16,5 @@ jobs:
         with:
           install: false  # only the mise binary is needed; [tools] are not CI's concern
       - if: ${{ matrix.os == 'macos-26' }}
-        run: brew list
+        run: brew uninstall google-chrome
       - run: make bootstrap-check
