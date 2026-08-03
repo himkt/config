@@ -6,7 +6,7 @@ min_version = "2026.7.18"
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
 "~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
-"~/.config/mise" = "../mise"
+"~/.config/mise" = { source = "../mise", mode = "symlink-each" }
 "~/.config/nvim" = "../nvim"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"

@@ -15,6 +15,7 @@ jobs:
       - uses: jdx/mise-action@7e36c90d9ab29c415a2384db3006f3ec8a8cc654 # v4.2.4
         with:
           install: false  # only the mise binary is needed; [tools] are not CI's concern
+      - run: mise trust
       - name: Remove pre-installed packages by homebrew
         if: ${{ matrix.os == 'macos-26' }}
         run: brew uninstall google-chrome
