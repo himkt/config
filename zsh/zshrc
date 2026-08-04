@@ -89,7 +89,12 @@ Linux*)
 esac
 
 for prefix in $HOMEBREW_ROOT $HOME $HOME/.local $HOME/dotfiles $GOPATH $HOME/.rd; do
-  export PATH=$PATH:$prefix/bin
+  export PATH=$prefix/bin:$PATH
+done
+
+# keg-only
+for package in zip unzip; do
+  export PATH=$PATH:$HOMEBREW_ROOT/opt/$package/bin
 done
 
 if command -v brew > /dev/null; then
