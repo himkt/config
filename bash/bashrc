@@ -12,10 +12,7 @@ case "$(uname -s)" in
 esac
 
 if [ -d "$HOMEBREW_ROOT/bin" ]; then
-  case ":$PATH:" in
-    *":$HOMEBREW_ROOT/bin:"*) ;;
-    *) export PATH="$PATH:$HOMEBREW_ROOT/bin" ;;
-  esac
+  export PATH=$HOMEBREW_ROOT/bin:$PATH
 fi
 
 if command -v brew > /dev/null; then
