@@ -1,7 +1,6 @@
 min_version = "2026.7.18"
 
 [dotfiles]
-"~/.bashrc" = "../bash/bashrc"
 "~/.claude" = { source = "../claude", mode = "symlink-each" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
