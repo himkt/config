@@ -157,5 +157,6 @@
   "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "autoInstallIdeExtension": false
+  "autoInstallIdeExtension": false,
+  "disableArtifact": true
 }
