@@ -13,7 +13,6 @@ min_version = "2026.7.18"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
-# mise itself is deliberately absent: brew owns its install (brew/Brewfile)
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
 "brew:coreutils" = "latest"
@@ -27,22 +26,6 @@ min_version = "2026.7.18"
 "brew:unzip" = "latest"
 "brew:zip" = "latest"
 "brew:zsh" = "latest"
-"brew-cask:1password" = "latest"
-"brew-cask:ghostty" = "latest"
-"brew-cask:google-chrome" = "latest"
-"brew-cask:himkt/tap/voicevox" = "latest"
-"brew-cask:inkscape" = "latest"
-"brew-cask:insomnia" = "latest"
-"brew-cask:netron" = "latest"
-"brew-cask:notion" = "latest"
-"brew-cask:nvidia-nsight-systems" = "latest"
-"brew-cask:obs" = "latest"
-"brew-cask:quo" = "latest"
-"brew-cask:rancher" = "latest"
-"brew-cask:slack" = "latest"
-"brew-cask:visual-studio-code" = "latest"
-"brew-cask:font-jetbrains-mono" = "latest"
-"brew-cask:font-noto-sans-cjk" = "latest"
 
 [bootstrap.macos.dock]
 autohide = true
