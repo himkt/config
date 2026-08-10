@@ -103,7 +103,9 @@
       "Bash(git push)",
       "Bash(git push *)",
       "Bash(uv sync)",
-      "Bash(cafleet member exec *)"
+      "Bash(cafleet member prompt * --shell *)",
+      "Bash(cafleet member prompt * --shell)",
+      "Bash(cafleet member prompt --shell *)"
     ],
     "additionalDirectories": [
       "~/.claude"
