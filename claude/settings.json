@@ -135,6 +135,7 @@
       }
     ]
   },
+  "disableArtifact": true,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/bin/status.py"
@@ -160,5 +161,5 @@
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
   "autoInstallIdeExtension": false,
-  "disableArtifact": true
+  "tui": "fullscreen"
 }
