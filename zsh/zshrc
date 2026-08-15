@@ -142,18 +142,35 @@ function current_timestamp () {
   echo "[%B%F{red}%*%f%b]"
 }
 
+function untracked_file_count () {
+  local git_cmd=(git)
+  if command -v timeout > /dev/null; then
+    git_cmd=(timeout 0.1 git)
+  fi
+
+  local out
+  out="$($git_cmd[@] ls-files --other --exclude-standard 2>/dev/null)"
+  if [ "$?" -eq 124 ]; then
+    echo "?"
+  elif [ -z "$out" ]; then
+    echo 0
+  else
+    echo "$out" | wc -l | awk '{print $1}'
+  fi
+}
+
 function current_git_status () {
   local git_branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
   if [ -z "$git_branch" ]; then
-    return
+    echo ''
+  else
+    UNTRACK_STATUS=""
+    UNTRACK_STATUS+="%B%F{red}$(untracked_file_count)%f%b"
+    UNTRACK_STATUS+="%B%F{yellow}$(git diff --name-only | wc -l | awk '{print $1}')%f%b"
+    UNTRACK_STATUS+="%B%F{green}$(git diff --name-only --staged | wc -l | awk '{print $1}')%f%b"
+    BRANCH_NAME="%B%F{red}$git_branch%f%b"
+    echo "[$UNTRACK_STATUS@$BRANCH_NAME]"
   fi
-
-  UNTRACK_STATUS=""
-  UNTRACK_STATUS+="%B%F{red}$(git ls-files --other --exclude-standard | wc -l | awk '{print $1}')%f%b"
-  UNTRACK_STATUS+="%B%F{yellow}$(git diff --name-only | wc -l | awk '{print $1}')%f%b"
-  UNTRACK_STATUS+="%B%F{green}$(git diff --name-only --staged | wc -l | awk '{print $1}')%f%b"
-  BRANCH_NAME="%B%F{red}$git_branch%f%b"
-  echo "[$UNTRACK_STATUS@$BRANCH_NAME]"
 }
 
 PROMPT='$(current_path) > '
