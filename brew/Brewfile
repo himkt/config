@@ -1,6 +1,8 @@
 tap 'himkt/tap'
 
 cask '1password'
+cask 'chatgpt'
+cask 'claude'
 cask 'font-jetbrains-mono'
 cask 'font-noto-sans-cjk'
 cask 'ghostty'
