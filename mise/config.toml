@@ -60,7 +60,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:neovim/neovim" = "v0.12.4"
 "aqua:ogulcancelik/herdr" = "v0.8.0"
 "aqua:openai/codex" = "v0.147.0"
-"aqua:pnpm/pnpm" = "11.20.0"
+"aqua:pnpm/pnpm" = "11.21.0"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:suzuki-shunsuke/pinact" = "v4.1.1"
 "aqua:tmux/tmux-builds" = "v3.6a"
