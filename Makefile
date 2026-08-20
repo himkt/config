@@ -15,6 +15,10 @@ brew-bundle-check:
 bootstrap:
 	mise bootstrap --yes
 
+update:
+	mise up
+	mise bootstrap packages upgrade --yes
+
 # CI-oriented: --force because runner images ship stock dotfiles
 # (e.g. ~/.zshrc); never needed in the normal local flow.
 bootstrap-check:
