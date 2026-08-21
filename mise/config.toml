@@ -13,6 +13,7 @@ min_version = "2026.7.18"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
+"brew:agent-browser" = "latest"
 "brew:azure-cli" = "latest"
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
