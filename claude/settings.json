@@ -114,17 +114,6 @@
   },
   "model": "fable",
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/bin/validate_bash.py validate"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
