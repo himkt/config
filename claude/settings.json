@@ -146,10 +146,10 @@
   "language": "Use professional English",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "autoInstallIdeExtension": false,
-  "tui": "fullscreen"
+  "autoInstallIdeExtension": false
 }
