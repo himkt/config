@@ -107,23 +107,13 @@
       "Bash(cafleet member prompt * --shell)",
       "Bash(cafleet member prompt --shell *)"
     ],
+    "defaultMode": "acceptEdits",
     "additionalDirectories": [
       "~/.claude"
     ]
   },
   "model": "fable",
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/bin/validate_bash.py validate"
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "hooks": [
@@ -156,10 +146,10 @@
   "language": "Use professional English",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
+  "tui": "fullscreen",
   "autoMemoryEnabled": false,
   "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "autoInstallIdeExtension": false,
-  "tui": "fullscreen"
+  "autoInstallIdeExtension": false
 }
