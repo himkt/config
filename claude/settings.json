@@ -107,6 +107,7 @@
       "Bash(cafleet member prompt * --shell)",
       "Bash(cafleet member prompt --shell *)"
     ],
+    "defaultMode": "acceptEdits",
     "additionalDirectories": [
       "~/.claude"
     ]
