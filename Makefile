@@ -15,7 +15,7 @@ brew-bundle-check:
 bootstrap:
 	mise bootstrap --yes
 
-update:
+up:
 	mise up
 	mise bootstrap packages upgrade --yes
 
