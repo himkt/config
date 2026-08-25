@@ -8,6 +8,7 @@
     "allow": [
       "Edit",
       "Bash(gh api repos/*/*/actions/jobs/*)",
+      "Bash(gh api repos/*/*/issues/comments/* *)",
       "Bash(gh api repos/*/*/issues/*/comments)",
       "Bash(gh api repos/*/*/issues/*/comments *)",
       "Bash(gh api repos/*/*/issues/*/comments/* *)",
