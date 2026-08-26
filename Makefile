@@ -12,11 +12,9 @@ brew-bundle:
 brew-bundle-check:
 	HOMEBREW_BUNDLE_NO_UPGRADE=1 brew bundle check --verbose --file=$(PWD)/brew/Brewfile
 
-bootstrap:
-	mise bootstrap --yes
-
 up:
 	mise up
+	mise bootstrap --yes
 	mise bootstrap packages upgrade --yes
 
 # CI-oriented: --force because runner images ship stock dotfiles
