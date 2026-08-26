@@ -17,11 +17,5 @@ up:
 	mise bootstrap --yes
 	mise bootstrap packages upgrade --yes
 
-# CI-oriented: --force because runner images ship stock dotfiles
-# (e.g. ~/.zshrc); never needed in the normal local flow.
-bootstrap-check:
-	mise bootstrap dotfiles apply --force
-	mise bootstrap --dry-run --yes
-
 touchid-sudo:
 	$(PWD)/bin/setup-touchid-sudo.sh

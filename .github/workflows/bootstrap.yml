@@ -19,4 +19,4 @@ jobs:
       - name: Remove pre-installed packages by homebrew
         if: ${{ matrix.os == 'macos-26' }}
         run: brew uninstall google-chrome
-      - run: make bootstrap-check
+      - run: make up
