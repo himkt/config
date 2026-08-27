@@ -68,7 +68,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
 "core:node" = "26.7.0"
-"core:rust" = "1.98.0"
+"core:rust" = "1.97.1"
 "core:zig" = "v0.15.2"
 
 [settings]
