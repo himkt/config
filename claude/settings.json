@@ -27,7 +27,6 @@
       "Bash(gh issue list *)",
       "Bash(gh issue view *)",
       "Bash(gh pr checks *)",
-      "Bash(gh pr edit * --add-reviewer @copilot)",
       "Bash(gh pr diff *)",
       "Bash(gh pr list)",
       "Bash(gh pr list *)",
@@ -79,12 +78,10 @@
       "Skill(loop)",
       "Skill(pathfinder-explain)",
       "Skill(review-claude-config)",
-      "Skill(slidev:slidev)",
       "Skill(update-config)",
       "Bash(cafleet *)",
       "Skill(cafleet)",
-      "Skill(cafleet-design-doc)",
-      "Skill(cafleet-research)"
+      "Skill(cafleet-design-doc)"
     ],
     "deny": [
       "Bash(awk *)",
