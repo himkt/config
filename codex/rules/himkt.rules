@@ -1,0 +1,104 @@
+prefix_rule(
+    pattern = ["gh", "auth", "status"],
+    decision = "allow",
+    match = ["gh auth status", "gh auth status --hostname github.com"],
+    not_match = ["gh auth login", "gh auth logout"],
+)
+
+prefix_rule(
+    pattern = ["gh", "issue", "list"],
+    decision = "allow",
+    match = ["gh issue list", "gh issue list --state open"],
+    not_match = ["gh issue create", "gh issue"],
+)
+
+prefix_rule(
+    pattern = ["gh", "issue", "view"],
+    decision = "allow",
+    match = ["gh issue view 42", "gh issue view 42 --comments"],
+    not_match = ["gh issue edit 42", "gh issue close 42"],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "checks"],
+    decision = "allow",
+    match = ["gh pr checks", "gh pr checks 123 --watch"],
+    not_match = ["gh pr merge 123", "gh pr"],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "diff"],
+    decision = "allow",
+    match = ["gh pr diff", "gh pr diff 123", "gh pr diff 123 --name-only"],
+    not_match = ["gh pr merge 123", "gh pr"],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "list"],
+    decision = "allow",
+    match = ["gh pr list", "gh pr list --state open"],
+    not_match = ["gh pr create", "gh pr"],
+)
+
+prefix_rule(
+    pattern = ["gh", "pr", "view"],
+    decision = "allow",
+    match = ["gh pr view", "gh pr view 123", "gh pr view 123 --json title"],
+    not_match = ["gh pr edit 123", "gh pr", "gh pr checkout 123"],
+)
+
+prefix_rule(
+    pattern = ["gh", "repo", "view"],
+    decision = "allow",
+    match = ["gh repo view", "gh repo view himkt/config"],
+    not_match = ["gh repo clone himkt/config", "gh repo delete himkt/config"],
+)
+
+prefix_rule(
+    pattern = ["gh", "run", "list"],
+    decision = "allow",
+    match = ["gh run list", "gh run list --workflow ci.yaml"],
+    not_match = ["gh run rerun 123", "gh run"],
+)
+
+prefix_rule(
+    pattern = ["gh", "run", "view"],
+    decision = "allow",
+    match = ["gh run view 123", "gh run view 123 --log"],
+    not_match = ["gh run cancel 123", "gh run watch 123"],
+)
+
+prefix_rule(
+    pattern = ["gh", "search"],
+    decision = "allow",
+    match = ["gh search code prefix_rule --repo openai/codex", "gh search prs --author himkt"],
+    not_match = ["gh secret list", "gh status"],
+)
+
+prefix_rule(
+    pattern = ["git", "add"],
+    decision = "allow",
+    match = ["git add file.py", "git add -A"],
+    not_match = ["git rm file.py", "git apply patch.diff"],
+)
+
+prefix_rule(
+    pattern = ["git", "commit"],
+    decision = "allow",
+    match = [["git", "commit", "-m", "feat: add rules"], "git commit --amend --no-edit"],
+    not_match = ["git push", "git commit-tree abc123"],
+)
+
+prefix_rule(
+    pattern = ["herdr", "pane", "read"],
+    decision = "allow",
+    match = ["herdr pane read", "herdr pane read 1"],
+    not_match = ["herdr pane write 1", "herdr pane"],
+)
+
+prefix_rule(
+    pattern = ["rg"],
+    decision = "allow",
+    match = ["rg --files", "rg pattern src/", "rg -n TODO"],
+    not_match = ["grep pattern src/", "ripgrep pattern"],
+)
