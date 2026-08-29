@@ -1,7 +1,9 @@
 min_version = "2026.7.18"
 
 [dotfiles]
+"~/.agents/skills" = { source = "../skills", mode = "symlink" }
 "~/.claude" = { source = "../claude", mode = "symlink-each" }
+"~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
 "~/.codex/rules" = { source = "../codex/rules", mode = "symlink-each" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
