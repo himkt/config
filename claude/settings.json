@@ -4,7 +4,6 @@
   "attribution": {
     "commit": ""
   },
-  "outputStyle": "Concise",
   "permissions": {
     "allow": [
       "Edit",
@@ -142,6 +141,7 @@
       "autoUpdate": true
     }
   },
+  "outputStyle": "Concise",
   "language": "Use professional English",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
@@ -150,5 +150,6 @@
   "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
-  "autoInstallIdeExtension": false
+  "autoInstallIdeExtension": false,
+  "remoteControlAtStartup": false
 }
