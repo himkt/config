@@ -4,6 +4,7 @@
   "attribution": {
     "commit": ""
   },
+  "outputStyle": "Concise",
   "permissions": {
     "allow": [
       "Edit",
