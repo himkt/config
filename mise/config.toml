@@ -1,4 +1,4 @@
-min_version = "2026.7.18"
+min_version = "2026.8.14"
 
 [dotfiles]
 "~/.claude" = { source = "../claude", mode = "symlink-each" }
@@ -29,6 +29,25 @@ min_version = "2026.7.18"
 "brew:unzip" = "latest"
 "brew:zip" = "latest"
 "brew:zsh" = "latest"
+"brew-cask:1password" = { os = "macos", version = "latest" }
+"brew-cask:chatgpt" = { os = "macos", version = "latest" }
+"brew-cask:claude" = { os = "macos", version = "latest" }
+"brew-cask:discord" = { os = "macos", version = "latest" }
+"brew-cask:font-jetbrains-mono" = { os = "macos", version = "latest" }
+"brew-cask:font-noto-sans-cjk" = { os = "macos", version = "latest" }
+"brew-cask:ghostty" = { os = "macos", version = "latest" }
+"brew-cask:google-chrome" = { os = "macos", version = "latest" }
+"brew-cask:himkt/tap/voicevox" = { os = "macos", version = "latest" }
+"brew-cask:inkscape" = { os = "macos", version = "latest" }
+"brew-cask:insomnia" = { os = "macos", version = "latest" }
+"brew-cask:netron" = { os = "macos", version = "latest" }
+"brew-cask:notion" = { os = "macos", version = "latest" }
+"brew-cask:nvidia-nsight-systems" = { os = "macos", version = "latest" }
+"brew-cask:obs" = { os = "macos", version = "latest" }
+"brew-cask:quo" = { os = "macos", version = "latest" }
+"brew-cask:rancher" = { os = "macos", version = "latest" }
+"brew-cask:slack" = { os = "macos", version = "latest" }
+"brew-cask:visual-studio-code" = { os = "macos", version = "latest" }
 
 [bootstrap.macos.dock]
 autohide = true
