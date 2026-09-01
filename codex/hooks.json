@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.local/bin/gh_api_guard.py",
+            "command": "~/.local/bin/validate_gh_api.py validate",
             "timeout": 10
           }
         ]

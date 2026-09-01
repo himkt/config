@@ -1,50 +1,33 @@
 #!/usr/bin/env python3
 
-"""PreToolUse hook that validates `gh api` endpoints against an allowlist.
-
-Works with both Claude Code and Codex hooks: reads the hook payload
-({"tool_input": {"command": "..."}}) from stdin and, when the command
-invokes `gh api` with an endpoint outside ALLOWLIST, emits a
-permissionDecision "deny" JSON. Commands that do not invoke `gh api`,
-and `gh api` calls whose every segment is allowlisted, produce no output
-so the harness's normal permission rules decide.
-
-Pair this hook with a broad allow rule (Claude: `Bash(gh api *)`,
-Codex: `prefix_rule(pattern=["gh", "api"], decision="allow")`); the hook
-narrows that grant to the endpoints below.
-
-ALLOWLIST entries are (methods, endpoint-glob). Globs use fnmatch
-semantics where `*` also matches `/`. The effective method is the value
-of -X/--method, else POST when body fields are present (gh's behavior),
-else GET.
-
-CLI:
-    (no argument) - run as hook: read payload from stdin
-    test          - run embedded unittest suite
-"""
-
 import json
 import os
 import re
 import sys
+from dataclasses import dataclass
 from fnmatch import fnmatchcase
 
-# The deployed hook is a symlink; resolve it so validate_bash (kept next to
-# this file in the repo) is importable regardless of the symlink location.
 sys.path.insert(0, os.path.dirname(os.path.realpath(__file__)))
 
 from validate_bash import parse
 
+
+@dataclass(frozen=True)
+class AllowlistEntry:
+    methods: frozenset[str]
+    endpoint_glob: str
+
+
 ALLOWLIST = (
-    ("GET", "repos/*/*/actions/jobs/*"),
-    ("GET PATCH DELETE", "repos/*/*/issues/comments/*"),
-    ("GET POST", "repos/*/*/issues/*/comments"),
-    ("GET PATCH DELETE", "repos/*/*/pulls/comments/*"),
-    ("GET POST", "repos/*/*/pulls/*/comments"),
-    ("GET POST", "repos/*/*/pulls/*/reviews"),
-    ("GET POST PUT DELETE", "repos/*/*/pulls/*/reviews/*"),
-    ("GET POST DELETE", "repos/*/*/pulls/*/requested_reviewers"),
-    ("GET", "repos/*/*/contents/*"),
+    AllowlistEntry(frozenset({"GET"}), "repos/*/*/actions/jobs/*"),
+    AllowlistEntry(frozenset({"GET", "PATCH", "DELETE"}), "repos/*/*/issues/comments/*"),
+    AllowlistEntry(frozenset({"GET", "POST"}), "repos/*/*/issues/*/comments"),
+    AllowlistEntry(frozenset({"GET", "PATCH", "DELETE"}), "repos/*/*/pulls/comments/*"),
+    AllowlistEntry(frozenset({"GET", "POST"}), "repos/*/*/pulls/*/comments"),
+    AllowlistEntry(frozenset({"GET", "POST"}), "repos/*/*/pulls/*/reviews"),
+    AllowlistEntry(frozenset({"GET", "POST", "PUT", "DELETE"}), "repos/*/*/pulls/*/reviews/*"),
+    AllowlistEntry(frozenset({"GET", "POST", "DELETE"}), "repos/*/*/pulls/*/requested_reviewers"),
+    AllowlistEntry(frozenset({"GET"}), "repos/*/*/contents/*"),
 )
 
 _METHOD_FLAGS = ("-X", "--method")
@@ -73,7 +56,6 @@ def _effective_method(keywords):
 
 
 def _check_segment(seg):
-    """Return rejection reason for one `gh api` segment, or None if allowed."""
     if seg["expansions"]:
         e = seg["expansions"][0]
         return f"cannot verify endpoint: {e['reason']} in '{e['token']}'"
@@ -88,19 +70,13 @@ def _check_segment(seg):
     if method is None:
         return "multiple -X/--method flags"
 
-    for methods, pattern in ALLOWLIST:
-        if method in methods.split() and fnmatchcase(endpoint, pattern):
+    for entry in ALLOWLIST:
+        if method in entry.methods and fnmatchcase(endpoint, entry.endpoint_glob):
             return None
     return f"{method} {endpoint} is not in the allowlist"
 
 
 def check(command):
-    """Return rejection reason for a command string, or None if no opinion.
-
-    Denies when any `gh api` segment fails validation, or when the
-    command mentions `gh api` but cannot be parsed. Commands without
-    `gh api` yield None (the hook stays silent).
-    """
     try:
         segments = parse(command)
     except ValueError as e:
@@ -121,7 +97,7 @@ def _deny(reason):
             "hookEventName": "PreToolUse",
             "permissionDecision": "deny",
             "permissionDecisionReason":
-                f"{reason} (allowlist: gh_api_guard.py)",
+                f"{reason} (allowlist: validate_gh_api.py)",
         },
     }))
 
@@ -129,7 +105,7 @@ def _deny(reason):
 def _run_tests():
     import unittest
 
-    class GhApiGuardTests(unittest.TestCase):
+    class ValidateGhApiTests(unittest.TestCase):
         def assertAllowed(self, command):
             self.assertIsNone(check(command), command)
 
@@ -208,12 +184,18 @@ def _run_tests():
                 "POST repos/x/y/contents/a is not in the allowlist",
             )
 
-    suite = unittest.TestLoader().loadTestsFromTestCase(GhApiGuardTests)
+    suite = unittest.TestLoader().loadTestsFromTestCase(ValidateGhApiTests)
     return unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful()
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "test":
+    import argparse
+
+    ap = argparse.ArgumentParser(prog="validate_gh_api.py")
+    ap.add_argument("subcommand", choices=("validate", "test"))
+    subcmd = ap.parse_args().subcommand
+
+    if subcmd == "test":
         sys.exit(0 if _run_tests() else 1)
 
     try:
