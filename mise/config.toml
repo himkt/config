@@ -2,6 +2,8 @@ min_version = "2026.8.14"
 
 [dotfiles]
 "~/.claude" = { source = "../claude", mode = "symlink-each" }
+"~/.codex/hooks.json" = "../codex/hooks.json"
+"~/.local/bin/gh_api_guard.py" = "../bin/gh_api_guard.py"
 "~/.codex/rules" = { source = "../codex/rules", mode = "symlink-each" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"

@@ -7,21 +7,7 @@
   "permissions": {
     "allow": [
       "Edit",
-      "Bash(gh api repos/*/*/actions/jobs/*)",
-      "Bash(gh api repos/*/*/issues/comments/* *)",
-      "Bash(gh api repos/*/*/issues/*/comments)",
-      "Bash(gh api repos/*/*/issues/*/comments *)",
-      "Bash(gh api repos/*/*/issues/*/comments/* *)",
-      "Bash(gh api repos/*/*/pulls/comments/* *)",
-      "Bash(gh api repos/*/*/pulls/*/comments)",
-      "Bash(gh api repos/*/*/pulls/*/comments *)",
-      "Bash(gh api repos/*/*/pulls/*/comments/* *)",
-      "Bash(gh api repos/*/*/pulls/*/reviews)",
-      "Bash(gh api repos/*/*/pulls/*/reviews *)",
-      "Bash(gh api repos/*/*/pulls/*/reviews/* *)",
-      "Bash(gh api repos/*/*/pulls/*/requested_reviewers)",
-      "Bash(gh api repos/*/*/pulls/*/requested_reviewers *)",
-      "Bash(gh api repos/*/*/contents/*)",
+      "Bash(gh api *)",
       "Bash(gh auth status)",
       "Bash(gh issue list *)",
       "Bash(gh issue view *)",
@@ -112,6 +98,19 @@
   },
   "model": "fable",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/bin/gh_api_guard.py",
+            "if": "Bash(gh api*)",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/bin/gh_api_guard.py",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
