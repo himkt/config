@@ -47,8 +47,7 @@ gh pr checks {url}
 ## Creating a PR
 
 ```bash
-gh pr create --fill                          # auto-populate title+body from commits
-gh pr edit {number} --add-reviewer @copilot  # always request Copilot review immediately after
+gh pr create --fill # auto-populate title+body from commits
 ```
 
 Use `--title` / `--body-file` only when the user explicitly asks for a custom title/body.

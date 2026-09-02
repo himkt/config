@@ -1,9 +1,10 @@
 min_version = "2026.8.14"
 
 [dotfiles]
+"~/.agents/skills" = { source = "../skills", mode = "symlink" }
 "~/.claude" = { source = "../claude", mode = "symlink-each" }
+"~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
 "~/.codex/hooks.json" = "../codex/hooks.json"
-"~/.local/bin/validate_gh_api.py" = "../bin/validate_gh_api.py"
 "~/.codex/rules" = { source = "../codex/rules", mode = "symlink-each" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
@@ -13,6 +14,7 @@ min_version = "2026.8.14"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"
 "~/.config/uv" = "../uv"
+"~/.local/bin/validate_gh_api.py" = "../bin/validate_gh_api.py"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
@@ -67,10 +69,10 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 
 [tools]
 "aqua:ahmetb/kubectx" = "v0.11.0"
-"aqua:anomalyco/opencode" = "v1.18.21"
+"aqua:anomalyco/opencode" = "v1.18.23"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
-"aqua:anthropics/claude-code" = "v2.1.240"
-"aqua:astral-sh/uv" = "0.12.5"
+"aqua:anthropics/claude-code" = "v2.1.246"
+"aqua:astral-sh/uv" = "0.12.6"
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 "aqua:cli/cli" = "v2.98.0"
 "aqua:derailed/k9s" = "v0.51.0"
@@ -80,16 +82,16 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
 "aqua:kubernetes-sigs/krew" = "v0.5.0"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.36.4"
-"aqua:neovim/neovim" = "v0.12.4"
+"aqua:neovim/neovim" = "v0.12.5"
 "aqua:ogulcancelik/herdr" = "v0.8.2"
-"aqua:openai/codex" = "v0.149.0"
-"aqua:pnpm/pnpm" = "11.22.0"
+"aqua:openai/codex" = "v0.149.1"
+"aqua:pnpm/pnpm" = "11.24.0"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:suzuki-shunsuke/pinact" = "v4.1.1"
 "aqua:tmux/tmux-builds" = "v3.6a"
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
-"core:node" = "26.7.0"
+"core:node" = "26.8.0"
 "core:rust" = "1.98.0"
 "core:zig" = "v0.15.2"
 
