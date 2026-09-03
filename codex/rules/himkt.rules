@@ -1,4 +1,11 @@
 prefix_rule(
+    pattern = ["gh", "api"],
+    decision = "allow",
+    match = ["gh api repos/himkt/config/pulls/1/comments", "gh api repos/himkt/config/contents/README.md"],
+    not_match = ["gh auth logout", "gh apiary"],
+)
+
+prefix_rule(
     pattern = ["gh", "auth", "status"],
     decision = "allow",
     match = ["gh auth status", "gh auth status --hostname github.com"],

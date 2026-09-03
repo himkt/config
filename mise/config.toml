@@ -4,6 +4,7 @@ min_version = "2026.8.14"
 "~/.agents/skills" = { source = "../skills", mode = "symlink" }
 "~/.claude" = { source = "../claude", mode = "symlink-each" }
 "~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
+"~/.codex/hooks.json" = "../codex/hooks.json"
 "~/.codex/rules" = { source = "../codex/rules", mode = "symlink-each" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
@@ -13,6 +14,7 @@ min_version = "2026.8.14"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"
 "~/.config/uv" = "../uv"
+"~/.local/bin/validate_gh_api.py" = "../bin/validate_gh_api.py"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
