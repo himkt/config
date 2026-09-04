@@ -26,6 +26,7 @@ min_version = "2026.8.14"
 "brew:git" = "latest"
 "brew:himkt/tap/cafleet" = "latest"
 "brew:himkt/tap/pathfinder" = "latest"
+"brew:krew" = "latest"
 "brew:less" = "latest"
 "brew:libpq" = "latest"
 "brew:rustup" = "latest"
@@ -68,7 +69,6 @@ tap_to_click = true
 NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
 
 [tools]
-"aqua:ahmetb/kubectx" = "v0.11.0"
 "aqua:anomalyco/opencode" = "v1.18.23"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
 "aqua:anthropics/claude-code" = "v2.1.247"
@@ -80,7 +80,6 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:jqlang/jq" = "1.8.2"
 "aqua:junegunn/fzf" = "v0.74.3"
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
-"aqua:kubernetes-sigs/krew" = "v0.5.0"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.0"
 "aqua:neovim/neovim" = "v0.12.5"
 "aqua:ogulcancelik/herdr" = "v0.8.2"
