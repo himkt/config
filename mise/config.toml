@@ -69,14 +69,14 @@ tap_to_click = true
 NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
 
 [tools]
-"aqua:anomalyco/opencode" = "v1.18.23"
+"aqua:anomalyco/opencode" = "v1.18.25"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
-"aqua:anthropics/claude-code" = "v2.1.248"
+"aqua:anthropics/claude-code" = "v2.1.251"
 "aqua:astral-sh/uv" = "0.12.7"
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 "aqua:cli/cli" = "v2.98.0"
 "aqua:derailed/k9s" = "v0.51.0"
-"aqua:git-lfs/git-lfs" = "v3.7.1"
+"aqua:git-lfs/git-lfs" = "v3.8.0"
 "aqua:jqlang/jq" = "1.8.2"
 "aqua:junegunn/fzf" = "v0.74.3"
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
