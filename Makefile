@@ -12,6 +12,9 @@ brew-bundle:
 brew-bundle-check:
 	HOMEBREW_BUNDLE_NO_UPGRADE=1 brew bundle check --verbose --file=$(PWD)/brew/Brewfile
 
+krew-bundle:
+	cat $(PWD)/krew/plugins | xargs kubectl krew install
+
 up:
 	mise up
 	mise bootstrap --yes
