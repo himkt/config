@@ -92,6 +92,7 @@
       "Bash(cafleet member prompt --shell *)"
     ],
     "defaultMode": "acceptEdits",
+    "disableAutoMode": "disable",
     "additionalDirectories": [
       "~/.claude"
     ]
@@ -148,7 +149,7 @@
   "autoMemoryEnabled": false,
   "skipWorkflowUsageWarning": true,
   "autoCompactEnabled": true,
+  "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
-  "autoInstallIdeExtension": false,
-  "remoteControlAtStartup": false
+  "autoInstallIdeExtension": false
 }
