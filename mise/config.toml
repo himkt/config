@@ -80,6 +80,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:git-lfs/git-lfs" = "v3.8.0"
 "aqua:jqlang/jq" = "1.8.2"
 "aqua:junegunn/fzf" = "v0.74.3"
+"aqua:Kitware/CMake" = "v4.4.3"
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.0"
 "aqua:neovim/neovim" = "v0.12.5"
