@@ -97,6 +97,20 @@ prefix_rule(
 )
 
 prefix_rule(
+    pattern = ["git", "diff"],
+    decision = "allow",
+    match = ["git diff"],
+    not_match = ["git push"],
+)
+
+prefix_rule(
+    pattern = ["git", "log"],
+    decision = "allow",
+    match = [["git", "log", "--oneline"], "git log"],
+    not_match = ["git push", "git commit-tree abc123"],
+)
+
+prefix_rule(
     pattern = ["herdr", "pane", "read"],
     decision = "allow",
     match = ["herdr pane read", "herdr pane read 1"],
