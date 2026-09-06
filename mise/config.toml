@@ -6,7 +6,7 @@ min_version = "2026.8.14"
 "~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
 "~/.codex/AGENTS.md" = "../claude/CLAUDE.md"
 "~/.codex/hooks.json" = "../codex/hooks.json"
-"~/.codex/rules" = { source = "../codex/rules", mode = "symlink-each" }
+"~/.codex/rules" = { source = "../codex/rules", mode = "symlink" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
 "~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
