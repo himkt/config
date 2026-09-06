@@ -126,3 +126,11 @@ Rules for consistent, clean git commit history across all projects.
 ### Pull requests
 
 - ALWAYS create PRs with `gh pr create --fill`. Use `--title` / `--body-file` ONLY when the user explicitly asks for a custom title or body.
+
+## Codex Sandbox Network Retries
+
+This section applies only to Codex and its command execution tools.
+
+When a command required for the user's authorized task fails because of sandbox or proxy network restrictions, rerun the same command with `sandbox_permissions: "require_escalated"` and a concise `justification`. Proceed directly through the tool's approval flow so existing `allow` rules can apply and any additional approval can be requested there.
+
+Command `allow` rules and proxy domain permissions are separate controls: an allowed command can still fail during ordinary sandbox execution. Perform the escalated retry before reporting the task as blocked. Keep the retry within the authorized task and preserve the configured network restrictions.
