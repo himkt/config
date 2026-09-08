@@ -127,6 +127,15 @@ Rules for consistent, clean git commit history across all projects.
 
 - ALWAYS create PRs with `gh pr create --fill`. Use `--title` / `--body-file` ONLY when the user explicitly asks for a custom title or body.
 
+## Bash Commands
+
+Run one command per Bash tool call so that each invocation matches a `permissions.allow` pattern in settings.json. Shell operators break pattern matching and trigger approval prompts that block work.
+
+- Run each command as a separate Bash call. NEVER chain commands with `&&`, `||`, or `;`. Pipes (`|`) are allowed
+- Run `cd /path/to/dir` as its own Bash call, then run subsequent commands in separate calls. The working directory persists between Bash calls, so `cd /path && command` is never necessary
+- Write file output with the Write tool. NEVER use redirects (`>`, `>>`, `<`)
+- Pass literal arguments. Use command substitution (`$()` or backticks) only when there is no other way to obtain the value
+
 ## Codex Sandbox Network Retries
 
 This section applies only to Codex and its command execution tools.
