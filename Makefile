@@ -8,7 +8,7 @@ krew-bundle:
 
 up:
 	mise up
-	mise bootstrap dotfiles--yes
+	mise bootstrap dotfiles --yes
 
 brew-up:
 	mise bootstrap packages upgrade --yes
