@@ -16,7 +16,8 @@ jobs:
         with:
           install: false  # only the mise binary is needed; [tools] are not CI's concern
       - run: mise trust
-      - name: Remove pre-installed packages by homebrew
-        if: ${{ matrix.os == 'macos-26' }}
-        run: brew uninstall google-chrome
       - run: make up
+      - if: ${{ matrix.os == 'macos-26' }}
+        run: |
+          brew uninstall google-chrome
+          make brew-up
