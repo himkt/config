@@ -3,21 +3,14 @@
 mise:
 	curl https://mise.run | sh
 
-brew:
-	$(PWD)/bin/setup-homebrew.sh
-
-brew-bundle:
-	brew bundle --verbose --file=$(PWD)/brew/Brewfile
-
-brew-bundle-check:
-	HOMEBREW_BUNDLE_NO_UPGRADE=1 brew bundle check --verbose --file=$(PWD)/brew/Brewfile
-
 krew-bundle:
 	cat $(PWD)/krew/plugins | xargs kubectl krew install
 
 up:
 	mise up
-	mise bootstrap --yes
+	mise bootstrap dotfiles--yes
+
+brew-up:
 	mise bootstrap packages upgrade --yes
 
 touchid-sudo:
