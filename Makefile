@@ -11,6 +11,7 @@ up:
 	mise bootstrap dotfiles apply --yes
 
 brew-up:
+	mise bootstrap packages apply --yes
 	mise bootstrap packages upgrade --yes
 
 touchid-sudo:
