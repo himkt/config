@@ -109,6 +109,9 @@ def check_argv(argv, budget=None):
             raise PolicyError("EVALUATION_LIMIT", "API argument byte limit exceeded")
     if len(argv) < 3 or argv[:2] != ["gh", "api"] or argv[2].startswith("-"):
         _block("Place one relative endpoint immediately after gh api")
+    budget.charge(len(argv[2]))
+    if "#" in argv[2]:
+        _block("Use a GitHub endpoint without a URL fragment")
     endpoint = argv[2].partition("?")[0]
     budget.charge(len(endpoint) * 8)
     if (not endpoint or endpoint.startswith("//") or "://" in endpoint
@@ -307,7 +310,8 @@ def _run_tests():
                     self.assert_blocked(["gh", "api", CONTENTS, "--method", method])
 
         def test_relative_paths_allow_one_leading_slash_and_optional_query(self):
-            for endpoint in (CONTENTS, "/" + CONTENTS, CONTENTS + "?ref=main", CONTENTS + "?x=%2f"):
+            for endpoint in (CONTENTS, "/" + CONTENTS, CONTENTS + "?ref=main",
+                             CONTENTS + "?x=%2f", CONTENTS + "?ref=a%23b"):
                 with self.subTest(endpoint=endpoint):
                     self.assert_allowed(endpoint)
 
@@ -321,6 +325,15 @@ def _run_tests():
             ):
                 with self.subTest(endpoint=endpoint):
                     self.assert_blocked(["gh", "api", endpoint])
+
+            for endpoint, method in (
+                ("repos/himkt/config#/pulls/1/reviews/1", "DELETE"),
+                ("repos/himkt/config#/contents/x", "GET"),
+                (CONTENTS + "#", "GET"),
+                (CONTENTS + "?ref=main#fragment", "GET"),
+            ):
+                with self.subTest(endpoint=endpoint, method=method):
+                    self.assert_blocked(["gh", "api", endpoint, "--method", method])
 
         def test_runtime_host_inputs_require_github_com(self):
             self.assert_allowed(CONTENTS, "--hostname=github.com")

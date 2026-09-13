@@ -1483,13 +1483,23 @@ def _run_tests():
 
         def test_allowed_shell_rule_still_requires_github_endpoint_authorization(self):
             for client in ("codex", "claude"):
-                for command in ("gh api user", "gh api repos/himkt/config/contents/x -XDELETE"):
+                for command in (
+                    "gh api user", "gh api repos/himkt/config/contents/x -XDELETE",
+                    "gh api 'repos/himkt/config#/pulls/1/reviews/1' -XDELETE",
+                    "gh api 'repos/himkt/config#/contents/x'",
+                    "gh api 'repos/himkt/config/contents/x#'",
+                    "gh api 'repos/himkt/config/contents/x?ref=main#fragment'",
+                ):
                     with self.subTest(client=client, command=command):
                         envelope = dict(ENVELOPE, tool_input={"command": command})
                         self.assert_denied(self.invoke(client, envelope), "GH_API_BLOCK")
-                envelope = dict(ENVELOPE, tool_input={"command": "gh api repos/himkt/config/contents/x"})
-                result = self.invoke(client, envelope)
-                self.assert_success(result, client)
+                for endpoint in ("repos/himkt/config/contents/x",
+                                 "repos/himkt/config/contents/x?ref=main",
+                                 "repos/himkt/config/contents/x?ref=a%23b"):
+                    with self.subTest(client=client, endpoint=endpoint):
+                        envelope = dict(ENVELOPE, tool_input={"command": f"gh api '{endpoint}'"})
+                        result = self.invoke(client, envelope)
+                        self.assert_success(result, client)
 
         def test_shell_block_precedes_github_gate(self):
             self.policy_path.write_text(json.dumps({"version": 1, "allow": [["gh", "api", "**"]],
