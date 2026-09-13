@@ -35,9 +35,234 @@ CLI subcommands (stdin: {"tool_input": {"command": "..."}}):
 """
 
 import json
+import os
+from pathlib import Path
 import re
 import shlex
+import stat
 import sys
+import time
+
+
+MAX_POLICY_BYTES = 1024 * 1024
+
+
+class PolicyError(ValueError):
+    def __init__(self, code, message):
+        super().__init__(message)
+        self.code = code
+
+
+class EvaluationBudget:
+    def __init__(self, limit=8_000_000, deadline=None):
+        self.remaining = limit
+        self.deadline = deadline
+        self.until_clock_check = 1024
+
+    def charge(self, units=1):
+        self.remaining -= units
+        self.until_clock_check -= units
+        if self.remaining < 0:
+            raise PolicyError("EVALUATION_LIMIT", "Evaluation work limit exceeded")
+        if self.until_clock_check <= 0:
+            self.check_deadline()
+            self.until_clock_check = 1024
+
+    def check_deadline(self):
+        if self.deadline is not None and time.monotonic() >= self.deadline:
+            raise PolicyError("EVALUATION_LIMIT", "Evaluation deadline exceeded")
+
+
+def _invalid_policy(message):
+    raise PolicyError("POLICY_INVALID", message)
+
+
+def _unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            _invalid_policy("Duplicate object key")
+        result[key] = value
+    return result
+
+
+def _jsonc_text(text, budget):
+    cleaned = list(text)
+    state = "plain"
+    depth = 0
+    escaped = False
+    i = 0
+    while i < len(text):
+        budget.charge()
+        char = text[i]
+        following = text[i + 1] if i + 1 < len(text) else ""
+        if state == "string":
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                state = "plain"
+        elif state in ("line", "block"):
+            cleaned[i] = char if char in "\r\n" else " "
+            if state == "line" and char in "\r\n":
+                state = "plain"
+            elif state == "block" and char == "/" and following == "*":
+                _invalid_policy("Nested comments are unsupported")
+            elif state == "block" and char == "*" and following == "/":
+                budget.charge()
+                cleaned[i + 1] = " "
+                i += 1
+                state = "plain"
+        elif char == '"':
+            state = "string"
+        elif char == "/" and following in ("/", "*"):
+            budget.charge()
+            cleaned[i] = cleaned[i + 1] = " "
+            i += 1
+            state = "line" if following == "/" else "block"
+        elif char in "[{":
+            depth += 1
+            if depth > 8:
+                raise PolicyError("EVALUATION_LIMIT", "JSON nesting limit exceeded")
+        elif char in "]}":
+            depth -= 1
+        i += 1
+    if state in ("string", "block"):
+        _invalid_policy("Unterminated string or comment")
+
+    in_string = False
+    escaped = False
+    previous = None
+    before_comma = None
+    comma_index = None
+    for i, char in enumerate(cleaned):
+        budget.charge()
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+                previous = '"'
+            continue
+        if char in " \t\r\n":
+            continue
+        if char in "]}" and previous == "," and before_comma not in (None, "[", "{", ",", ":"):
+            cleaned[comma_index] = " "
+        if char == ",":
+            comma_index = i
+            before_comma = previous
+        if char == '"':
+            in_string = True
+        previous = char
+    return "".join(cleaned)
+
+
+def validate_policy(policy, budget=None):
+    if budget is None:
+        budget = EvaluationBudget()
+    if not isinstance(policy, dict) or set(policy) != {"version", "allow", "block"}:
+        _invalid_policy("Policy requires version, allow, and block")
+    if type(policy["version"]) is not int or policy["version"] != 1:
+        _invalid_policy("Policy version must be integer 1")
+    for category in ("allow", "block"):
+        if not isinstance(policy[category], list):
+            _invalid_policy("Policy rule collections must be arrays")
+    if len(policy["allow"]) + len(policy["block"]) > 1024:
+        raise PolicyError("EVALUATION_LIMIT", "Policy rule limit exceeded")
+    for category in ("allow", "block"):
+        seen = set()
+        for rule in policy[category]:
+            budget.charge()
+            if not isinstance(rule, list) or not rule:
+                _invalid_policy("Rules must be nonempty arrays")
+            if len(rule) > 128:
+                raise PolicyError("EVALUATION_LIMIT", "Rule element limit exceeded")
+            for element in rule:
+                if not isinstance(element, str):
+                    _invalid_policy("Rule elements must be strings")
+                if len(element) > 4096:
+                    raise PolicyError("EVALUATION_LIMIT", "Rule character limit exceeded")
+                for char in element:
+                    budget.charge()
+                    if 0xD800 <= ord(char) <= 0xDFFF:
+                        _invalid_policy("Policy contains invalid Unicode")
+            if not rule[0] or "/" in rule[0] or "*" in rule[0]:
+                _invalid_policy("Executable must be a literal name without slashes")
+            identity = tuple(rule)
+            budget.charge(sum(map(len, rule)))
+            if identity in seen:
+                _invalid_policy("Duplicate policy rule")
+            seen.add(identity)
+    return policy
+
+
+def load_policy(budget=None):
+    if budget is None:
+        budget = EvaluationBudget()
+    path = Path.home() / ".config/himkt/accepts.jsonc"
+    try:
+        descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+        try:
+            if not stat.S_ISREG(os.fstat(descriptor).st_mode):
+                _invalid_policy("Policy must be a regular file")
+            with os.fdopen(descriptor, "rb", closefd=False) as stream:
+                content = stream.read(MAX_POLICY_BYTES + 1)
+        finally:
+            os.close(descriptor)
+        if len(content) > MAX_POLICY_BYTES:
+            raise PolicyError("EVALUATION_LIMIT", "Policy byte limit exceeded")
+        budget.charge(len(content))
+        text = content.decode("utf-8", errors="strict")
+        policy = json.loads(
+            _jsonc_text(text, budget), object_pairs_hook=_unique_object,
+            parse_constant=lambda value: _invalid_policy("Nonfinite JSON number"),
+        )
+        return validate_policy(policy, budget)
+    except FileNotFoundError as error:
+        raise PolicyError("POLICY_MISSING", f"Repair policy at {path}: file missing") from error
+    except PolicyError as error:
+        raise PolicyError(error.code, f"Repair policy at {path}: {error}") from error
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise PolicyError("POLICY_INVALID", f"Repair policy at {path}: unreadable or invalid policy") from error
+
+
+def translate_seed(settings):
+    if not isinstance(settings, dict) or not isinstance(settings.get("permissions"), dict):
+        raise ValueError("Seed requires permissions")
+    policy = {"version": 1, "allow": [], "block": []}
+    exceptions = {
+        "cafleet member prompt * --shell *",
+        "cafleet member prompt * --shell",
+        "cafleet member prompt --shell *",
+    }
+    for category in ("allow", "deny", "ask"):
+        entries = settings["permissions"].get(category)
+        if not isinstance(entries, list) or any(not isinstance(entry, str) for entry in entries):
+            raise ValueError("Seed permission categories must be string arrays")
+        target = "allow" if category == "allow" else "block"
+        for entry in entries:
+            if not entry.startswith("Bash("):
+                continue
+            if not entry.endswith(")"):
+                raise ValueError("Incomplete Bash seed entry")
+            source = entry[5:-1]
+            if not re.fullmatch(r"[A-Za-z0-9_.*= /-]+", source):
+                raise ValueError("Unsupported Bash seed syntax")
+            tokens = source.split(" ")
+            if any(not token for token in tokens):
+                raise ValueError("Seed requires single-space argument separators")
+            if source in exceptions and target == "block":
+                rules = [["cafleet", "member", "prompt", "**", flag, "**"]
+                         for flag in ("--shell", "--shell=*")]
+            else:
+                rules = [["**" if token == "*" else token for token in tokens]]
+            for rule in rules:
+                if rule not in policy[target]:
+                    policy[target].append(rule)
+    return validate_policy(policy)
 
 
 _DIGITS = frozenset("0123456789")
