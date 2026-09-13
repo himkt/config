@@ -100,7 +100,7 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "^Bash$",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
