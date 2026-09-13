@@ -1,7 +1,7 @@
 min_version = "2026.8.14"
 
 [dotfiles]
-"~/.agents/skills" = { source = "../skills", mode = "symlink" }
+"~/.agents/skills" = { source = "../skills", mode = "copy" }
 "~/.claude" = { source = "../claude", mode = "copy" }
 "~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
 "~/.codex" = { source = "../codex", mode = "copy" }
