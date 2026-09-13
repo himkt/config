@@ -31,7 +31,7 @@ python3 bin/validate_gh_api.py test
 {"hook_event_name":"PreToolUse","tool_name":"Bash","tool_input":{"command":"git status"}}
 ```
 
-The standalone GitHub validator checks literal syntax and GitHub endpoint policy; the combined validator enforces the shared command policy. Each script's `test` subcommand runs its embedded suite and fixtures: Bash covers parsing, policy, migration, and adapters; GitHub covers endpoint/method checks and host preconditions. Run both commands for the complete suite. Installed copies need only the two helper scripts; the repository-source comparison is skipped when the source settings are absent. Test scratch files stay in `.test-scratch` under the working directory. Run diagnostics through an operator shell when native agent permissions restrict Python execution.
+The standalone GitHub validator checks literal syntax and GitHub endpoint policy; the combined validator enforces the shared command policy. Run both embedded `test` commands to check parsing, policy matching, client responses, and GitHub restrictions. Tests clean up their temporary files. Run diagnostics through an operator shell when native agent permissions restrict Python execution.
 
 ## Installation and qualification
 
