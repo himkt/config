@@ -1,44 +1,12 @@
 #!/usr/bin/env python3
 
-"""POSIX-flavored shell command parser.
-
-Public API:
-    parse(command_string: str) -> list[dict]
-        One dict per command. The input is split on '|', ';', '&&', '||';
-        each piece becomes one segment. Each dict has keys:
-            command     str
-            positionals list[str]
-            keywords    dict[str, str|bool|list]
-            redirect    list[dict]   (operator + optional target)
-            expansions  list[dict]   (token + reason; empty when safe)
-
-Raises ValueError on malformed input or unsupported syntax ('<<', '<<<',
-'&', subshells, etc.).
-
-Each token (command, positionals, keyword keys/values, redirect targets)
-is scanned for shell-expansion vectors, in three layers:
-  1. Multi-char introducers: $(...), $((...)), $[...], ${...}, $'...',
-     $"...", `...`, <(...), >(...).
-  2. $VAR and special-variable expansion.
-  3. Stray '$' (defense-in-depth catch-all).
-Findings populate seg["expansions"] as [{"token": str, "reason": str}, ...].
-
-Bare operators (<, >, >>, &&, ;) inside a token are NOT flagged at the
-token level — they are detected structurally when unquoted (_tokenize,
-_split_commands), and are inert as literal characters when quoted.
-
-CLI subcommands (stdin: {"tool_input": {"command": "..."}}):
-    parse     - print parsed result as JSON
-    validate  - exit 2 if the command has multiple segments, any redirect,
-                or any non-empty seg["expansions"]
-    test      - run embedded unittest suite
-"""
+"""Literal command parsing and shared command policy evaluation."""
 
 import json
 import os
 from pathlib import Path
 import re
-import shlex
+import signal
 import stat
 import sys
 import time
@@ -265,253 +233,256 @@ def translate_seed(settings):
     return validate_policy(policy)
 
 
-_DIGITS = frozenset("0123456789")
-
-_OOS_OPS = {
-    "<<": "heredoc/here-string is not supported",
-    "<<<": "heredoc/here-string is not supported",
-    "&": "background execution is not supported",
-}
-
-_DIVIDERS = ("|", ";", "&&", "||")
-
-_REDIR_OPS_NO_TARGET = ("2>&1", "1>&2")
+_RESERVED_WORDS = frozenset((
+    "if", "then", "else", "elif", "fi", "for", "while", "until", "do",
+    "done", "case", "esac", "in", "select", "function", "time", "coproc",
+    "{", "}", "!", "[[", "]]",
+))
 
 
-def _shlex_tokens(s):
-    lex = shlex.shlex(s, posix=True, punctuation_chars=True)
-    lex.whitespace_split = True
-    return list(lex)
+def _shell_error(message):
+    raise PolicyError("SHELL_UNSUPPORTED", message)
 
 
-def _try_digit_prefix(raw, i):
-    """Return (op, advance) if a digit at i starts a redirect, else (None, 0)."""
-    if i + 1 >= len(raw) or raw[i] not in _DIGITS:
-        return None, 0
-    fd, nxt = raw[i], raw[i + 1]
-    if nxt in (">", ">>", "<"):
-        return fd + nxt, 2
-    if nxt != ">&":
-        return None, 0
-    if i + 2 >= len(raw) or raw[i + 2] not in _DIGITS:
-        raise ValueError(f"fd-dup '{fd}>&' is missing single-digit target fd")
-    op = f"{fd}>&{raw[i + 2]}"
-    if op not in _REDIR_OPS_NO_TARGET:
-        raise ValueError(f"unsupported fd-dup '{op}' (only 2>&1 and 1>&2 are allowed)")
-    return op, 3
+def _check_character(char):
+    if (ord(char) < 32 and char not in "\t\r\n") or ord(char) == 127:
+        _shell_error("Unsupported control character")
+    if 0xD800 <= ord(char) <= 0xDFFF:
+        _shell_error("Invalid Unicode")
 
 
-def _split_commands(raw):
-    segments = [[]]
-    last = None
-    for t in raw:
-        if t in _DIVIDERS:
-            if not segments[-1]:
-                raise ValueError(f"empty command before '{t}'")
-            segments.append([])
-            last = t
-        else:
-            segments[-1].append(t)
-    if not segments[-1]:
-        raise ValueError(f"empty command after '{last}'")
-    return segments
-
-
-def _tokenize(raw):
-    out = []
-    i = 0
-    while i < len(raw):
-        t = raw[i]
-        if msg := _OOS_OPS.get(t):
-            raise ValueError(msg)
-        op, advance = _try_digit_prefix(raw, i)
-        if op is not None:
-            out.append(("REDIR", op))
-            i += advance
-            continue
-        if t == ">&":
-            raise ValueError("fd-dup requires explicit source fd; got '>&...'")
-        if t in (">", ">>", "<", "&>"):
-            out.append(("REDIR", t))
-        elif t and all(c in "();<>|&" for c in t):
-            raise ValueError(f"unsupported operator: '{t}'")
-        else:
-            out.append(("WORD", t))
-        i += 1
-    return out
-
-
-def _extract_redirects(tokens):
-    redirects = []
-    words = []
-    i = 0
-    while i < len(tokens):
-        kind, text = tokens[i]
-        if kind == "WORD":
-            words.append(text)
-            i += 1
-        elif text in _REDIR_OPS_NO_TARGET:
-            redirects.append({"operator": text})
-            i += 1
-        elif i + 1 < len(tokens) and tokens[i + 1][0] == "WORD":
-            redirects.append({"operator": text, "target": tokens[i + 1][1]})
-            i += 2
-        else:
-            raise ValueError(f"redirect operator '{text}' has no target")
-    return words, redirects
-
-
-def _classify(words):
-    command = None
-    positionals = []
-    keywords = {}
-    positional_only = False
-    i = 0
-    while i < len(words):
-        w = words[i]
-        i += 1
-        if positional_only:
-            positionals.append(w)
-        elif w == "--":
-            positional_only = True
-        elif w.startswith("--") and "=" in w:
-            key, _, value = w.partition("=")
-            if key == "--":
-                raise ValueError(f"empty key in '{w}'")
-            keywords.setdefault(key, []).append(value)
-        elif w.startswith("-") and w not in ("--", "-"):
-            if i < len(words) and not words[i].startswith("-"):
-                keywords.setdefault(w, []).append(words[i])
-                i += 1
-            else:
-                keywords.setdefault(w, []).append(True)
-        elif command is None:
-            command = w
-        else:
-            positionals.append(w)
-    if command is None:
-        raise ValueError("no command token in input")
-    return command, positionals, {k: v[0] if len(v) == 1 else v for k, v in keywords.items()}
-
-
-# Layer 1: multi-char introducers that begin (or wholly form) a shell-
-# expansion vector. Order matters — '$((' must precede '$(' so the longer
-# prefix wins.
-_EXPANSION_PATTERNS = (
-    ("$((", "arithmetic expansion '$((...))'"),
-    ("$(", "command substitution '$(...)'"),
-    ("${", "variable expansion '${...}'"),
-    ("$[", "arithmetic expansion '$[...]'"),
-    ("$'", "ANSI-C quoting \"$'...'\""),
-    ('$"', "locale-aware string '$\"...\"'"),
-    ("`", "backtick command substitution"),
-    ("<(", "process substitution '<(...)'"),
-    (">(", "process substitution '>(...)'"),
-)
-
-# Layer 2: $VAR, $_x, $1, $@, $*, $#, $?, $!, $$, $- — names, positional
-# and special vars. ('-' must be last in the char class to avoid being
-# parsed as a range.)
-_VAR_RE = re.compile(r"\$[A-Za-z0-9_@*#?!$-]")
-
-
-def _scan_injection(s):
-    """Return rejection reason if s embeds a shell-expansion vector, else None.
-
-    Detection layers, in order:
-      1. Multi-char introducers (_EXPANSION_PATTERNS).
-      2. $VAR / special-variable expansion (_VAR_RE).
-      3. Stray '$' fallback — defense-in-depth for any '$' that escaped
-         layers 1 and 2.
-
-    Bare operators (<, >, >>, &&, ;) inside a token are NOT scanned here:
-    they are detected structurally by _tokenize and _split_commands when
-    unquoted, and are inert literal characters when quoted into a token
-    (bash does not re-parse them at runtime).
-    """
-    for needle, msg in _EXPANSION_PATTERNS:
-        if needle in s:
-            return msg
-    if _VAR_RE.search(s):
-        return "variable expansion '$VAR'"
-    if "$" in s:
-        return "stray '$'"
-    return None
-
-
-def _segment_words(seg):
-    """Yield every user-supplied word in a parsed segment.
-
-    Both keyword keys and values are scanned: a payload like
-    `cmd --"$VAR"=foo` parses to key '--$VAR', which would re-evaluate
-    if reassembled into a shell command.
-    """
-    yield seg["command"]
-    yield from seg["positionals"]
-    for k, v in seg["keywords"].items():
-        yield k
-        for x in (v if isinstance(v, list) else [v]):
-            if isinstance(x, str):
-                yield x
-    for r in seg["redirect"]:
-        if "target" in r:
-            yield r["target"]
-
-
-def _find_expansions(seg):
-    """Return [{token, reason}, ...] for every expansion in seg's words.
-
-    Order follows _segment_words: command, positionals, keyword keys/values,
-    redirect targets. One entry per occurrence — duplicates are recorded
-    twice. Each reason is _scan_injection's first match within the token.
-    """
-    return [{"token": w, "reason": reason}
-            for w in _segment_words(seg)
-            if (reason := _scan_injection(w))]
-
-
-def _parse_segment(raw):
-    words, redirects = _extract_redirects(_tokenize(raw))
-    command, positionals, keywords = _classify(words)
-    seg = {"command": command, "positionals": positionals,
-           "keywords": keywords, "redirect": redirects}
-    seg["expansions"] = _find_expansions(seg)
-    return seg
-
-
-def parse(command_string):
+def parse(command_string, budget=None):
+    if budget is None:
+        budget = EvaluationBudget()
     if not isinstance(command_string, str):
-        raise ValueError(f"command must be a string, got {type(command_string).__name__}")
-    if not command_string.strip():
-        raise ValueError("empty input")
+        _shell_error("Command must be a string")
+    if len(command_string) > 65536:
+        raise PolicyError("EVALUATION_LIMIT", "Command byte limit exceeded")
+    budget.charge(len(command_string))
+    try:
+        command_bytes = len(command_string.encode("utf-8"))
+    except UnicodeError as error:
+        raise PolicyError("SHELL_UNSUPPORTED", "Invalid Unicode") from error
+    if command_bytes > 65536:
+        raise PolicyError("EVALUATION_LIMIT", "Command byte limit exceeded")
+    argv = []
+    word = []
+    started = False
+    quote = None
+    i = 0
 
-    return [_parse_segment(seg) for seg in _split_commands(_shlex_tokens(command_string))]
+    def finish_word():
+        nonlocal started
+        if started:
+            if len(argv) >= 1024:
+                raise PolicyError("EVALUATION_LIMIT", "Argument count limit exceeded")
+            argv.append("".join(word))
+            word.clear()
+            started = False
+
+    while i < len(command_string):
+        budget.charge()
+        char = command_string[i]
+        _check_character(char)
+        if quote == "'":
+            if char == "'":
+                quote = None
+            else:
+                word.append(char)
+        elif char == "\\":
+            if i + 1 == len(command_string):
+                _shell_error("Incomplete escape")
+            budget.charge()
+            following = command_string[i + 1]
+            _check_character(following)
+            if following in "\r\n":
+                _shell_error("Line continuation is unsupported")
+            if quote == '"' and following not in '$`"\\':
+                word.append("\\")
+            word.append(following)
+            started = True
+            i += 1
+        elif quote == '"':
+            if char == '"':
+                quote = None
+            elif char in "$`":
+                _shell_error("Use quoted or escaped literal arguments")
+            else:
+                word.append(char)
+        elif char in " \t":
+            finish_word()
+        elif char in "'\"":
+            quote = char
+            started = True
+        elif char in "\r\n;|&<>()$`*?[]{}~!#":
+            _shell_error("Use one command with literal arguments")
+        elif char == "=" and not word:
+            _shell_error("Quote a leading equals sign")
+        else:
+            word.append(char)
+            started = True
+        i += 1
+    if quote is not None:
+        _shell_error("Unterminated quote")
+    finish_word()
+    if not argv or not argv[0]:
+        _shell_error("Executable is required")
+    budget.charge(len(argv[0]))
+    if argv[0] in _RESERVED_WORDS or re.match(r"[A-Za-z_][A-Za-z0-9_]*=", argv[0]):
+        _shell_error("Use an executable followed by literal arguments")
+    return argv
 
 
-def _check_safe(result):
-    """Return rejection reason string, or None if the command is safe."""
-    if len(result) > 1:
-        return "multiple commands are not allowed"
-    for seg in result:
-        if seg["redirect"]:
-            return "redirects are not allowed"
-        if seg["expansions"]:
-            return seg["expansions"][0]["reason"]
-    return None
+def _compile_rule(rule, budget):
+    compiled = []
+    for pattern in rule:
+        characters = []
+        has_star = False
+        for char in pattern:
+            budget.charge()
+            if char == "*":
+                has_star = True
+                if characters and characters[-1] == "*":
+                    continue
+            characters.append(char)
+        compiled.append((pattern == "**", "".join(characters), has_star))
+    return compiled
 
 
-# Optional remediation hints appended to BLOCKED: messages, keyed by the
-# reason string that _check_safe (or _scan_injection) returns. Add an entry
-# here when a rejection has a clear, single-line "do this instead" suggestion.
-_REASON_HINTS = {
-    "multiple commands are not allowed":
-        "Use separate Bash calls when chaining is needed.",
-}
+def _match_argument(argument, pattern, has_star, budget):
+    if not has_star:
+        budget.charge()
+        if len(argument) != len(pattern):
+            return False
+        for left, right in zip(argument, pattern):
+            budget.charge()
+            if left != right:
+                return False
+        return True
+    previous = bytearray(len(pattern) + 1)
+    current = bytearray(len(pattern) + 1)
+    previous[0] = 1
+    for j, char in enumerate(pattern, 1):
+        budget.charge()
+        previous[j] = previous[j - 1] if char == "*" else 0
+    for char in argument:
+        current[0] = 0
+        for j, expected in enumerate(pattern, 1):
+            budget.charge()
+            if expected == "*":
+                current[j] = current[j - 1] | previous[j]
+            else:
+                budget.charge()
+                current[j] = previous[j - 1] & (char == expected)
+        previous, current = current, previous
+    return bool(previous[-1])
 
 
-def _format_blocked_message(reason):
-    hint = _REASON_HINTS.get(reason)
-    return f"BLOCKED: {reason}. {hint}" if hint else f"BLOCKED: {reason}"
+def match_argv(argv, rule, budget=None):
+    if budget is None:
+        budget = EvaluationBudget()
+    if not isinstance(argv, list) or not argv or any(not isinstance(arg, str) for arg in argv):
+        raise ValueError("argv must be a nonempty string array")
+    if len(argv) > 1024 or sum(len(arg) for arg in argv) > 65536:
+        raise PolicyError("EVALUATION_LIMIT", "Argument limits exceeded")
+    validate_policy({"version": 1, "allow": [rule], "block": []}, budget)
+    compiled = _compile_rule(rule, budget)
+    previous = bytearray(len(argv) + 1)
+    current = bytearray(len(argv) + 1)
+    previous[0] = 1
+    for whole_arguments, pattern, has_star in compiled:
+        budget.charge()
+        current[0] = previous[0] if whole_arguments else 0
+        for j, argument in enumerate(argv, 1):
+            budget.charge()
+            if whole_arguments:
+                current[j] = previous[j] | current[j - 1]
+            elif previous[j - 1]:
+                current[j] = _match_argument(argument, pattern, has_star, budget)
+            else:
+                current[j] = 0
+        previous, current = current, previous
+    return bool(previous[-1])
+
+
+def evaluate(command, policy, budget=None):
+    if budget is None:
+        budget = EvaluationBudget()
+    validate_policy(policy, budget)
+    argv = parse(command, budget)
+    for rule in policy["block"]:
+        if match_argv(argv, rule, budget):
+            raise PolicyError("RULE_BLOCK", "Command matches a block rule")
+    for rule in policy["allow"]:
+        if match_argv(argv, rule, budget):
+            return "allow"
+    raise PolicyError("RULE_UNMATCHED", f"Review shared policy for executable {argv[0][:80]!r}")
+
+
+class EvaluationTimeout(PolicyError):
+    def __init__(self):
+        super().__init__("EVALUATION_LIMIT", "Evaluation deadline exceeded")
+
+
+def _timeout_handler(signum, frame):
+    raise EvaluationTimeout()
+
+
+def _read_envelope(budget):
+    content = sys.stdin.buffer.read(MAX_POLICY_BYTES + 1)
+    if len(content) > MAX_POLICY_BYTES:
+        raise PolicyError("EVALUATION_LIMIT", "Hook input byte limit exceeded")
+    budget.charge(len(content))
+    try:
+        text = content.decode("utf-8")
+        _jsonc_text(text, budget)
+        envelope = json.loads(text, object_pairs_hook=_unique_object,
+                              parse_constant=lambda value: _invalid_policy("Nonfinite number"))
+    except PolicyError as error:
+        if error.code == "EVALUATION_LIMIT":
+            raise
+        raise PolicyError("INPUT_INVALID", "Expected a JSON hook envelope") from error
+    except (ValueError, UnicodeError) as error:
+        raise PolicyError("INPUT_INVALID", "Expected a JSON hook envelope") from error
+    if (not isinstance(envelope, dict)
+            or envelope.get("hook_event_name") != "PreToolUse"
+            or envelope.get("tool_name") != "Bash"
+            or not isinstance(envelope.get("tool_input"), dict)
+            or not isinstance(envelope["tool_input"].get("command"), str)
+            or not envelope["tool_input"]["command"]):
+        raise PolicyError("INPUT_INVALID", "Expected PreToolUse Bash command")
+    return envelope["tool_input"]["command"]
+
+
+def _validate_cli():
+    timer_installed = False
+    try:
+        deadline = time.monotonic() + 2
+        signal.signal(signal.SIGALRM, _timeout_handler)
+        signal.setitimer(signal.ITIMER_REAL, 2)
+        timer_installed = True
+        budget = EvaluationBudget(deadline=deadline)
+        command = _read_envelope(budget)
+        policy = load_policy(budget)
+        evaluate(command, policy, budget)
+        output = json.dumps({"hookSpecificOutput": {
+            "hookEventName": "PreToolUse", "permissionDecision": "allow",
+            "permissionDecisionReason": "Matched shared command policy",
+        }}) + "\n"
+        budget.check_deadline()
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        timer_installed = False
+        sys.stdout.write(output)
+        return 0
+    except PolicyError as error:
+        code, message = error.code, str(error)
+    except Exception:
+        code, message = "INTERNAL_ERROR", "Command evaluation failed"
+    finally:
+        if timer_installed:
+            signal.setitimer(signal.ITIMER_REAL, 0)
+    sys.stderr.write(f"BLOCKED [{code}]: {message}"[:1023] + "\n")
+    return 2
 
 
 def _run_tests():
@@ -520,24 +491,29 @@ def _run_tests():
     suite = unittest.defaultTestLoader.discover(str(Path(__file__).resolve().parent / "tests"))
     return unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful()
 
-if __name__ == "__main__":
+
+def main():
     import argparse
 
-    ap = argparse.ArgumentParser(prog="parser.py")
-    ap.add_argument("subcommand", choices=("parse", "validate", "test"))
-    subcmd = ap.parse_args().subcommand
-
-    if subcmd == "test":
-        sys.exit(0 if _run_tests() else 1)
-
+    parser = argparse.ArgumentParser(prog="validate_bash.py")
+    subcommands = parser.add_subparsers(dest="subcommand", required=True)
+    subcommands.add_parser("parse")
+    validate = subcommands.add_parser("validate")
+    validate.add_argument("--client", choices=("codex", "claude"), required=True)
+    subcommands.add_parser("test")
+    arguments = parser.parse_args()
+    if arguments.subcommand == "test":
+        return 0 if _run_tests() else 1
+    if arguments.subcommand == "validate":
+        return _validate_cli()
     try:
         result = parse(json.load(sys.stdin)["tool_input"]["command"])
-    except (ValueError, KeyError, TypeError) as e:
-        print(f"parse error: {e}", file=sys.stderr)
-        sys.exit(2)
-
-    if subcmd == "parse":
         print(json.dumps(result))
-    elif reason := _check_safe(result):
-        print(_format_blocked_message(reason), file=sys.stderr)
-        sys.exit(2)
+        return 0
+    except (ValueError, KeyError, TypeError):
+        sys.stderr.write("BLOCKED [INPUT_INVALID]: Expected a literal command\n")
+        return 2
+
+
+if __name__ == "__main__":
+    sys.exit(main())
