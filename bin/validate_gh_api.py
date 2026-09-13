@@ -144,101 +144,11 @@ def _deny(reason):
 
 
 def _run_tests():
+    from pathlib import Path
     import unittest
 
-    class ValidateGhApiTests(unittest.TestCase):
-        def assertAllowed(self, command):
-            self.assertIsNone(check(command), command)
-
-        def assertDenied(self, command, reason_part):
-            reason = check(command)
-            self.assertIsNotNone(reason, command)
-            self.assertIn(reason_part, reason, command)
-
-        def test_non_gh_api_commands_pass_through(self):
-            for src in [
-                "ls -la",
-                "gh pr view 123",
-                "gh apiary",
-                "rg 'gh api' docs/",
-                "echo 'price $'",
-                "cat 'unclosed",
-            ]:
-                with self.subTest(src=src):
-                    self.assertAllowed(src)
-
-        def test_allowed_endpoints(self):
-            for src in [
-                "gh api repos/himkt/config/actions/jobs/123",
-                "gh api /repos/himkt/config/actions/jobs/123",
-                "gh api repos/himkt/config/issues/1/comments",
-                "gh api repos/himkt/config/issues/1/comments -f body=hi",
-                "gh api repos/himkt/config/issues/comments/9 -X PATCH -f body=hi",
-                "gh api repos/himkt/config/issues/comments/9 -X DELETE",
-                "gh api repos/himkt/config/pulls/comments/9 -X PATCH -f body=hi",
-                "gh api repos/himkt/config/pulls/2/comments",
-                "gh api repos/himkt/config/pulls/2/reviews -f event=APPROVE",
-                "gh api repos/himkt/config/pulls/2/reviews/5/dismissals -X PUT -f message=x",
-                "gh api repos/himkt/config/pulls/2/requested_reviewers -f 'reviewers[]=a'",
-                "gh api repos/himkt/config/contents/README.md",
-                "gh api 'repos/himkt/config/contents/README.md?ref=main'",
-                "gh api repos/himkt/config/contents/README.md --jq .sha",
-                "gh api repos/himkt/config/contents/README.md --jq '.x > 0'",
-                "gh api repos/himkt/config/pulls/2/comments | wc -l",
-                "gh -R himkt/config api repos/himkt/config/pulls/2/comments",
-            ]:
-                with self.subTest(src=src):
-                    self.assertAllowed(src)
-
-        def test_denied_endpoints(self):
-            for src, reason_part in [
-                ("gh api user", "GET user is not in the allowlist"),
-                ("gh api repos/himkt/config", "not in the allowlist"),
-                ("gh api repos/himkt/config/pulls -f title=x",
-                 "POST repos/himkt/config/pulls is not in the allowlist"),
-                ("gh api repos/himkt/config/contents/x -X PUT -f message=m",
-                 "PUT repos/himkt/config/contents/x is not in the allowlist"),
-                ("gh api repos/himkt/config/actions/jobs/1 -X POST",
-                 "POST repos/himkt/config/actions/jobs/1 is not in the allowlist"),
-                ("gh api --method DELETE repos/himkt/config",
-                 "not in the allowlist"),
-                ("gh api graphql -f query=q", "POST graphql is not in the allowlist"),
-                ("gh api repos/x/y/contents/a -F content=@f",
-                 "POST repos/x/y/contents/a is not in the allowlist"),
-            ]:
-                with self.subTest(src=src):
-                    self.assertDenied(src, reason_part)
-
-        def test_unverifiable_commands_denied(self):
-            for src, reason_part in [
-                ("gh api", "exactly one endpoint"),
-                ("gh api a/b c/d", "exactly one endpoint"),
-                ("gh api --paginate repos/x/y/actions/jobs/1", "exactly one endpoint"),
-                ("gh api repos/x/y/actions/jobs/1 2>/dev/null", "exactly one endpoint"),
-                ('gh api "repos/$OWNER/config/pulls/2/comments"', "cannot verify endpoint"),
-                ("gh api repos/x/y/contents/a -H \"Auth: `cat t`\"", "cannot verify endpoint"),
-                ("gh api 'repos/x/y/pulls/2/comments' -X GET -X DELETE",
-                 "multiple -X/--method flags"),
-                ("gh api repos/x/y/contents/a 'unclosed", "cannot verify 'gh api' command"),
-            ]:
-                with self.subTest(src=src):
-                    self.assertDenied(src, reason_part)
-
-        def test_gh_api_found_after_any_operator(self):
-            for src in [
-                "gh api user | jq .login",
-                "echo x; gh api user",
-                "true && gh api user",
-                "false || gh api user",
-                "gh api user > out",
-                "gh api user&",
-            ]:
-                with self.subTest(src=src):
-                    self.assertDenied(src, "not in the allowlist")
-
-    suite = unittest.TestLoader().loadTestsFromTestCase(ValidateGhApiTests)
+    suite = unittest.defaultTestLoader.discover(str(Path(__file__).resolve().parent / "tests"))
     return unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful()
-
 
 if __name__ == "__main__":
     import argparse
