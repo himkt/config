@@ -91,8 +91,7 @@
       "Bash(cafleet member prompt * --shell)",
       "Bash(cafleet member prompt --shell *)"
     ],
-    "defaultMode": "acceptEdits",
-    "disableAutoMode": "disable",
+    "defaultMode": "auto",
     "additionalDirectories": [
       "~/.claude"
     ]
@@ -101,12 +100,11 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "^Bash$",
         "hooks": [
           {
             "type": "command",
-            "command": "~/.local/bin/validate_gh_api.py validate",
-            "if": "Bash(gh api*)",
+            "command": "~/.local/bin/validate_bash.py validate --client claude",
             "timeout": 10
           }
         ]
