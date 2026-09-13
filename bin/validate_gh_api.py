@@ -1,22 +1,10 @@
 #!/usr/bin/env python3
 
-"""PreToolUse hook that restricts `gh api` to an allowlist of endpoints.
+"""Validate literal GitHub API arguments against the endpoint policy."""
 
-Reads {"tool_input": {"command": "..."}} from stdin and denies when any
-`gh api` segment targets an endpoint/method outside ALLOWLIST or cannot be
-verified literally (shell expansion, unbalanced quotes, ambiguous flags).
-
-CLI subcommands:
-    validate  - emit a PreToolUse deny decision when the command is rejected
-    test      - run embedded unittest suite
-"""
-
-import json
-import re
-import shlex
+import os
 import sys
 from dataclasses import dataclass
-from fnmatch import fnmatchcase
 
 
 @dataclass(frozen=True)
@@ -37,135 +25,153 @@ ALLOWLIST = (
     AllowlistEntry(frozenset({"GET"}), "repos/*/*/contents/*"),
 )
 
-_METHOD_FLAGS = ("-X", "--method")
-_BODY_FLAGS = ("-f", "--raw-field", "-F", "--field", "--input")
-
-_GH_API_RE = re.compile(r"\bgh\s+api\b")
-
-# shlex splits these out as standalone tokens when unquoted; every such
-# token ends the current segment so a `gh api` after `;`, `|`, `&&`, or a
-# redirect is still inspected on its own.
-_OPERATOR_CHARS = set("();<>|&")
-
-
-def _segments(command):
-    lex = shlex.shlex(command, posix=True, punctuation_chars=True)
-    lex.whitespace_split = True
-    segments = [[]]
-    for token in lex:
-        if set(token) <= _OPERATOR_CHARS:
-            segments.append([])
-        else:
-            segments[-1].append(token)
-    return [s for s in segments if s]
+_VALUE_OPTIONS = {
+    "-X": "method", "--method": "method",
+    "-f": "raw-field", "--raw-field": "raw-field",
+    "-F": "field", "--field": "field",
+    "--input": "input", "-H": "header", "--header": "header",
+    "--hostname": "hostname", "--cache": "cache",
+    "-q": "jq", "--jq": "jq", "-t": "template", "--template": "template",
+}
+_BOOLEAN_OPTIONS = {
+    "--paginate": "paginate", "--slurp": "slurp",
+    "-i": "include", "--include": "include", "--silent": "silent",
+    "--verbose": "verbose", "--allow-escape-sequences": "allow-escape-sequences",
+}
+_REPEATABLE = frozenset(("field", "raw-field", "header"))
+_METHODS = frozenset(("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"))
 
 
-def _classify(words):
-    positionals = []
-    keywords = {}
+def _block(message):
+    from validate_bash import PolicyError
+
+    raise PolicyError("GH_API_BLOCK", message)
+
+
+def _options(arguments, budget):
+    options = {}
     i = 0
-    while i < len(words):
-        w = words[i]
+    while i < len(arguments):
+        budget.charge()
+        token = arguments[i]
         i += 1
-        if w == "--":
-            positionals.extend(words[i:])
+        if token == "--":
+            if i != len(arguments):
+                _block("Endpoint must precede options with no extra arguments")
             break
-        if w.startswith("--") and "=" in w:
-            key, _, value = w.partition("=")
-            keywords.setdefault(key, []).append(value)
-        elif w.startswith("-") and w != "-":
-            if i < len(words) and not words[i].startswith("-"):
-                keywords.setdefault(w, []).append(words[i])
-                i += 1
-            else:
-                keywords.setdefault(w, []).append(True)
+        if token in _BOOLEAN_OPTIONS:
+            name = _BOOLEAN_OPTIONS[token]
+            value = True
         else:
-            positionals.append(w)
-    return positionals, keywords
+            if token.startswith("--"):
+                flag, separator, value = token.partition("=")
+                attached = bool(separator)
+            elif token.startswith("-") and len(token) >= 2:
+                flag, value = token[:2], token[2:]
+                attached = bool(value)
+                if value.startswith("="):
+                    value = value[1:]
+            else:
+                _block("Expected an API option after the endpoint")
+            if flag not in _VALUE_OPTIONS:
+                _block("Unsupported API option")
+            name = _VALUE_OPTIONS[flag]
+            if not attached:
+                if i == len(arguments):
+                    _block("API option requires a value")
+                value = arguments[i]
+                i += 1
+            if not value:
+                _block("API option requires a nonempty value")
+        if name in options and name not in _REPEATABLE:
+            _block("Repeated scalar API option")
+        options.setdefault(name, []).append(value)
+    return options
 
 
-def _effective_method(keywords):
-    explicit = [v for flag in _METHOD_FLAGS for v in keywords.get(flag, ()) if isinstance(v, str)]
-    if explicit:
-        return explicit[0].upper() if len(explicit) == 1 else None
-    if any(flag in keywords for flag in _BODY_FLAGS):
-        return "POST"
-    return "GET"
+def check_argv(argv, budget=None):
+    from validate_bash import EvaluationBudget, PolicyError, _match_argument
 
-
-def _check_segment(words):
-    positionals, keywords = _classify(words)
-    if positionals[:2] != ["gh", "api"]:
-        return None
-
-    for w in words:
-        if "$" in w or "`" in w:
-            return f"cannot verify endpoint: shell expansion in '{w}'"
-
-    endpoints = positionals[2:]
-    if len(endpoints) != 1:
-        return ("expected exactly one endpoint argument; "
-                "place the endpoint immediately after 'gh api'")
-    endpoint = endpoints[0].lstrip("/").partition("?")[0]
-
-    method = _effective_method(keywords)
-    if method is None:
-        return "multiple -X/--method flags"
-
+    if budget is None:
+        budget = EvaluationBudget()
+    if not isinstance(argv, list) or any(not isinstance(arg, str) for arg in argv):
+        _block("Expected literal API arguments")
+    if len(argv) > 1024:
+        raise PolicyError("EVALUATION_LIMIT", "Argument count limit exceeded")
+    total_bytes = 0
+    for arg in argv:
+        budget.charge(len(arg) + 1)
+        try:
+            total_bytes += len(arg.encode("utf-8"))
+        except UnicodeError:
+            _block("Invalid Unicode in API arguments")
+        if total_bytes > 65536:
+            raise PolicyError("EVALUATION_LIMIT", "API argument byte limit exceeded")
+    if len(argv) < 3 or argv[:2] != ["gh", "api"] or argv[2].startswith("-"):
+        _block("Place one relative endpoint immediately after gh api")
+    endpoint = argv[2].partition("?")[0]
+    budget.charge(len(endpoint) * 8)
+    if (not endpoint or endpoint.startswith("//") or "://" in endpoint
+            or any(char in endpoint for char in "\\%{}")
+            or "//" in endpoint or any(ord(char) < 32 or ord(char) == 127 for char in endpoint)):
+        _block("Use an unambiguous relative GitHub endpoint")
+    endpoint = endpoint.removeprefix("/")
+    if any(component in (".", "..") for component in endpoint.split("/")):
+        _block("Endpoint path traversal is unsupported")
+    options = _options(argv[3:], budget)
+    host = os.environ.get("GH_HOST", "")
+    budget.charge(len(host) + 1)
+    if host and host != "github.com":
+        _block("GH_HOST must select github.com")
+    if "hostname" in options and options["hostname"][0] != "github.com":
+        _block("API hostname must be github.com")
+    for header in options.get("header", []):
+        budget.charge(len(header))
+        if header.partition(":")[0].strip().lower() == "host":
+            _block("Use the configured GitHub host without a Host header override")
+    if "input" in options and options["input"][0] == "-":
+        _block("Provide a file source for the request body")
+    for field in options.get("field", []):
+        budget.charge(len(field))
+        if field.partition("=")[2] == "@-":
+            _block("Provide a file source for typed fields")
+    if "method" in options:
+        budget.charge(len(options["method"][0]))
+        method = options["method"][0].upper()
+    else:
+        method = "POST" if any(name in options for name in ("field", "raw-field", "input")) else "GET"
+    if method not in _METHODS:
+        _block("Unsupported HTTP method")
     for entry in ALLOWLIST:
-        if method in entry.methods and fnmatchcase(endpoint, entry.endpoint_glob):
+        budget.charge(len(entry.endpoint_glob) + 1)
+        if method in entry.methods and _match_argument(endpoint, entry.endpoint_glob, True, budget):
             return None
-    return f"{method} {endpoint} is not in the allowlist"
+    _block("Endpoint and method require GitHub policy review")
+
+
+def check_deployment_hosts(default_host, api_host_override):
+    if default_host != "github.com" or api_host_override is not None:
+        raise ValueError("Deploy with default host github.com and no API-host override")
 
 
 def check(command):
-    try:
-        segments = _segments(command)
-    except ValueError as e:
-        if _GH_API_RE.search(command):
-            return f"cannot verify 'gh api' command: {e}"
-        return None
+    from validate_bash import EvaluationBudget, parse
 
-    for words in segments:
-        if reason := _check_segment(words):
-            return reason
-    return None
+    budget = EvaluationBudget()
+    return check_argv(parse(command, budget), budget)
 
 
-def _deny(reason):
-    print(json.dumps({
-        "hookSpecificOutput": {
-            "hookEventName": "PreToolUse",
-            "permissionDecision": "deny",
-            "permissionDecisionReason":
-                f"{reason} (allowlist: validate_gh_api.py)",
-        },
-    }))
+def main():
+    import argparse
+    from validate_bash import _run_tests, _validate_cli
 
+    parser = argparse.ArgumentParser(prog="validate_gh_api.py")
+    parser.add_argument("subcommand", choices=("validate", "test"))
+    arguments = parser.parse_args()
+    if arguments.subcommand == "test":
+        return 0 if _run_tests() else 1
+    return _validate_cli(github_only=True)
 
-def _run_tests():
-    from pathlib import Path
-    import unittest
-
-    suite = unittest.defaultTestLoader.discover(str(Path(__file__).resolve().parent / "tests"))
-    return unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful()
 
 if __name__ == "__main__":
-    import argparse
-
-    ap = argparse.ArgumentParser(prog="validate_gh_api.py")
-    ap.add_argument("subcommand", choices=("validate", "test"))
-    subcmd = ap.parse_args().subcommand
-
-    if subcmd == "test":
-        sys.exit(0 if _run_tests() else 1)
-
-    try:
-        command = json.load(sys.stdin)["tool_input"]["command"]
-    except (json.JSONDecodeError, KeyError, TypeError):
-        sys.exit(0)
-    if not isinstance(command, str):
-        sys.exit(0)
-
-    if reason := check(command):
-        _deny(reason)
+    sys.exit(main())

@@ -415,6 +415,10 @@ def evaluate(command, policy, budget=None):
             raise PolicyError("RULE_BLOCK", "Command matches a block rule")
     for rule in policy["allow"]:
         if match_argv(argv, rule, budget):
+            if argv[:2] == ["gh", "api"]:
+                from validate_gh_api import check_argv
+
+                check_argv(argv, budget)
             return "allow"
     raise PolicyError("RULE_UNMATCHED", f"Review shared policy for executable {argv[0][:80]!r}")
 
@@ -454,21 +458,33 @@ def _read_envelope(budget):
     return envelope["tool_input"]["command"]
 
 
-def _validate_cli():
+def _validate_cli(client=None, github_only=False):
     timer_installed = False
     try:
         deadline = time.monotonic() + 2
         signal.signal(signal.SIGALRM, _timeout_handler)
         signal.setitimer(signal.ITIMER_REAL, 2)
         timer_installed = True
+        if (github_only and client is not None) or (not github_only and client not in ("codex", "claude")):
+            raise ValueError("Select one explicit client or standalone GitHub validation")
         budget = EvaluationBudget(deadline=deadline)
         command = _read_envelope(budget)
-        policy = load_policy(budget)
-        evaluate(command, policy, budget)
-        output = json.dumps({"hookSpecificOutput": {
-            "hookEventName": "PreToolUse", "permissionDecision": "allow",
-            "permissionDecisionReason": "Matched shared command policy",
-        }}) + "\n"
+        if github_only:
+            from validate_gh_api import check_argv
+
+            argv = parse(command, budget)
+            if argv[:2] == ["gh", "api"]:
+                check_argv(argv, budget)
+        else:
+            policy = load_policy(budget)
+            evaluate(command, policy, budget)
+        if client == "claude":
+            output = json.dumps({"hookSpecificOutput": {
+                "hookEventName": "PreToolUse", "permissionDecision": "allow",
+                "permissionDecisionReason": "Matched shared command policy",
+            }}) + "\n"
+        else:
+            output = ""
         budget.check_deadline()
         signal.setitimer(signal.ITIMER_REAL, 0)
         timer_installed = False
@@ -505,7 +521,7 @@ def main():
     if arguments.subcommand == "test":
         return 0 if _run_tests() else 1
     if arguments.subcommand == "validate":
-        return _validate_cli()
+        return _validate_cli(client=arguments.client)
     try:
         result = parse(json.load(sys.stdin)["tool_input"]["command"])
         print(json.dumps(result))
@@ -516,4 +532,5 @@ def main():
 
 
 if __name__ == "__main__":
+    sys.modules["validate_bash"] = sys.modules[__name__]
     sys.exit(main())
