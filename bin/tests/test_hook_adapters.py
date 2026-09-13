@@ -10,7 +10,7 @@ import unittest
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SUCCESS = {"hookSpecificOutput": {
+CLAUDE_SUCCESS = {"hookSpecificOutput": {
     "hookEventName": "PreToolUse", "permissionDecision": "allow",
     "permissionDecisionReason": "Matched shared command policy",
 }}
@@ -58,13 +58,20 @@ class HookAdapterTests(unittest.TestCase):
         self.assertNotIn("Traceback", message)
         return message
 
-    def test_both_clients_emit_exact_approval_object(self):
+    def assert_success(self, result, client):
+        self.assertIn(client, ("codex", "claude"))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stderr, b"")
+        if client == "codex":
+            self.assertEqual(result.stdout, b"")
+        else:
+            self.assertEqual(json.loads(result.stdout), CLAUDE_SUCCESS)
+
+    def test_clients_emit_their_respective_success_responses(self):
         for client in ("codex", "claude"):
             with self.subTest(client=client):
                 result = self.invoke(client)
-                self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertEqual(result.stderr, b"")
-                self.assertEqual(json.loads(result.stdout), SUCCESS)
+                self.assert_success(result, client)
 
     def test_additional_envelope_fields_are_supported_without_rewriting_input(self):
         envelope = copy.deepcopy(ENVELOPE)
@@ -73,8 +80,7 @@ class HookAdapterTests(unittest.TestCase):
         for client in ("codex", "claude"):
             with self.subTest(client=client):
                 result = self.invoke(client, envelope)
-                self.assertEqual(result.returncode, 0, result.stderr)
-                self.assertEqual(json.loads(result.stdout), SUCCESS)
+                self.assert_success(result, client)
 
     def test_missing_or_invalid_required_envelope_fields_are_input_denials(self):
         cases = [None, [], 1, True, "command", {}]
@@ -158,8 +164,7 @@ class HookAdapterTests(unittest.TestCase):
                     self.assert_denied(self.invoke(client, envelope), "GH_API_BLOCK")
             envelope = dict(ENVELOPE, tool_input={"command": "gh api repos/himkt/config/contents/x"})
             result = self.invoke(client, envelope)
-            self.assertEqual(result.returncode, 0, result.stderr)
-            self.assertEqual(json.loads(result.stdout), SUCCESS)
+            self.assert_success(result, client)
 
     def test_shell_block_precedes_github_gate(self):
         self.policy_path.write_text(json.dumps({"version": 1, "allow": [["gh", "api", "**"]],
@@ -174,7 +179,7 @@ class HookAdapterTests(unittest.TestCase):
 
     def test_unexpected_exceptions_deny_without_leaking_details(self):
         for client in ("codex", "claude"):
-            for target in ("evaluate", "load_policy", "json.dumps"):
+            for target in ("evaluate", "load_policy"):
                 with self.subTest(client=client, target=target):
                     injection = (
                         f'with patch("validate_bash.{target}", side_effect=RuntimeError("SECRET_BODY")):\n'
@@ -182,6 +187,14 @@ class HookAdapterTests(unittest.TestCase):
                     )
                     message = self.assert_denied(self.invoke(client, injection=injection), "INTERNAL_ERROR")
                     self.assertNotIn("SECRET_BODY", message)
+
+    def test_claude_serialization_failure_denies_without_leaking_details(self):
+        injection = (
+            'with patch("validate_bash.json.dumps", side_effect=RuntimeError("SECRET_BODY")):\n'
+            "    sys.exit(gate.main())"
+        )
+        message = self.assert_denied(self.invoke("claude", injection=injection), "INTERNAL_ERROR")
+        self.assertNotIn("SECRET_BODY", message)
 
     def test_deadline_setup_failure_is_an_explicit_denial(self):
         injection = (
@@ -220,6 +233,24 @@ class HookAdapterTests(unittest.TestCase):
         for envelope in ({}, None, dict(ENVELOPE, tool_input={"command": None})):
             with self.subTest(envelope=envelope):
                 self.assert_denied(self.invoke(envelope=envelope, module="validate_gh_api.py"), "INPUT_INVALID")
+
+    def test_standalone_allowed_github_success_has_empty_stdout_without_shared_policy(self):
+        self.policy_path.unlink()
+        envelope = dict(ENVELOPE, tool_input={"command": "gh api repos/himkt/config/contents/x"})
+        result = self.invoke(envelope=envelope, module="validate_gh_api.py")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(result.stdout, b"")
+        self.assertEqual(result.stderr, b"")
+
+    def test_standalone_literal_non_github_success_has_empty_stdout_without_shared_policy(self):
+        self.policy_path.unlink()
+        for command in ("git status", "herdr pane read 1", "printf 'price $'"):
+            with self.subTest(command=command):
+                envelope = dict(ENVELOPE, tool_input={"command": command})
+                result = self.invoke(envelope=envelope, module="validate_gh_api.py")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(result.stdout, b"")
+                self.assertEqual(result.stderr, b"")
 
     def test_standalone_github_validator_shares_literal_parsing_and_endpoint_denial(self):
         for command, code in (("gh api user", "GH_API_BLOCK"),
