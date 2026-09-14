@@ -4,7 +4,6 @@ min_version = "2026.8.14"
 "~/.agents/skills" = { source = "../skills", mode = "copy" }
 "~/.claude" = { source = "../claude", mode = "copy" }
 "~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
-"~/.codex" = { source = "../codex", mode = "copy" }
 "~/.codex/AGENTS.md" = { source = "../claude/CLAUDE.md", mode = "copy" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
