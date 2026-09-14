@@ -800,7 +800,8 @@ def _run_tests():
                 ordinary_file = project / "file"
                 ordinary_file.write_text("file")
                 for client in ("codex", "claude"):
-                    for cwd in (None, "", "relative", 1, str(project / "missing"), str(ordinary_file)):
+                    for cwd in (None, "", "relative", 1, str(project / "missing"), str(ordinary_file),
+                                str(project) + "/\x00"):
                         with self.subTest(client=client, cwd=cwd):
                             envelope = {"hook_event_name": "PreToolUse", "tool_name": "Bash",
                                         "cwd": cwd, "tool_input": {"command": "git status"}}
