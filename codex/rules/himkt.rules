@@ -1,0 +1,7 @@
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Ask the user to confirm before pushing commits to a remote.",
+    match = ["git push", "git push origin main", "git push -u origin topic"],
+    not_match = ["git status", "git fetch origin"],
+)
