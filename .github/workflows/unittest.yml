@@ -1,0 +1,12 @@
+name: unittest
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  unittest:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: python3 bin/validate_bash.py test
+      - run: python3 bin/validate_gh_api.py test

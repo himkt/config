@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.local/bin/validate_gh_api.py validate",
+            "command": "~/.local/bin/validate_bash.py validate --client codex",
             "timeout": 10
           }
         ]
