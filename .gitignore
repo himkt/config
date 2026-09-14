@@ -2,6 +2,3 @@
 !.gitignore
 !.github/
 result
-
-codex/rules/*.rules
-!codex/rules/himkt.rules

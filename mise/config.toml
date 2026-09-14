@@ -8,15 +8,12 @@ min_version = "2026.8.14"
 "~/.codex/AGENTS.md" = { source = "../claude/CLAUDE.md", mode = "copy" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
-"~/.config/himkt/accepts.jsonc" = { source = "../himkt/accepts.jsonc", mode = "copy" }
 "~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
 "~/.config/mise" = { source = "../mise", mode = "symlink-each" }
 "~/.config/nvim" = "../nvim"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"
 "~/.config/uv" = "../uv"
-"~/.local/bin/validate_bash.py" = { source = "../bin/validate_bash.py", mode = "copy" }
-"~/.local/bin/validate_gh_api.py" = { source = "../bin/validate_gh_api.py", mode = "copy" }
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
@@ -25,6 +22,7 @@ min_version = "2026.8.14"
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
 "brew:coreutils" = "latest"
+"brew:ffmpeg" = "latest"
 "brew:git" = "latest"
 "brew:himkt/tap/cafleet" = "latest"
 "brew:himkt/tap/pathfinder" = "latest"
@@ -32,6 +30,7 @@ min_version = "2026.8.14"
 "brew:less" = "latest"
 "brew:libpq" = "latest"
 "brew:rustup" = "latest"
+"brew:tesseract" = "latest"
 "brew:tree" = "latest"
 "brew:unzip" = "latest"
 "brew:zip" = "latest"

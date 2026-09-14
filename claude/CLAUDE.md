@@ -129,7 +129,7 @@ Rules for consistent, clean git commit history across all projects.
 
 ## Bash Commands
 
-Run one literal command per Bash tool call. The shared command gate reads `~/.config/himkt/accepts.jsonc` on each invocation; a command must match an allow rule and pass every block and GitHub API check. Maintain the repository policy in `himkt/accepts.jsonc` and explicitly install its copy after review. Native client permissions remain additional controls.
+Run one literal command per Bash tool call. Follow the client's configured permissions and sandbox controls.
 
 - Run each command as a separate Bash call, including each pipeline stage. Use a command's built-in filtering options when available. Chaining, pipes, background execution, and unquoted newlines are blocked.
 - Run `cd /path/to/dir` as its own Bash call, then run subsequent commands in separate calls. The working directory persists between Bash calls, so `cd /path && command` is never necessary
