@@ -157,8 +157,8 @@ def validate_policy(policy, budget=None):
                     budget.charge()
                     if 0xD800 <= ord(char) <= 0xDFFF:
                         _invalid_policy("Policy contains invalid Unicode")
-            if not rule[0] or "/" in rule[0] or "*" in rule[0]:
-                _invalid_policy("Executable must be a literal name without slashes")
+            if not rule[0] or "*" in rule[0]:
+                _invalid_policy("Executable must be a nonempty literal name or path")
             identity = tuple(rule)
             budget.charge(sum(map(len, rule)))
             if identity in seen:
@@ -167,10 +167,7 @@ def validate_policy(policy, budget=None):
     return policy
 
 
-def load_policy(budget=None):
-    if budget is None:
-        budget = EvaluationBudget()
-    path = Path.home() / ".config/himkt/accepts.jsonc"
+def _load_policy_file(path, budget, optional=False):
     try:
         descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
         try:
@@ -190,11 +187,40 @@ def load_policy(budget=None):
         )
         return validate_policy(policy, budget)
     except FileNotFoundError as error:
+        if optional and not path.is_symlink():
+            return {"version": 1, "allow": [], "block": []}
         raise PolicyError("POLICY_MISSING", f"Repair policy at {path}: file missing") from error
     except PolicyError as error:
         raise PolicyError(error.code, f"Repair policy at {path}: {error}") from error
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise PolicyError("POLICY_INVALID", f"Repair policy at {path}: unreadable or invalid policy") from error
+
+
+def project_directory(cwd):
+    try:
+        directory = Path(cwd).resolve(strict=True)
+    except (OSError, RuntimeError) as error:
+        raise PolicyError("INPUT_INVALID", "Working directory must be accessible") from error
+    if not directory.is_dir():
+        raise PolicyError("INPUT_INVALID", "Working directory must be a directory")
+    for candidate in (directory, *directory.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return directory
+
+
+def load_policy(budget=None, cwd=None):
+    if budget is None:
+        budget = EvaluationBudget()
+    global_policy = _load_policy_file(Path.home() / ".config/himkt/accepts.jsonc", budget)
+    local_path = project_directory(Path.cwd() if cwd is None else cwd) / ".rules/accepts.jsonc"
+    local_policy = _load_policy_file(local_path, budget, optional=True)
+    merged = {"version": 1}
+    for category in ("allow", "block"):
+        merged[category] = [list(rule) for rule in dict.fromkeys(
+            tuple(rule) for rule in global_policy[category] + local_policy[category]
+        )]
+    return validate_policy(merged, budget)
 
 
 _RESERVED_WORDS = frozenset((
@@ -377,14 +403,14 @@ def evaluate(command, policy, budget=None):
     for rule in policy["block"]:
         if match_argv(argv, rule, budget):
             raise PolicyError("RULE_BLOCK", "Command matches a block rule")
+    if Path(argv[0]).name == "gh" and argv[1:2] == ["api"]:
+        from validate_gh_api import check_argv
+
+        check_argv(["gh", *argv[1:]], budget)
     for rule in policy["allow"]:
         if match_argv(argv, rule, budget):
-            if argv[:2] == ["gh", "api"]:
-                from validate_gh_api import check_argv
-
-                check_argv(argv, budget)
             return "allow"
-    raise PolicyError("RULE_UNMATCHED", f"Review shared policy for executable {argv[0][:80]!r}")
+    return "defer"
 
 
 class EvaluationTimeout(PolicyError):
@@ -419,7 +445,10 @@ def _read_envelope(budget):
             or not isinstance(envelope["tool_input"].get("command"), str)
             or not envelope["tool_input"]["command"]):
         raise PolicyError("INPUT_INVALID", "Expected PreToolUse Bash command")
-    return envelope["tool_input"]["command"]
+    if "cwd" in envelope and (not isinstance(envelope["cwd"], str)
+                               or not Path(envelope["cwd"]).is_absolute()):
+        raise PolicyError("INPUT_INVALID", "Hook cwd must be an absolute directory path")
+    return envelope
 
 
 def _validate_cli(client=None, github_only=False):
@@ -432,17 +461,19 @@ def _validate_cli(client=None, github_only=False):
         if (github_only and client is not None) or (not github_only and client not in ("codex", "claude")):
             raise ValueError("Select one explicit client or standalone GitHub validation")
         budget = EvaluationBudget(deadline=deadline)
-        command = _read_envelope(budget)
+        envelope = _read_envelope(budget)
+        command = envelope["tool_input"]["command"]
+        decision = "defer"
         if github_only:
             from validate_gh_api import check_argv
 
             argv = parse(command, budget)
-            if argv[:2] == ["gh", "api"]:
-                check_argv(argv, budget)
+            if Path(argv[0]).name == "gh" and argv[1:2] == ["api"]:
+                check_argv(["gh", *argv[1:]], budget)
         else:
-            policy = load_policy(budget)
-            evaluate(command, policy, budget)
-        if client == "claude":
+            policy = load_policy(budget, cwd=envelope.get("cwd"))
+            decision = evaluate(command, policy, budget)
+        if client == "claude" and decision == "allow":
             output = json.dumps({"hookSpecificOutput": {
                 "hookEventName": "PreToolUse", "permissionDecision": "allow",
                 "permissionDecisionReason": "Matched shared command policy",
@@ -524,16 +555,29 @@ def _run_tests():
             self.assertEqual(evaluate("git status", policy), "allow")
             self.assert_error("RULE_BLOCK", evaluate, "git push origin main", policy)
             for command in ("/usr/bin/git status", "env git status", "Git status"):
-                self.assert_error("RULE_UNMATCHED", evaluate, command, policy)
-            self.assert_error("RULE_UNMATCHED", evaluate, "git status",
-                              {"version": 1, "allow": [], "block": []})
+                self.assertEqual(evaluate(command, policy), "defer")
+            self.assertEqual(evaluate("git status", {"version": 1, "allow": [], "block": []}), "defer")
+
+        def test_executable_paths(self):
+            paths = {"version": 1, "allow": [["/usr/bin/git", "status"], ["./tool", "**"]],
+                     "block": [["./tool", "delete"]]}
+            self.assertEqual(evaluate("/usr/bin/git status", paths), "allow")
+            self.assertEqual(evaluate("git status", paths), "defer")
+            self.assertEqual(evaluate("./tool list", paths), "allow")
+            self.assert_error("RULE_BLOCK", evaluate, "./tool delete", paths)
+
+        def test_github_gate_before_defer(self):
+            empty = {"version": 1, "allow": [], "block": []}
+            for executable in ("gh", "/usr/bin/gh", "./gh"):
+                self.assert_error("GH_API_BLOCK", evaluate, executable + " api user", empty)
+                self.assertEqual(evaluate(executable + " api repos/himkt/config/contents/x", empty), "defer")
 
         def test_schema(self):
             self.assertEqual(validate_policy(policy), policy)
             for invalid in (
                 None, {}, dict(policy, version=True), dict(policy, version=2),
                 dict(policy, extra=1), dict(policy, allow="git"),
-                dict(policy, allow=[[]]), dict(policy, allow=[["/bin/git"]]),
+                dict(policy, allow=[[]]), dict(policy, allow=[[""]]),
                 dict(policy, allow=[["g*"]]), dict(policy, allow=[["git", 1]]),
                 dict(policy, allow=[["git"], ["git"]]),
             ):
@@ -563,6 +607,45 @@ def _run_tests():
                 path.write_bytes(b" " * (MAX_POLICY_BYTES + 1))
                 self.assert_error("EVALUATION_LIMIT", load_policy)
 
+        def test_project_policy_merge(self):
+            with tempfile.TemporaryDirectory(prefix=".validate-", dir=Path.cwd()) as home, patch.dict(os.environ, HOME=home):
+                global_path = Path(home) / ".config/himkt/accepts.jsonc"
+                global_path.parent.mkdir(parents=True)
+                global_path.write_text(json.dumps(policy))
+                root = Path(home) / "project"
+                child = root / "src"
+                child.mkdir(parents=True)
+                (root / ".git").write_text("gitdir: ../worktree-metadata")
+                local_path = root / ".rules/accepts.jsonc"
+                local_path.parent.mkdir()
+                self.assertEqual(load_policy(cwd=child), policy)
+                local_path.write_text(json.dumps({"version": 1,
+                    "allow": [["git", "**"], ["git", "push", "**"], ["./tool", "**"]],
+                    "block": [["git", "status"]]}))
+                merged = load_policy(cwd=child)
+                self.assertEqual(merged["allow"].count(["git", "**"]), 1)
+                self.assertEqual(evaluate("./tool list", merged), "allow")
+                self.assert_error("RULE_BLOCK", evaluate, "git status", merged)
+                self.assert_error("RULE_BLOCK", evaluate, "git push", merged)
+                local_path.write_text("{")
+                with self.assertRaises(PolicyError) as caught:
+                    load_policy(cwd=child)
+                self.assertEqual(caught.exception.code, "POLICY_INVALID")
+                self.assertIn(str(local_path), str(caught.exception))
+                local_path.unlink()
+                local_path.symlink_to(root / "missing.jsonc")
+                self.assert_error("POLICY_MISSING", load_policy, None, child)
+
+        def test_project_discovery(self):
+            with tempfile.TemporaryDirectory(prefix=".validate-", dir=Path.cwd()) as temporary:
+                root = Path(temporary)
+                child = root / "src"
+                child.mkdir()
+                (root / ".git").mkdir()
+                self.assertEqual(project_directory(child), root.resolve())
+                (child / ".git").mkdir()
+                self.assertEqual(project_directory(child), child.resolve())
+
         def test_evaluation_limits(self):
             self.assert_error("EVALUATION_LIMIT", parse, "git status", EvaluationBudget(limit=0))
             self.assert_error("EVALUATION_LIMIT", match_argv, ["git", "x" * 100],
@@ -583,7 +666,7 @@ def _run_tests():
                     for command, expected in (
                         ("git status", None),
                         ("git push", "RULE_BLOCK" if client else None),
-                        ("unknown", "RULE_UNMATCHED" if client else None),
+                        ("unknown", None),
                         ("git | id", "SHELL_UNSUPPORTED"),
                         ("gh api user", "GH_API_BLOCK"),
                         ("gh api 'repos/himkt/config#/pulls/1/reviews/1' -XDELETE", "GH_API_BLOCK"),
@@ -603,7 +686,7 @@ def _run_tests():
                             else:
                                 self.assertEqual(result.returncode, 0, result.stderr)
                                 self.assertEqual(result.stderr, "")
-                                if client == "claude":
+                                if client == "claude" and command != "unknown":
                                     self.assertEqual(json.loads(result.stdout), {"hookSpecificOutput": {
                                         "hookEventName": "PreToolUse", "permissionDecision": "allow",
                                         "permissionDecisionReason": "Matched shared command policy"}})
@@ -621,6 +704,36 @@ def _run_tests():
                             self.assertEqual(result.returncode, 2)
                             self.assertEqual(result.stdout, "")
                             self.assertIn(code, result.stderr)
+
+        def test_client_project_cwd(self):
+            with tempfile.TemporaryDirectory(prefix=".validate-", dir=Path.cwd()) as home:
+                global_path = Path(home) / ".config/himkt/accepts.jsonc"
+                global_path.parent.mkdir(parents=True)
+                global_path.write_text(json.dumps(policy))
+                project = Path(home) / "project"
+                (project / ".rules").mkdir(parents=True)
+                (project / ".git").mkdir()
+                child = project / "src"
+                child.mkdir()
+                (project / ".rules/accepts.jsonc").write_text(json.dumps({"version": 1,
+                    "allow": [["./tool", "**"]], "block": [["git", "status"]]}))
+                for client in ("codex", "claude"):
+                    for command, expected in (("./tool list", "allow"), ("git status", "RULE_BLOCK"),
+                                              ("unknown", "defer")):
+                        envelope = {"hook_event_name": "PreToolUse", "tool_name": "Bash",
+                                    "cwd": str(child.resolve()), "tool_input": {"command": command}}
+                        result = subprocess.run([sys.executable, str(script), "validate", "--client", client],
+                                                input=json.dumps(envelope), text=True, capture_output=True,
+                                                env=dict(os.environ, HOME=home), timeout=3)
+                        self.assertEqual(result.returncode, 2 if expected == "RULE_BLOCK" else 0, result.stderr)
+                        if expected == "RULE_BLOCK":
+                            self.assertIn("RULE_BLOCK", result.stderr)
+                        else:
+                            self.assertEqual(result.stderr, "")
+                        if client == "claude" and expected == "allow":
+                            self.assertEqual(json.loads(result.stdout)["hookSpecificOutput"]["permissionDecision"], "allow")
+                        else:
+                            self.assertEqual(result.stdout, "")
 
         def test_internal_failure_denies(self):
             output, error = io.StringIO(), io.StringIO()
