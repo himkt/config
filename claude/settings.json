@@ -5,6 +5,9 @@
     "commit": ""
   },
   "permissions": {
+    "ask": [
+      "Bash(git push *)"
+    ],
     "allow": [
       "Edit",
       "NotebookEdit",
