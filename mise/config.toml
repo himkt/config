@@ -84,7 +84,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.0"
 "aqua:neovim/neovim" = "v0.12.5"
-"aqua:ogulcancelik/herdr" = "v0.8.2"
+"aqua:ogulcancelik/herdr" = "v0.9.0"
 "aqua:openai/codex" = "v0.153.4"
 "aqua:pnpm/pnpm" = "12.3.4"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
