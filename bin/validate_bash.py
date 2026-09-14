@@ -509,6 +509,19 @@ def _run_tests():
     script = Path(__file__).resolve()
 
     class ValidatorTests(unittest.TestCase):
+        @contextlib.contextmanager
+        def policy_files(self):
+            with tempfile.TemporaryDirectory(prefix=".validate-", dir=Path.cwd()) as home, patch.dict(os.environ, HOME=home):
+                root = Path(home).resolve()
+                global_path = root / ".config/himkt/accepts.jsonc"
+                global_path.parent.mkdir(parents=True)
+                global_path.write_text(json.dumps(policy))
+                project = root / "project"
+                (project / ".git").mkdir(parents=True)
+                local_path = project / ".rules/accepts.jsonc"
+                local_path.parent.mkdir()
+                yield global_path, local_path, project
+
         def assert_error(self, code, function, *args):
             with self.assertRaises(PolicyError) as caught:
                 function(*args)
@@ -652,6 +665,158 @@ def _run_tests():
                               ["git", "*a*b*"], EvaluationBudget(limit=1))
             self.assert_error("EVALUATION_LIMIT", EvaluationBudget(deadline=0).check_deadline)
             self.assert_error("EVALUATION_LIMIT", parse, "git " + "x" * 65536)
+
+        def test_non_git_directory_uses_only_starting_policy(self):
+            with self.policy_files() as (global_path, local_path, project):
+                child = project / "src"
+                (child / ".rules").mkdir(parents=True)
+                local_path.write_text(json.dumps({"version": 1, "allow": [], "block": [["git", "status"]]}))
+                child_policy = child / ".rules/accepts.jsonc"
+                child_policy.write_text(json.dumps({"version": 1, "allow": [["./child"]], "block": []}))
+                path_exists = Path.exists
+                with patch.object(Path, "exists", lambda path: path.name != ".git" and path_exists(path)):
+                    self.assertEqual(project_directory(child), child)
+                    merged = load_policy(cwd=child)
+                self.assertEqual(merged["allow"], policy["allow"] + [["./child"]])
+                self.assertEqual(merged["block"], policy["block"])
+                self.assertEqual(evaluate("git status", merged), "allow")
+
+        def test_missing_local_policy_contributes_empty_rules(self):
+            with self.policy_files() as (global_path, local_path, project):
+                local_path.parent.rmdir()
+                self.assertEqual(load_policy(cwd=project), policy)
+                local_path.parent.mkdir()
+                self.assertEqual(load_policy(cwd=project), policy)
+
+        def test_each_file_rejects_duplicate_rules_in_each_category(self):
+            with self.policy_files() as (global_path, local_path, project):
+                for target in (global_path, local_path):
+                    for category in ("allow", "block"):
+                        with self.subTest(target=target, category=category):
+                            global_path.write_text(json.dumps(policy))
+                            local_path.write_text(json.dumps({"version": 1, "allow": [], "block": []}))
+                            invalid = {"version": 1, "allow": [], "block": []}
+                            invalid[category] = [["git", "status"], ["git", "status"]]
+                            target.write_text(json.dumps(invalid))
+                            with self.assertRaises(PolicyError) as caught:
+                                load_policy(cwd=project)
+                            self.assertEqual(caught.exception.code, "POLICY_INVALID")
+                            self.assertIn(str(target), str(caught.exception))
+
+        def test_merge_deduplicates_each_category_in_scope_order(self):
+            with self.policy_files() as (global_path, local_path, project):
+                global_path.write_text(json.dumps({"version": 1,
+                    "allow": [["global"], ["shared"]], "block": [["blocked"], ["shared"]]}))
+                local_path.write_text(json.dumps({"version": 1,
+                    "allow": [["shared"], ["local"]], "block": [["shared"], ["local-block"]]}))
+                merged = load_policy(cwd=project)
+                self.assertEqual(merged, {"version": 1,
+                    "allow": [["global"], ["shared"], ["local"]],
+                    "block": [["blocked"], ["shared"], ["local-block"]]})
+                self.assert_error("RULE_BLOCK", evaluate, "shared", merged)
+
+        def test_merged_rule_limit_counts_both_categories_after_deduplication(self):
+            with self.policy_files() as (global_path, local_path, project):
+                allowed = [["tool", str(index)] for index in range(512)]
+                blocked = [["blocked", str(index)] for index in range(512)]
+                global_path.write_text(json.dumps({"version": 1, "allow": allowed, "block": blocked}))
+                local_path.write_text(json.dumps({"version": 1, "allow": allowed, "block": blocked}))
+                self.assertEqual(load_policy(cwd=project), {"version": 1, "allow": allowed, "block": blocked})
+                local_path.write_text(json.dumps({"version": 1, "allow": [["extra"]], "block": []}))
+                self.assert_error("EVALUATION_LIMIT", load_policy, None, project)
+
+        def test_policy_files_are_reloaded_on_each_call(self):
+            with self.policy_files() as (global_path, local_path, project):
+                self.assertEqual(evaluate("git status", load_policy(cwd=project)), "allow")
+                global_path.write_text(json.dumps({"version": 1, "allow": [], "block": []}))
+                self.assertEqual(evaluate("git status", load_policy(cwd=project)), "defer")
+                local_path.write_text(json.dumps({"version": 1, "allow": [["git", "status"]], "block": []}))
+                self.assertEqual(evaluate("git status", load_policy(cwd=project)), "allow")
+                local_path.write_text(json.dumps({"version": 1, "allow": [], "block": [["git", "status"]]}))
+                self.assert_error("RULE_BLOCK", evaluate, "git status", load_policy(cwd=project))
+                global_path.unlink()
+                self.assert_error("POLICY_MISSING", load_policy, None, project)
+
+        def test_nested_repository_and_worktree_use_only_their_root_policy(self):
+            with self.policy_files() as (global_path, local_path, project):
+                local_path.write_text(json.dumps({"version": 1, "allow": [], "block": [["git", "status"]]}))
+                for name, worktree in (("nested", False), ("worktree", True)):
+                    with self.subTest(worktree=worktree):
+                        nested = project / name
+                        child = nested / "src"
+                        (child / ".rules").mkdir(parents=True)
+                        (child / ".rules/accepts.jsonc").write_text("{")
+                        if worktree:
+                            (nested / ".git").write_text("gitdir: ../metadata")
+                        else:
+                            (nested / ".git").mkdir()
+                        self.assertEqual(project_directory(child), nested)
+                        self.assertEqual(load_policy(cwd=child), policy)
+                        (nested / ".rules").mkdir()
+                        (nested / ".rules/accepts.jsonc").write_text(json.dumps({"version": 1,
+                            "allow": [["./nested"]], "block": []}))
+                        self.assertEqual(load_policy(cwd=child)["allow"], policy["allow"] + [["./nested"]])
+
+        def test_symlink_cwd_uses_resolved_repository(self):
+            with self.policy_files() as (global_path, local_path, project):
+                target = project / "nested"
+                (target / ".git").mkdir(parents=True)
+                alias = project / "alias"
+                alias.symlink_to(target, target_is_directory=True)
+                local_path.write_text("{")
+                self.assertEqual(project_directory(alias), target)
+                self.assertEqual(load_policy(cwd=alias), policy)
+
+        def test_local_policy_file_errors_include_repair_path(self):
+            with self.policy_files() as (global_path, local_path, project):
+                for content, code in ((b"\xff", "POLICY_INVALID"),
+                                      (b'{"version":1,"allow":[],"block":[],"block":[]}', "POLICY_INVALID"),
+                                      (b" " * (MAX_POLICY_BYTES + 1), "EVALUATION_LIMIT")):
+                    with self.subTest(code=code, size=len(content)):
+                        local_path.write_bytes(content)
+                        with self.assertRaises(PolicyError) as caught:
+                            load_policy(cwd=project)
+                        self.assertEqual(caught.exception.code, code)
+                        self.assertIn(str(local_path), str(caught.exception))
+                local_path.unlink()
+                local_path.mkdir()
+                self.assert_error("POLICY_INVALID", load_policy, None, project)
+
+        def test_unmatched_syntax_and_path_github_calls_are_checked(self):
+            empty = {"version": 1, "allow": [], "block": []}
+            for command in ("unknown | cat", "unknown > output", "unknown $HOME"):
+                with self.subTest(command=command):
+                    self.assert_error("SHELL_UNSUPPORTED", evaluate, command, empty)
+            for executable in ("gh", "/usr/bin/gh", "./gh"):
+                with self.subTest(executable=executable):
+                    allowed = {"version": 1, "allow": [[executable, "api", "**"]], "block": []}
+                    self.assert_error("GH_API_BLOCK", evaluate, executable + " api user", allowed)
+                    blocked = dict(allowed, block=[[executable, "api", "**"]])
+                    self.assert_error("RULE_BLOCK", evaluate, executable + " api user", blocked)
+
+        def test_clients_validate_cwd_and_use_process_cwd_when_omitted(self):
+            with self.policy_files() as (global_path, local_path, project):
+                local_path.write_text(json.dumps({"version": 1, "allow": [], "block": [["git", "status"]]}))
+                ordinary_file = project / "file"
+                ordinary_file.write_text("file")
+                for client in ("codex", "claude"):
+                    for cwd in (None, "", "relative", 1, str(project / "missing"), str(ordinary_file)):
+                        with self.subTest(client=client, cwd=cwd):
+                            envelope = {"hook_event_name": "PreToolUse", "tool_name": "Bash",
+                                        "cwd": cwd, "tool_input": {"command": "git status"}}
+                            result = subprocess.run([sys.executable, str(script), "validate", "--client", client],
+                                                    input=json.dumps(envelope), text=True, capture_output=True,
+                                                    cwd=project, timeout=3)
+                            self.assertEqual(result.returncode, 2)
+                            self.assertEqual(result.stdout, "")
+                            self.assertTrue(result.stderr.startswith("BLOCKED [INPUT_INVALID]:"), result.stderr)
+                    del envelope["cwd"]
+                    result = subprocess.run([sys.executable, str(script), "validate", "--client", client],
+                                            input=json.dumps(envelope), text=True, capture_output=True,
+                                            cwd=project, timeout=3)
+                    self.assertEqual(result.returncode, 2)
+                    self.assertEqual(result.stdout, "")
+                    self.assertTrue(result.stderr.startswith("BLOCKED [RULE_BLOCK]:"), result.stderr)
 
         def test_client_contracts(self):
             with tempfile.TemporaryDirectory(prefix=".validate-", dir=Path.cwd()) as home:
