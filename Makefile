@@ -1,20 +1,22 @@
-.PHONY: bootstrap bootstrap-check brew brew-bundle brew-bundle-check mise touchid-sudo
+.PHONY: all brew-up dotfiles krew-up mise mise-up touchid-sudo
 
-mise:
-	curl https://mise.run | sh
-
-krew-bundle:
-	cat $(PWD)/krew/plugins | xargs kubectl krew install
-
-up:
-	mise up
-
-dotfiles:
-	mise bootstrap dotfiles apply --yes
+all: mise brew-up dotfiles krew-up mise-up
 
 brew-up:
 	mise bootstrap packages apply --yes
 	mise bootstrap packages upgrade --yes
+
+dotfiles:
+	mise bootstrap dotfiles apply --yes
+
+mise:
+	curl https://mise.run | sh
+
+mise-up:
+	mise up
+
+krew-up:
+	kubectl krew install < krew/plugins
 
 touchid-sudo:
 	$(PWD)/bin/setup-touchid-sudo.sh
