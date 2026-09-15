@@ -20,4 +20,11 @@ jobs:
       - run: mise trust
       - run: make mise-up
       - run: make brew-up
-      - run: make krew-up
+      - if: ${{ matrix.os == 'macos-26' }}
+        run: |
+          export PATH=$PATH:/opt/homebrew/bin
+          make krew-up
+      - if: ${{ matrix.os == 'ubuntu-26.04' }}
+        run: |
+          export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
+          make krew-up
