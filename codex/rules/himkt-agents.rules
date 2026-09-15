@@ -1,0 +1,21 @@
+prefix_rule(
+    pattern = ["cafleet"],
+    decision = "allow",
+    match = ["cafleet message poll 5", "cafleet member list 1", "cafleet doctor"],
+    not_match = ["cafleetd", "herdr pane read"],
+)
+
+prefix_rule(
+    pattern = ["cafleet", "member", "prompt"],
+    decision = "prompt",
+    justification = "cafleet member prompt keystrokes arbitrary text or shell commands into a member pane.",
+    match = ["cafleet member prompt 5 hello", "cafleet member prompt 5 --shell ls"],
+    not_match = ["cafleet member list 1", "cafleet message send --from-member-id 1 --to-member-id 2 ready"],
+)
+
+prefix_rule(
+    pattern = ["herdr", "pane", "read"],
+    decision = "allow",
+    match = ["herdr pane read", "herdr pane read 1"],
+    not_match = ["herdr pane write 1", "herdr pane"],
+)

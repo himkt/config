@@ -1,0 +1,125 @@
+prefix_rule(
+    pattern = ["grep"],
+    decision = "allow",
+    match = ["grep -rn TODO src/", "grep pattern file.txt"],
+    not_match = ["egrep pattern file.txt", "git grep pattern"],
+)
+
+prefix_rule(
+    pattern = ["ls"],
+    decision = "allow",
+    match = ["ls", "ls -la bin/"],
+    not_match = ["lsof -i :8080", "eza -la"],
+)
+
+prefix_rule(
+    pattern = ["printf"],
+    decision = "allow",
+    match = ["printf hello", ["printf", "%s\\n", "literal"]],
+    not_match = ["echo hello", "print hello"],
+)
+
+prefix_rule(
+    pattern = ["rg"],
+    decision = "allow",
+    match = ["rg --files", "rg pattern src/", "rg -n TODO"],
+    not_match = ["grep pattern src/", "ripgrep pattern"],
+)
+
+prefix_rule(
+    pattern = ["sleep"],
+    decision = "allow",
+    match = ["sleep 5", "sleep 0.5"],
+    not_match = ["timeout 5 sleep 10", "wait"],
+)
+
+prefix_rule(
+    pattern = ["stat"],
+    decision = "allow",
+    match = ["stat file.py", "stat -f %z file.py"],
+    not_match = ["status", "git status"],
+)
+
+prefix_rule(
+    pattern = ["tree"],
+    decision = "allow",
+    match = ["tree", "tree -L 2 src/"],
+    not_match = ["git ls-tree HEAD", "treee"],
+)
+
+prefix_rule(
+    pattern = ["wc"],
+    decision = "allow",
+    match = ["wc -l file.txt", "wc -c file.txt"],
+    not_match = ["wcs", "cat file.txt"],
+)
+
+prefix_rule(
+    pattern = ["wget"],
+    decision = "allow",
+    match = ["wget https://example.com/file.tar.gz", "wget -O out.json https://example.com/api"],
+    not_match = ["curl https://example.com", "wg show"],
+)
+
+prefix_rule(
+    pattern = ["awk"],
+    decision = "forbidden",
+    match = ["awk -F: {print $1} file.txt"],
+    not_match = ["gawk-free", "rg pattern"],
+)
+
+prefix_rule(
+    pattern = ["cat"],
+    decision = "forbidden",
+    match = ["cat file.txt", "cat -n file.txt"],
+    not_match = ["catalog", "rg pattern file.txt"],
+)
+
+prefix_rule(
+    pattern = ["curl"],
+    decision = "forbidden",
+    match = ["curl https://example.com", "curl -X POST https://example.com/api"],
+    not_match = ["wget https://example.com", "curlie https://example.com"],
+)
+
+prefix_rule(
+    pattern = ["echo"],
+    decision = "forbidden",
+    match = ["echo hello", "echo -n hello"],
+    not_match = ["printf hello", "echoes"],
+)
+
+prefix_rule(
+    pattern = ["find"],
+    decision = "forbidden",
+    match = ["find . -name *.py", "find src/ -type f"],
+    not_match = ["rg --files", "findutils"],
+)
+
+prefix_rule(
+    pattern = ["kill"],
+    decision = "forbidden",
+    match = ["kill 1234", "kill -9 1234"],
+    not_match = ["pkill node", "killall node"],
+)
+
+prefix_rule(
+    pattern = ["mkdir"],
+    decision = "forbidden",
+    match = ["mkdir dir", "mkdir -p a/b/c"],
+    not_match = ["mkdirs", "install -d dir"],
+)
+
+prefix_rule(
+    pattern = ["touch"],
+    decision = "forbidden",
+    match = ["touch file.txt", "touch -m file.txt"],
+    not_match = ["touchid", "git add file.txt"],
+)
+
+prefix_rule(
+    pattern = ["xargs"],
+    decision = "forbidden",
+    match = ["xargs rm", "xargs -0 -n1 echo"],
+    not_match = ["rg --files", "args"],
+)

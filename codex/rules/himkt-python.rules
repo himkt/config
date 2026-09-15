@@ -1,0 +1,41 @@
+prefix_rule(
+    pattern = ["uv", "run", "pytest"],
+    decision = "allow",
+    match = ["uv run pytest", "uv run pytest tests/ -k parser"],
+    not_match = ["uv run python script.py", "pytest tests/"],
+)
+
+prefix_rule(
+    pattern = ["uv", "run", "ruff", "check"],
+    decision = "allow",
+    match = ["uv run ruff check", "uv run ruff check --fix src/"],
+    not_match = ["uv run ruff", "ruff check"],
+)
+
+prefix_rule(
+    pattern = ["uv", "run", "ruff", "format"],
+    decision = "allow",
+    match = ["uv run ruff format", "uv run ruff format src/"],
+    not_match = ["uv run ruff", "ruff format"],
+)
+
+prefix_rule(
+    pattern = ["uv", "sync", "--frozen"],
+    decision = "allow",
+    match = ["uv sync --frozen", "uv sync --frozen --all-extras"],
+    not_match = ["uv sync", "uv sync --upgrade"],
+)
+
+prefix_rule(
+    pattern = ["python"],
+    decision = "forbidden",
+    match = ["python script.py", "python -c print(1)"],
+    not_match = ["uv run pytest", "python3 script.py"],
+)
+
+prefix_rule(
+    pattern = ["python3"],
+    decision = "forbidden",
+    match = ["python3 script.py", "python3 -m json.tool settings.json"],
+    not_match = ["uv run pytest", "python script.py"],
+)

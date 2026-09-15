@@ -8,6 +8,8 @@ krew-bundle:
 
 up:
 	mise up
+
+dotfiles:
 	mise bootstrap dotfiles apply --yes
 
 brew-up:

@@ -5,11 +5,51 @@
     "commit": ""
   },
   "permissions": {
-    "ask": [
-      "Bash(git push *)"
-    ],
     "allow": [
       "Edit",
+      "Bash(gh api *)",
+      "Bash(gh auth status)",
+      "Bash(gh issue list *)",
+      "Bash(gh issue view *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh pr list)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr view *)",
+      "Bash(gh repo view *)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)",
+      "Bash(gh search *)",
+      "Bash(git add *)",
+      "Bash(git branch *)",
+      "Bash(git commit *)",
+      "Bash(git diff *)",
+      "Bash(git grep *)",
+      "Bash(git log *)",
+      "Bash(git ls-tree *)",
+      "Bash(git ls-files *)",
+      "Bash(git mv *)",
+      "Bash(git rm *)",
+      "Bash(git status)",
+      "Bash(grep *)",
+      "Bash(herdr pane read *)",
+      "Bash(ls)",
+      "Bash(ls *)",
+      "Bash(printf *)",
+      "Bash(rg)",
+      "Bash(rg *)",
+      "Bash(sleep)",
+      "Bash(sleep *)",
+      "Bash(stat *)",
+      "Bash(tree)",
+      "Bash(tree *)",
+      "Bash(uv run pytest *)",
+      "Bash(uv run ruff check *)",
+      "Bash(uv run ruff format *)",
+      "Bash(uv sync --frozen)",
+      "Bash(uv sync --frozen *)",
+      "Bash(wc *)",
+      "Bash(wget *)",
       "NotebookEdit",
       "Read(/settings.json)",
       "Read(/skills/**)",
@@ -25,16 +65,54 @@
       "Skill(pathfinder-explain)",
       "Skill(review-claude-config)",
       "Skill(update-config)",
+      "Bash(cafleet *)",
       "Skill(cafleet)",
       "Skill(cafleet-design-doc)"
     ],
-    "defaultMode": "auto",
+    "deny": [
+      "Bash(awk *)",
+      "Bash(cat *)",
+      "Bash(curl *)",
+      "Bash(echo *)",
+      "Bash(find *)",
+      "Bash(git -C *)",
+      "Bash(git -c *)",
+      "Bash(kill *)",
+      "Bash(mkdir *)",
+      "Bash(python *)",
+      "Bash(python3 *)",
+      "Bash(touch *)",
+      "Bash(xargs *)"
+    ],
+    "ask": [
+      "Bash(git push)",
+      "Bash(git push *)",
+      "Bash(uv sync)",
+      "Bash(cafleet member prompt * --shell *)",
+      "Bash(cafleet member prompt * --shell)",
+      "Bash(cafleet member prompt --shell *)"
+    ],
+    "defaultMode": "acceptEdits",
+    "disableAutoMode": "disable",
     "additionalDirectories": [
       "~/.claude"
     ]
   },
   "model": "fable",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.local/bin/validate_gh_api.py validate",
+            "if": "Bash(gh api*)",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [

@@ -1,0 +1,98 @@
+prefix_rule(
+    pattern = ["git", "add"],
+    decision = "allow",
+    match = ["git add file.py", "git add -A"],
+    not_match = ["git rm file.py", "git apply patch.diff"],
+)
+
+prefix_rule(
+    pattern = ["git", "branch"],
+    decision = "allow",
+    match = ["git branch", "git branch --show-current", "git branch feat/x"],
+    not_match = ["git checkout -b feat/x", "git switch feat/x"],
+)
+
+prefix_rule(
+    pattern = ["git", "commit"],
+    decision = "allow",
+    match = [["git", "commit", "-m", "feat: add rules"], "git commit --amend --no-edit"],
+    not_match = ["git push", "git commit-tree abc123"],
+)
+
+prefix_rule(
+    pattern = ["git", "diff"],
+    decision = "allow",
+    match = ["git diff", "git diff --stat main..HEAD"],
+    not_match = ["git difftool", "git push"],
+)
+
+prefix_rule(
+    pattern = ["git", "grep"],
+    decision = "allow",
+    match = ["git grep TODO", "git grep -n pattern -- src/"],
+    not_match = ["grep TODO src/", "git gc"],
+)
+
+prefix_rule(
+    pattern = ["git", "log"],
+    decision = "allow",
+    match = [["git", "log", "--oneline"], "git log"],
+    not_match = ["git push", "git commit-tree abc123"],
+)
+
+prefix_rule(
+    pattern = ["git", "ls-tree"],
+    decision = "allow",
+    match = ["git ls-tree HEAD", "git ls-tree -r --name-only main bin"],
+    not_match = ["git ls-remote origin", "git tree"],
+)
+
+prefix_rule(
+    pattern = ["git", "ls-files"],
+    decision = "allow",
+    match = ["git ls-files", "git ls-files -s bin/validate_gh_api.py"],
+    not_match = ["git ls-remote origin", "git files"],
+)
+
+prefix_rule(
+    pattern = ["git", "mv"],
+    decision = "allow",
+    match = ["git mv old.py new.py"],
+    not_match = ["mv old.py new.py", "git merge main"],
+)
+
+prefix_rule(
+    pattern = ["git", "rm"],
+    decision = "allow",
+    match = ["git rm old.py", "git rm --cached secret.env"],
+    not_match = ["rm old.py", "git reset --hard"],
+)
+
+prefix_rule(
+    pattern = ["git", "status"],
+    decision = "allow",
+    match = ["git status", "git status --short"],
+    not_match = ["git stash", "git switch main"],
+)
+
+prefix_rule(
+    pattern = ["git", "-C"],
+    decision = "forbidden",
+    match = ["git -C /tmp/repo status", "git -C .. log"],
+    not_match = ["git status", "git log -C"],
+)
+
+prefix_rule(
+    pattern = ["git", "-c"],
+    decision = "forbidden",
+    match = ["git -c core.editor=vi commit", "git -c user.name=x log"],
+    not_match = ["git commit -m msg", "git log"],
+)
+
+prefix_rule(
+    pattern = ["git", "push"],
+    decision = "prompt",
+    justification = "Ask the user to confirm before pushing commits to a remote.",
+    match = ["git push", "git push origin main", "git push -u origin topic"],
+    not_match = ["git status", "git fetch origin"],
+)
