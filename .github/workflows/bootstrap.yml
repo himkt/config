@@ -16,9 +16,9 @@ jobs:
         with:
           install: false  # only the mise binary is needed; [tools] are not CI's concern
       - run: mise trust
+      - run: make mise-up
       - if: ${{ matrix.os == 'macos-26' }}
         run: |
           brew uninstall google-chrome
           make brew-up
       - run: make krew-up
-      - run: make mise-up
