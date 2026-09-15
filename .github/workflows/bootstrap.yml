@@ -15,9 +15,16 @@ jobs:
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
           install: false  # only the mise binary is needed; [tools] are not CI's concern
+      - if: ${{ matrix.os == 'macos-26' }}
+        run: brew uninstall google-chrome
       - run: mise trust
-      - run: make up
+      - run: make mise-up
+      - run: make brew-up
       - if: ${{ matrix.os == 'macos-26' }}
         run: |
-          brew uninstall google-chrome
-          make brew-up
+          export PATH=$PATH:/opt/homebrew/bin
+          make krew-up
+      - if: ${{ matrix.os == 'ubuntu-26.04' }}
+        run: |
+          export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
+          make krew-up
