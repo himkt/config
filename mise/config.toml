@@ -76,10 +76,10 @@ tap_to_click = true
 NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
 
 [tools]
-"aqua:anomalyco/opencode" = "v1.18.29"
+"aqua:anomalyco/opencode" = "v1.18.30"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
-"aqua:anthropics/claude-code" = "v2.1.263"
-"aqua:astral-sh/uv" = "0.12.10"
+"aqua:anthropics/claude-code" = "v2.1.268"
+"aqua:astral-sh/uv" = "0.12.13"
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 "aqua:cli/cli" = "v2.100.0"
 "aqua:derailed/k9s" = "v0.51.0"
@@ -91,14 +91,14 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.0"
 "aqua:neovim/neovim" = "v0.12.5"
 "aqua:ogulcancelik/herdr" = "v0.9.0"
-"aqua:openai/codex" = "v0.153.4"
-"aqua:pnpm/pnpm" = "12.3.4"
+"aqua:openai/codex" = "v0.154.0"
+"aqua:pnpm/pnpm" = "12.4.1"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:suzuki-shunsuke/pinact" = "v4.1.1"
 "aqua:tmux/tmux-builds" = "v3.6a"
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
-"core:node" = "26.8.1"
+"core:node" = "26.8.2"
 "core:rust" = "1.98.1"
 "core:zig" = "v0.15.2"
 
