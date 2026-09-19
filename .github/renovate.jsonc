@@ -24,6 +24,11 @@
       "matchManagers": ["mise"],
       "matchPackageNames": ["kubernetes-sigs/kustomize"],
       "extractVersion": "^kustomize/(?<version>v.+)$"
+    },
+    {
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["anomalyco/opencode"],
+      "overrideDatasource": "github-releases"
     }
   ]
 }
