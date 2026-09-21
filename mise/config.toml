@@ -76,9 +76,9 @@ tap_to_click = true
 NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
 
 [tools]
-"aqua:anomalyco/opencode" = "v1.18.30"
+"aqua:anomalyco/opencode" = "v1.18.31"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
-"aqua:anthropics/claude-code" = "v2.1.270"
+"aqua:anthropics/claude-code" = "v2.1.271"
 "aqua:astral-sh/uv" = "0.12.13"
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 "aqua:cli/cli" = "v2.100.0"
