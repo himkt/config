@@ -6,11 +6,7 @@ min_version = "2026.8.14"
 "~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
 "~/.codex/AGENTS.md" = { source = "../claude/CLAUDE.md", mode = "copy" }
 "~/.codex/hooks.json" = { source = "../codex/hooks.json", mode = "copy" }
-"~/.codex/rules/himkt-agents.rules" = { source = "../codex/rules/himkt-agents.rules", mode = "copy" }
-"~/.codex/rules/himkt-gh.rules" = { source = "../codex/rules/himkt-gh.rules", mode = "copy" }
-"~/.codex/rules/himkt-git.rules" = { source = "../codex/rules/himkt-git.rules", mode = "copy" }
-"~/.codex/rules/himkt-python.rules" = { source = "../codex/rules/himkt-python.rules", mode = "copy" }
-"~/.codex/rules/himkt-shell.rules" = { source = "../codex/rules/himkt-shell.rules", mode = "copy" }
+"~/.codex/rules" = { source = "../codex/rules", mode = "copy" }
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
 "~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
