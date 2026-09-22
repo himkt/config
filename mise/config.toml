@@ -78,7 +78,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 [tools]
 "aqua:anomalyco/opencode" = "v1.18.31"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
-"aqua:anthropics/claude-code" = "v2.1.271"
+"aqua:anthropics/claude-code" = "v2.1.280"
 "aqua:astral-sh/uv" = "0.12.13"
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 "aqua:cli/cli" = "v2.100.0"
@@ -91,7 +91,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.0"
 "aqua:neovim/neovim" = "v0.12.5"
 "aqua:ogulcancelik/herdr" = "v0.9.0"
-"aqua:openai/codex" = "v0.154.0"
+"aqua:openai/codex" = "v0.156.0"
 "aqua:pnpm/pnpm" = "12.4.1"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:suzuki-shunsuke/pinact" = "v5.0.0"
