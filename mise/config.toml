@@ -86,7 +86,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:kubernetes-sigs/kustomize" = "v5.8.1"
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.0"
 "aqua:neovim/neovim" = "v0.12.5"
-"aqua:ogulcancelik/herdr" = "v0.9.0"
+"aqua:ogulcancelik/herdr" = "v0.9.1"
 "aqua:openai/codex" = "v0.156.0"
 "aqua:pnpm/pnpm" = "12.4.2"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
@@ -94,7 +94,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:tmux/tmux-builds" = "v3.6a"
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
-"core:node" = "26.8.2"
+"core:node" = "26.9.0"
 "core:rust" = "1.98.1"
 "core:zig" = "v0.15.2"
 
