@@ -1,4 +1,4 @@
-.PHONY: all brew-up dotfiles krew-up mise mise-up touchid-sudo
+.PHONY: all brew-up dotfiles krew-up mise mise-up touchid-sudo up
 
 all: mise brew-up dotfiles krew-up mise-up
 
@@ -9,14 +9,16 @@ brew-up:
 dotfiles:
 	mise bootstrap dotfiles apply --yes
 
+krew-up:
+	kubectl krew install < krew/plugins
+
 mise:
 	curl https://mise.run | sh
 
 mise-up:
 	mise up
 
-krew-up:
-	kubectl krew install < krew/plugins
-
 touchid-sudo:
 	$(PWD)/bin/setup-touchid-sudo.sh
+
+up: brew-up krew-up mise-up
