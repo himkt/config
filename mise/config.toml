@@ -102,3 +102,4 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 all_compile = false
 experimental = true
 idiomatic_version_file_enable_tools = []
+minimum_release_age = "7d"
