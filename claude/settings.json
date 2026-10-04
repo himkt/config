@@ -92,8 +92,7 @@
       "Bash(cafleet member prompt * --shell)",
       "Bash(cafleet member prompt --shell *)"
     ],
-    "defaultMode": "acceptEdits",
-    "disableAutoMode": "disable",
+    "defaultMode": "auto",
     "additionalDirectories": [
       "~/.claude"
     ]
