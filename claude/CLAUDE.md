@@ -19,7 +19,7 @@ Lead with what the reader should do and what correct looks like; let the prohibi
 #### What's legitimate
 
 - Strong negative phrasing for a genuine hard constraint, paired with the positive instruction — e.g. "NEVER use HEREDOC for git commit; always use `git commit -m`".
-- A short "Forbidden patterns" / "anti-patterns" list that *complements* a positive spec (as in this section and in § Removal), rather than substituting for one.
+- A short "Forbidden patterns" / "anti-patterns" list that *complements* a positive spec (as in the Forbidden patterns lists throughout this file), rather than substituting for one.
 
 ### Code: fail fast
 
@@ -110,6 +110,38 @@ This rule applies whenever code, options, files, or features are removed. Common
 - Deleting a code path / module / class / function
 - Renaming with a hard-break (no aliases) — every mention of the old name goes
 - Deprecating in v1 and removing in v2 — the v2 removal must complete the cleanup; v1 is the only place a deprecation note should ever live, and only briefly
+
+## Describing Groups
+
+Describe a group by the property that selects its members, so adding or removing a member needs no doc edit: write "every package that defines a `test` script", not a list of those packages' names. Refer to a registry through its single source of truth instead of copying it: point at the directories under `plugins/`, the `choices` of a CLI option or a CI workflow input's `options`, the task runner's own listing (`make help`, `just --list`), or the dev dependency group in the project manifest (`pyproject.toml`, `package.json`).
+
+A hand-maintained list of members is a second copy of a registry the repository already holds. Every member added or removed must then be mirrored by hand, and the copy drifts out of date silently the first time someone forgets.
+
+### Forbidden patterns
+
+- A list of member names where a selecting property exists — e.g. "run the tests in `api`, `web`, and `worker`" when the rule is "every package that defines a `test` script"
+- A copied registry — a table of tasks duplicated from the task runner, dependencies duplicated from the manifest, allowed values duplicated from a CLI option's `choices`
+- A hard-coded count of a growing set — "the three packages", "all 5 services" — which drifts exactly like a list
+
+### What's legitimate
+
+- Naming members that each carry content of their own — their own table row, link, or section
+- Naming the members of a fixed domain that does not grow with the repository — e.g. semver increments `patch` / `minor` / `major`, log levels, HTTP methods
+- Naming members when no property in the repository selects them — the document itself is then the only definition of the set
+- A single named member as an example or reference implementation — e.g. "see `plugins/auth` for a complete plugin"
+- The names a reader observes in output — e.g. the files a linter reports, the commands a missing-dependency error names
+
+The test: if adding or removing a member would force an edit that only adds or deletes its name, the sentence is copying a registry held elsewhere — describe the selecting property or point at the source of truth instead.
+
+### Why
+
+A property-based description stays true as the repository grows and shrinks; an enumeration is correct only on the day it is written. The property also teaches the reader the rule that defines membership, so they can recognize a member the author never saw — a list of names hides that rule. Pointing at the single source of truth keeps one authoritative registry instead of several copies that disagree.
+
+### Scope
+
+Applies to living documentation that must stay true as the repository evolves — READMEs, docs, skills, rules files such as CLAUDE.md, code comments, and CLI help text — whenever it refers to a set of packages, services, tasks, dependencies, options, or other repository members.
+
+Point-in-time records — commit messages, PR descriptions, changelogs, and design docs — describe a specific change, so they name the exact members that change touched.
 
 ## Links in Responses
 
