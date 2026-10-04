@@ -111,6 +111,12 @@ This rule applies whenever code, options, files, or features are removed. Common
 - Renaming with a hard-break (no aliases) — every mention of the old name goes
 - Deprecating in v1 and removing in v2 — the v2 removal must complete the cleanup; v1 is the only place a deprecation note should ever live, and only briefly
 
+## Links in Responses
+
+Write every URL in conversation responses as plain text, with the label followed by the URL in parentheses: `herdr docs (https://herdr.dev/docs/)`. Never use Markdown hyperlink syntax (`[text](url)`) in responses. The terminal multiplexer captures the mouse, so a hidden link target cannot be opened, while a visible URL can still be selected and copied.
+
+This applies to chat output only. Files you write (READMEs, docs, design docs) keep whatever link style the file already uses.
+
 ## Git Workflow
 
 Rules for consistent, clean git commit history across all projects.
