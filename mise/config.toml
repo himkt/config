@@ -2,7 +2,9 @@ min_version = "2026.8.14"
 
 [dotfiles]
 "~/.agents/skills" = { source = "../skills", mode = "copy" }
-"~/.claude" = { source = "../claude", mode = "copy" }
+"~/.claude/CLAUDE.md" = { source = "../claude/CLAUDE.md", mode = "copy" }
+"~/.claude/bin" = { source = "../claude/bin", mode = "copy" }
+"~/.claude/settings.json" = { source = "../claude/settings.json", mode = "copy" }
 "~/.claude/skills" = { source = "../skills", mode = "symlink-each" }
 "~/.codex/AGENTS.md" = { source = "../claude/CLAUDE.md", mode = "copy" }
 "~/.codex/hooks.json" = { source = "../codex/hooks.json", mode = "copy" }
@@ -10,7 +12,7 @@ min_version = "2026.8.14"
 "~/.config/ghostty" = "../ghostty"
 "~/.config/git" = "../git"
 "~/.config/herdr" = { source = "../herdr", mode = "symlink-each" }
-"~/.config/mise" = "../mise"
+"~/.config/mise/config.toml" = "../mise/config.toml"
 "~/.config/nvim" = "../nvim"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"
