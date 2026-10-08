@@ -73,7 +73,7 @@ tap_to_click = true
 NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState" = false }
 
 [tools]
-"aqua:anomalyco/opencode" = "v1.18.33"
+"aqua:anomalyco/opencode" = "v1.18.34"
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
 "aqua:anthropics/claude-code" = "v2.1.293"
 "aqua:astral-sh/uv" = "0.12.21"
@@ -88,7 +88,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:kubernetes/kubernetes/kubectl" = "v1.37.1"
 "aqua:neovim/neovim" = "v0.12.5"
 "aqua:ogulcancelik/herdr" = "v0.9.3"
-"aqua:openai/codex" = "v0.159.2"
+"aqua:openai/codex" = "v0.160.0"
 "aqua:pnpm/pnpm" = "12.8.2"
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:suzuki-shunsuke/pinact" = "v5.0.0"
@@ -96,7 +96,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "asdf:mise-plugins/mise-gcloud" = "v569.0.0"
 "core:java" = "26.0.1"
 "core:node" = "26.10.0"
-"core:rust" = "1.98.1"
+"core:rust" = "1.99.0"
 "core:zig" = "v0.15.2"
 
 [settings]
