@@ -28,7 +28,7 @@
     "ask": [
       "Bash(git push)",
       "Bash(git push *)",
-      "Bash(uv sync)",
+      "Bash(uv sync)"
     ],
     "defaultMode": "auto",
     "additionalDirectories": [
