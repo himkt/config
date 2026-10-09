@@ -20,7 +20,6 @@ min_version = "2026.8.14"
 
 [bootstrap.packages]
 "brew:agent-browser" = "latest"
-"brew:azure-cli" = "latest"
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
 "brew:coreutils" = "latest"
@@ -39,6 +38,7 @@ min_version = "2026.8.14"
 "brew:zip" = "latest"
 "brew:zsh" = "latest"
 "brew-cask:1password" = { os = "macos", version = "latest" }
+"brew-cask:azure-cli" = "latest"
 "brew-cask:chatgpt" = { os = "macos", version = "latest" }
 "brew-cask:claude" = { os = "macos", version = "latest" }
 "brew-cask:discord" = { os = "macos", version = "latest" }
