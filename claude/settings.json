@@ -6,6 +6,9 @@
   },
   "permissions": {
     "allow": [
+      "Bash(cafleet message *)",
+      "Bash(cafleet monitor *)",
+      "Bash(cafleet member ping *)",
       "Edit",
       "NotebookEdit",
       "WebFetch",
