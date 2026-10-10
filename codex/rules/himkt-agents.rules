@@ -1,21 +1,20 @@
 prefix_rule(
-    pattern = ["cafleet"],
+    pattern = ["cafleet", "message"],
     decision = "allow",
-    match = ["cafleet message poll 5", "cafleet member list 1", "cafleet doctor"],
-    not_match = ["cafleetd", "herdr pane read"],
+    match = ["cafleet message poll 5", "cafleet message send --from-member-id 1 --to-member-id 2 ready"],
+    not_match = ["cafleet member list 1", "cafleet doctor"],
 )
 
 prefix_rule(
-    pattern = ["cafleet", "member", "prompt"],
-    decision = "prompt",
-    justification = "cafleet member prompt keystrokes arbitrary text or shell commands into a member pane.",
-    match = ["cafleet member prompt 5 hello", "cafleet member prompt 5 --shell ls"],
-    not_match = ["cafleet member list 1", "cafleet message send --from-member-id 1 --to-member-id 2 ready"],
+    pattern = ["cafleet", "monitor"],
+    decision = "allow",
+    match = ["cafleet monitor start 1", "cafleet monitor status"],
+    not_match = ["cafleet member list 1", "cafleet message poll 5"],
 )
 
 prefix_rule(
-    pattern = ["herdr", "pane", "read"],
+    pattern = ["cafleet", "member", "ping"],
     decision = "allow",
-    match = ["herdr pane read", "herdr pane read 1"],
-    not_match = ["herdr pane write 1", "herdr pane"],
+    match = ["cafleet member ping 5", "cafleet member ping 5 --timeout 10"],
+    not_match = ["cafleet member prompt 5 hello", "cafleet member list 1"],
 )
