@@ -1,0 +1,15 @@
+model_reasoning_effort = "medium"
+personality = "pragmatic"
+model = "gpt-6.1-sol"
+approvals_reviewer = "auto_review"
+
+[tui]
+screen_reader_detection_done = true
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-used"]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-6.1-sol" = 4
+
+[mcp_servers.workos]
+url = "https://mcp.workos.com/mcp"
