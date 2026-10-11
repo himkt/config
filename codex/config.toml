@@ -3,6 +3,9 @@ personality = "pragmatic"
 model = "gpt-6.1-sol"
 approvals_reviewer = "auto_review"
 
+[features]
+daemon_auto_start = false
+
 [tui]
 screen_reader_detection_done = true
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-used"]
