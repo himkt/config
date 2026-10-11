@@ -76,7 +76,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:ajeetdsouza/zoxide" = "v0.10.0"
 "aqua:anthropics/claude-code" = "v2.1.293"
 "aqua:astral-sh/uv" = "0.12.23"
-"aqua:aws/aws-cli" = "2.37.8"
+"aqua:aws/aws-cli" = "2.37.9"
 "aqua:BurntSushi/ripgrep" = "15.2.0"
 "aqua:cli/cli" = "v2.102.0"
 "aqua:derailed/k9s" = "v0.51.0"
