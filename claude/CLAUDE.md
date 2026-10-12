@@ -143,6 +143,18 @@ Applies to living documentation that must stay true as the repository evolves �
 
 Point-in-time records — commit messages, PR descriptions, changelogs, and design docs — describe a specific change, so they name the exact members that change touched.
 
+## Technical Terms in Japanese
+
+When writing Japanese, keep technical terms in their original English form: write `worktree`, `fail fast`, and `invariant` as they appear in the source material, embedded in the Japanese sentence — e.g. 「この関数は invariant が破れた時点で fail fast する」.
+
+A forced translation — 「作業木」 for `worktree`, 「早期失敗」 for `fail fast`, 「正本」 for `source of truth`, 「既定」 for `default` — makes the reader translate it back to recognize the concept, and it cannot be searched for in code, documentation, or error messages, which all use the English term.
+
+Japanese words that are themselves the established term — 「関数」, 「変数」, 「配列」 — stay in Japanese. The test: use the word a Japanese-speaking engineer would say aloud to a colleague.
+
+### Scope
+
+Applies to all Japanese text you write: conversation responses, documentation, code comments, and commit or PR discussion.
+
 ## Links in Responses
 
 Write every URL in conversation responses as plain text, with the label followed by the URL in parentheses: `herdr docs (https://herdr.dev/docs/)`. Never use Markdown hyperlink syntax (`[text](url)`) in responses. The terminal multiplexer captures the mouse, so a hidden link target cannot be opened, while a visible URL can still be selected and copied.
