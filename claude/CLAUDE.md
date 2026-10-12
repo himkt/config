@@ -145,11 +145,17 @@ Point-in-time records — commit messages, PR descriptions, changelogs, and desi
 
 ## Technical Terms in Japanese
 
-When writing Japanese, keep technical terms in their original English form: write `worktree`, `fail fast`, and `invariant` as they appear in the source material, embedded in the Japanese sentence — e.g. 「この関数は invariant が破れた時点で fail fast する」.
+When writing Japanese, write each technical term in the form a Japanese-speaking engineer would write it to a colleague. That form is one of three:
 
-A forced translation — 「作業木」 for `worktree`, 「早期失敗」 for `fail fast`, 「正本」 for `source of truth`, 「既定」 for `default` — makes the reader translate it back to recognize the concept, and it cannot be searched for in code, documentation, or error messages, which all use the English term.
+- **Established Japanese word** — 「関数」, 「変数」, 「配列」, 「引数」, 「戻り値」.
+- **Established katakana loanword** — 「デフォルト」, 「コミット」, 「ブランチ」, 「キャッシュ」, 「ディレクトリ」.
+- **Original English** — every other term, embedded in the Japanese sentence as it appears in the source material: `worktree`, `fail fast`, `invariant`, `source of truth`.
 
-Japanese words that are themselves the established term — 「関数」, 「変数」, 「配列」 — stay in Japanese. The test: use the word a Japanese-speaking engineer would say aloud to a colleague.
+For example: 「この関数は invariant が破れた時点で fail fast する」, 「デフォルトのブランチから worktree を作成する」.
+
+A forced translation — 「作業木」 for `worktree`, 「早期失敗」 for `fail fast`, 「正本」 for `source of truth`, 「既定」 for 「デフォルト」 — makes the reader translate it back to recognize the concept, and it cannot be searched for in code, documentation, or error messages. A katakana transliteration that is rare in Japanese technical writing — 「インバリアント」, 「フェイルファスト」 — carries the same cost.
+
+The test: choose katakana when the katakana form is the one commonly seen in Japanese technical writing; when the katakana form is rare or you are unsure, keep the English. A literal identifier, command, or config key always keeps its code form — `git commit`, the `default` key — whatever the surrounding prose uses.
 
 ### Scope
 
