@@ -145,21 +145,23 @@ Point-in-time records — commit messages, PR descriptions, changelogs, and desi
 
 ## Technical Terms in Japanese
 
-When writing Japanese, write each technical term in the form a Japanese-speaking engineer would write it to a colleague. That form is one of three:
+Write natural Japanese for the intended reader in responses, documentation, code comments, and commit or PR discussion. Select terminology in this order:
 
-- **Established Japanese word** — 「関数」, 「変数」, 「配列」, 「引数」, 「戻り値」.
-- **Established katakana loanword** — 「デフォルト」, 「コミット」, 「ブランチ」, 「キャッシュ」, 「ディレクトリ」.
-- **Original English** — every other term, embedded in the Japanese sentence as it appears in the source material: `worktree`, `fail fast`, `invariant`, `source of truth`.
+1. **Exact names and code:** preserve official names, identifiers, commands, config keys, and verbatim quotations, such as GitHub, Python, `git commit`, and `default`.
+2. **Ordinary prose:** use established Japanese words or katakana loanwords, even when the source uses English. Examples below illustrate usage, not an exhaustive glossary.
+3. **Terms without an established Japanese form:** keep English, such as `worktree`, `fail fast`, `invariant`, and `source of truth`. Explain unfamiliar terms for the intended reader. Choose these forms over invented translations or transliterations.
 
-For example: 「この関数は invariant が破れた時点で fail fast する」, 「デフォルトのブランチから worktree を作成する」.
+| English in prose | Established Japanese |
+| --- | --- |
+| function, variable, array, argument, return value | 関数、変数、配列、引数、戻り値 |
+| app, file, browser, account, profile | アプリ、ファイル、ブラウザ、アカウント、プロフィール |
+| server, client, database, backup, log | サーバ、クライアント、データベース、バックアップ、ログ |
+| commit, branch, cache, directory, default | コミット、ブランチ、キャッシュ、ディレクトリ、デフォルト |
+| online, offline, token, query, metadata | オンライン、オフライン、トークン、クエリ、メタデータ |
 
-A forced translation — 「作業木」 for `worktree`, 「早期失敗」 for `fail fast`, 「正本」 for `source of truth`, 「既定」 for 「デフォルト」 — makes the reader translate it back to recognize the concept, and it cannot be searched for in code, documentation, or error messages. A katakana transliteration that is rare in Japanese technical writing — 「インバリアント」, 「フェイルファスト」 — carries the same cost.
+When unsure, check the project's Japanese documentation or an authoritative Japanese source before choosing English. Preserve literals within Japanese prose: 「`account` テーブルからアカウントを削除します。」
 
-The test: choose katakana when the katakana form is the one commonly seen in Japanese technical writing; when the katakana form is rare or you are unsure, keep the English. A literal identifier, command, or config key always keeps its code form — `git commit`, the `default` key — whatever the surrounding prose uses.
-
-### Scope
-
-Applies to all Japanese text you write: conversation responses, documentation, code comments, and commit or PR discussion.
+Before delivering, review every remaining English word against these rules, unify terminology, and reread the completed text for natural Japanese.
 
 ## Links in Responses
 
