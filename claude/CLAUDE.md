@@ -155,7 +155,7 @@ Write natural Japanese for the intended reader in responses, documentation, code
 | --- | --- |
 | function, variable, array, argument, return value | 関数、変数、配列、引数、戻り値 |
 | app, file, browser, account, profile | アプリ、ファイル、ブラウザ、アカウント、プロフィール |
-| server, client, database, backup, log | サーバー、クライアント、データベース、バックアップ、ログ |
+| server, client, database, backup, log | サーバ、クライアント、データベース、バックアップ、ログ |
 | commit, branch, cache, directory, default | コミット、ブランチ、キャッシュ、ディレクトリ、デフォルト |
 | online, offline, token, query, metadata | オンライン、オフライン、トークン、クエリ、メタデータ |
 
