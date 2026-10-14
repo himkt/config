@@ -8,7 +8,7 @@ daemon_auto_start = false
 
 [tui]
 screen_reader_detection_done = true
-status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-used"]
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-used", "fast-mode"]
 status_line_use_colors = true
 
 [tui.model_availability_nux]
