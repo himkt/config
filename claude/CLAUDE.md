@@ -145,47 +145,23 @@ Point-in-time records — commit messages, PR descriptions, changelogs, and desi
 
 ## Technical Terms in Japanese
 
-Write natural Japanese for the intended reader. Choose the form commonly used in Japanese for each term; the fact that a concept is technical or its source material is English does not determine its spelling in Japanese.
+Write natural Japanese for the intended reader in responses, documentation, code comments, and commit or PR discussion. Select terminology in this order:
 
-### Selection order
+1. **Exact names and code:** preserve official names, identifiers, commands, config keys, and verbatim quotations, such as GitHub, Python, `git commit`, and `default`.
+2. **Ordinary prose:** use established Japanese words or katakana loanwords, even when the source uses English. Examples below illustrate usage, not an exhaustive glossary.
+3. **Terms without an established Japanese form:** keep English, such as `worktree`, `fail fast`, `invariant`, and `source of truth`. Explain unfamiliar terms for the intended reader. Choose these forms over invented translations or transliterations.
 
-Apply these steps in order:
-
-1. **Preserve exact names and code.** Product names, official feature names, identifiers, commands, config keys, and verbatim quotations retain their original spelling: WorkOS, OpenRouter, Keychain, Share Extension, `git commit`, the `default` key.
-2. **Use established Japanese words or katakana loanwords in prose.** Write 「関数」, 「変数」, 「配列」, 「引数」, 「戻り値」 and familiar loanwords such as 「アプリ」, 「アカウント」, 「データベース」, 「バックアップ」, 「ログ」, 「デフォルト」. An English word remains ordinary prose even when it describes software.
-3. **Keep English when an established Japanese form is absent.** Terms such as `worktree`, `fail fast`, `invariant`, and `source of truth` retain their English form. For a reader unfamiliar with the term, explain its meaning in natural Japanese at first use.
-
-When unsure whether a Japanese form is established, check the terminology used in the project's Japanese documentation or an authoritative Japanese source. Keeping English is appropriate after that check finds no established form; uncertainty alone is not a reason to turn familiar Japanese vocabulary into English.
-
-### Examples
-
-These examples illustrate the selection rule rather than define an exhaustive glossary:
-
-| Meaning in prose | Natural Japanese |
+| English in prose | Established Japanese |
 | --- | --- |
-| app | アプリ |
-| profile image | プロフィール画像 |
-| operational log | 運用ログ |
-| privacy policy | プライバシーポリシー |
-| database | データベース |
-| account deletion | アカウント削除 |
-| backup | バックアップ |
-| offline device | オフラインの端末 |
-| browser storage | ブラウザのストレージ |
+| function, variable, array, argument, return value | 関数、変数、配列、引数、戻り値 |
+| app, file, browser, account, profile | アプリ、ファイル、ブラウザ、アカウント、プロフィール |
+| server, client, database, backup, log | サーバー、クライアント、データベース、バックアップ、ログ |
+| commit, branch, cache, directory, default | コミット、ブランチ、キャッシュ、ディレクトリ、デフォルト |
+| online, offline, token, query, metadata | オンライン、オフライン、トークン、クエリ、メタデータ |
 
-For example: 「iOS アプリは認証情報を Keychain に保存します。アカウント削除の申請後、データベースとバックアップのデータを削除します。」
+When unsure, check the project's Japanese documentation or an authoritative Japanese source before choosing English. Preserve literals within Japanese prose: 「`account` テーブルからアカウントを削除します。」
 
-In engineering discussion: 「この関数は invariant が破れた時点で fail fast する。」, 「デフォルトのブランチから worktree を作成する。」
-
-Choose established usage over literal translation or invented transliteration. For example, use `worktree` rather than 「作業木」, `fail fast` rather than 「早期失敗」 or 「フェイルファスト」, and 「デフォルト」 rather than 「既定」. Preserve code spelling where it names a literal: 「`account` テーブルからアカウントを削除します。」
-
-### Before delivering Japanese text
-
-Read the completed text once for terminology and natural phrasing. For every remaining English word, confirm that it is an exact name or code literal, a verbatim quotation, or a term without an established Japanese form. Rewrite ordinary prose using established Japanese vocabulary, use the same form consistently for the same meaning, and read the surrounding sentence again for fluency. Perform this check on the actual response or edited artifact before delivering it.
-
-### Scope
-
-Applies to all Japanese text you write: conversation responses, documentation, code comments, and commit or PR discussion.
+Before delivering, review every remaining English word against these rules, unify terminology, and reread the completed text for natural Japanese.
 
 ## Links in Responses
 
