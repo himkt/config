@@ -145,17 +145,43 @@ Point-in-time records — commit messages, PR descriptions, changelogs, and desi
 
 ## Technical Terms in Japanese
 
-When writing Japanese, write each technical term in the form a Japanese-speaking engineer would write it to a colleague. That form is one of three:
+Write natural Japanese for the intended reader. Choose the form commonly used in Japanese for each term; the fact that a concept is technical or its source material is English does not determine its spelling in Japanese.
 
-- **Established Japanese word** — 「関数」, 「変数」, 「配列」, 「引数」, 「戻り値」.
-- **Established katakana loanword** — 「デフォルト」, 「コミット」, 「ブランチ」, 「キャッシュ」, 「ディレクトリ」.
-- **Original English** — every other term, embedded in the Japanese sentence as it appears in the source material: `worktree`, `fail fast`, `invariant`, `source of truth`.
+### Selection order
 
-For example: 「この関数は invariant が破れた時点で fail fast する」, 「デフォルトのブランチから worktree を作成する」.
+Apply these steps in order:
 
-A forced translation — 「作業木」 for `worktree`, 「早期失敗」 for `fail fast`, 「正本」 for `source of truth`, 「既定」 for 「デフォルト」 — makes the reader translate it back to recognize the concept, and it cannot be searched for in code, documentation, or error messages. A katakana transliteration that is rare in Japanese technical writing — 「インバリアント」, 「フェイルファスト」 — carries the same cost.
+1. **Preserve exact names and code.** Product names, official feature names, identifiers, commands, config keys, and verbatim quotations retain their original spelling: WorkOS, OpenRouter, Keychain, Share Extension, `git commit`, the `default` key.
+2. **Use established Japanese words or katakana loanwords in prose.** Write 「関数」, 「変数」, 「配列」, 「引数」, 「戻り値」 and familiar loanwords such as 「アプリ」, 「アカウント」, 「データベース」, 「バックアップ」, 「ログ」, 「デフォルト」. An English word remains ordinary prose even when it describes software.
+3. **Keep English when an established Japanese form is absent.** Terms such as `worktree`, `fail fast`, `invariant`, and `source of truth` retain their English form. For a reader unfamiliar with the term, explain its meaning in natural Japanese at first use.
 
-The test: choose katakana when the katakana form is the one commonly seen in Japanese technical writing; when the katakana form is rare or you are unsure, keep the English. A literal identifier, command, or config key always keeps its code form — `git commit`, the `default` key — whatever the surrounding prose uses.
+When unsure whether a Japanese form is established, check the terminology used in the project's Japanese documentation or an authoritative Japanese source. Keeping English is appropriate after that check finds no established form; uncertainty alone is not a reason to turn familiar Japanese vocabulary into English.
+
+### Examples
+
+These examples illustrate the selection rule rather than define an exhaustive glossary:
+
+| Meaning in prose | Natural Japanese |
+| --- | --- |
+| app | アプリ |
+| profile image | プロフィール画像 |
+| operational log | 運用ログ |
+| privacy policy | プライバシーポリシー |
+| database | データベース |
+| account deletion | アカウント削除 |
+| backup | バックアップ |
+| offline device | オフラインの端末 |
+| browser storage | ブラウザのストレージ |
+
+For example: 「iOS アプリは認証情報を Keychain に保存します。アカウント削除の申請後、データベースとバックアップのデータを削除します。」
+
+In engineering discussion: 「この関数は invariant が破れた時点で fail fast する。」, 「デフォルトのブランチから worktree を作成する。」
+
+Choose established usage over literal translation or invented transliteration. For example, use `worktree` rather than 「作業木」, `fail fast` rather than 「早期失敗」 or 「フェイルファスト」, and 「デフォルト」 rather than 「既定」. Preserve code spelling where it names a literal: 「`account` テーブルからアカウントを削除します。」
+
+### Before delivering Japanese text
+
+Read the completed text once for terminology and natural phrasing. For every remaining English word, confirm that it is an exact name or code literal, a verbatim quotation, or a term without an established Japanese form. Rewrite ordinary prose using established Japanese vocabulary, use the same form consistently for the same meaning, and read the surrounding sentence again for fluency. Perform this check on the actual response or edited artifact before delivering it.
 
 ### Scope
 
