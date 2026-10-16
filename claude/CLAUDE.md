@@ -143,9 +143,13 @@ Applies to living documentation that must stay true as the repository evolves �
 
 Point-in-time records — commit messages, PR descriptions, changelogs, and design docs — describe a specific change, so they name the exact members that change touched.
 
+## Response Language
+
+Write conversation responses in Japanese, following § Technical Terms in Japanese. Write every other text in English: files, documentation, code comments, commit messages, pull request titles and bodies, and issue or review comments. This holds even when the conversation is in Japanese or an existing file contains Japanese.
+
 ## Technical Terms in Japanese
 
-Write natural Japanese for the intended reader in responses, documentation, code comments, and commit or PR discussion. Select terminology in this order:
+Write natural Japanese for the intended reader in conversation responses. Select terminology in this order:
 
 1. **Exact names and code:** preserve official names, identifiers, commands, config keys, and verbatim quotations, such as GitHub, Python, `git commit`, and `default`.
 2. **Ordinary prose:** use established Japanese words or katakana loanwords, even when the source uses English. Examples below illustrate usage, not an exhaustive glossary.

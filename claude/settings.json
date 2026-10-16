@@ -39,18 +39,6 @@
     ]
   },
   "model": "opus[1m]",
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/bin/english_review.py"
-          }
-        ]
-      }
-    ]
-  },
   "disableArtifact": true,
   "statusLine": {
     "type": "command",
@@ -70,7 +58,7 @@
     }
   },
   "outputStyle": "Concise",
-  "language": "Use professional English",
+  "language": "Japanese",
   "alwaysThinkingEnabled": true,
   "effortLevel": "high",
   "tui": "fullscreen",
