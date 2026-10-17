@@ -1,4 +1,4 @@
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
 personality = "pragmatic"
 model = "gpt-6.1-sol"
 approvals_reviewer = "auto_review"
