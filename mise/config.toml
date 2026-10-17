@@ -19,7 +19,6 @@ min_version = "2026.8.14"
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
-"brew:agent-browser" = "latest"
 "brew:binutils" = "latest"
 "brew:btop" = "latest"
 "brew:coreutils" = "latest"

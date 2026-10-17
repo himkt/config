@@ -19,8 +19,6 @@
       "Read(/settings.json)",
       "Read(/skills/**)",
       "Read(/plugins/**)",
-      "Read(~/.agent-browser/tmp)",
-      "Skill(agent-browser)",
       "Skill(github-cli)",
       "Skill(loop)",
       "Skill(pathfinder-explain)",
@@ -45,19 +43,6 @@
   "statusLine": {
     "type": "command",
     "command": "~/.claude/bin/status.py"
-  },
-  "enabledPlugins": {
-    "agent-browser@himkt-marketplace": true,
-    "slidev@himkt-marketplace": true
-  },
-  "extraKnownMarketplaces": {
-    "himkt-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "himkt/himkt-marketplace"
-      },
-      "autoUpdate": true
-    }
   },
   "outputStyle": "Concise",
   "language": "Japanese",
