@@ -46,6 +46,7 @@ min_version = "2026.8.14"
 "brew-cask:ghostty" = { os = "macos", version = "latest" }
 "brew-cask:google-chrome" = { os = "macos", version = "latest" }
 "brew-cask:himkt/tap/voicevox" = { os = "macos", version = "latest" }
+"brew-cask:himkt/tap/vigil" = { os = "macos", version = "latest" }
 "brew-cask:inkscape" = { os = "macos", version = "latest" }
 "brew-cask:insomnia" = { os = "macos", version = "latest" }
 "brew-cask:netron" = { os = "macos", version = "latest" }
