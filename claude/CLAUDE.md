@@ -187,7 +187,7 @@ Rules for consistent, clean git commit history across all projects.
 
 ### Pull requests
 
-- ALWAYS create PRs with `gh pr create --fill`. Use `--title` / `--body-file` ONLY when the user explicitly asks for a custom title or body.
+- Create PRs with `gh pr create --title "..." --body-file /path/to/pr-description.md`, following the `github-cli` skill.
 
 ## Bash Commands
 

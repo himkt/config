@@ -46,8 +46,8 @@ gh pr checks {url}
 
 ## Creating a PR
 
-```bash
-gh pr create --fill # auto-populate title+body from commits
-```
+Write a concise title and description based on the final diff. Explain what changed and why, and include relevant validation. Follow applicable `CLAUDE.md` / `AGENTS.md` instructions for language, structure, and style.
 
-Use `--title` / `--body-file` only when the user explicitly asks for a custom title/body.
+```bash
+gh pr create --title "..." --body-file /path/to/pr-description.md
+```
