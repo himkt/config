@@ -53,6 +53,7 @@ min_version = "2026.8.14"
 "brew-cask:notion" = { os = "macos", version = "latest" }
 "brew-cask:nvidia-nsight-systems" = { os = "macos", version = "latest" }
 "brew-cask:obs" = { os = "macos", version = "latest" }
+"brew-cask:opencode-desktop" = { os = "macos", version = "latest" }
 "brew-cask:quo" = { os = "macos", version = "latest" }
 "brew-cask:rancher" = { os = "macos", version = "latest" }
 "brew-cask:slack" = { os = "macos", version = "latest" }
