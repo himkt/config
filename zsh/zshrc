@@ -89,7 +89,7 @@ Linux*)
 esac
 
 for prefix in $HOMEBREW_ROOT $HOME $HOME/.local $HOME/dotfiles $GOPATH $HOME/.rd; do
-  export PATH=$prefix/bin:$PATH
+  export PATH=$PATH:$prefix/bin
 done
 
 # keg-only
