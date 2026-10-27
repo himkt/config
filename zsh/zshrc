@@ -84,7 +84,7 @@ Linux*)
   ;;
 esac
 
-for prefix in $HOMEBREW_ROOT $HOME $HOME/.local $HOME/dotfiles $GOPATH $HOME/.rd; do
+for prefix in $HOMEBREW_ROOT $HOME/.local $HOME/dotfiles $GOPATH $HOME/.rd; do
   export PATH=$PATH:$prefix/bin
 done
 
@@ -108,8 +108,6 @@ if command -v brew > /dev/null; then
     export PATH="$HOMEBREW_ROOT/opt/libpq/bin:$PATH"
   fi
 fi
-
-export PYTHONSYSTEMPATH=$(which python3)
 
 # NOTE; Utilities
 
@@ -195,7 +193,6 @@ if command -v zoxide > /dev/null; then
 fi
 
 if command -v kubectl > /dev/null; then
-  export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
   source <(kubectl completion zsh)
   alias k=kubectl
 fi
