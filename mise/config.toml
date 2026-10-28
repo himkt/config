@@ -16,6 +16,8 @@ min_version = "2026.8.14"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"
 "~/.config/uv" = "../uv"
+"~/.hermes/config.yaml" = "../hermes/config.yaml"
+"~/.hermes/skills" = { source = "../skills", mode = "copy" }
 "~/.zshrc" = "../zsh/zshrc"
 
 [bootstrap.packages]
@@ -24,6 +26,7 @@ min_version = "2026.8.14"
 "brew:coreutils" = "latest"
 "brew:ffmpeg" = "latest"
 "brew:git" = "latest"
+"brew:hermes-agent" = "latest"
 "brew:himkt/tap/cafleet" = "latest"
 "brew:himkt/tap/pathfinder" = "latest"
 "brew:krew" = "latest"
