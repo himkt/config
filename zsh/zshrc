@@ -109,6 +109,11 @@ if command -v brew > /dev/null; then
   fi
 fi
 
+# krew binaries
+if command -v kubectl-krew > /dev/null; then
+  export PATH=$PATH:$HOME/.krew/bin
+fi
+
 # NOTE; Utilities
 
 function current_context () {
