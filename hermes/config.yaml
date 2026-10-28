@@ -1,0 +1,15 @@
+telemetry:
+  shared_metrics:
+    enabled: false
+    send: false
+    offer_version: 2
+model:
+  provider: nous
+  base_url: https://inference-api.nousresearch.com/v1
+  default: openai/gpt-6.1-sol
+_config_version: 51
+agent:
+  max_turns: 150
+  reasoning_effort: high
+gateway:
+  multiplex_profiles: true
