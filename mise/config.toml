@@ -99,7 +99,7 @@ NSGlobalDomain = { ApplePressAndHoldEnabled = false, "com.apple.keyboard.fnState
 "aqua:rossmacarthur/sheldon" = "0.8.5"
 "aqua:suzuki-shunsuke/pinact" = "v5.0.1"
 "aqua:tmux/tmux-builds" = "v3.6a"
-"asdf:mise-plugins/mise-gcloud" = "v569.0.0"
+"vfox:jdx/vfox-gcloud" = "591.0.0"
 "core:java" = "26.0.1"
 "core:node" = "26.12.1"
 "core:rust" = "1.99.1"
