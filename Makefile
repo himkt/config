@@ -7,6 +7,7 @@ brew-up:
 	mise bootstrap packages upgrade --yes
 
 dotfiles:
+	mise bootstrap --yes
 	mise bootstrap dotfiles apply --yes
 
 krew-up:
