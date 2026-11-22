@@ -103,10 +103,10 @@ if command -v brew > /dev/null; then
     export CPPFLAGS="-I$(brew --prefix xz)/include"
     export LDFLAGS="-L$(brew --prefix xz)/lib"
   fi
+fi
 
-  if [ -d "$HOMEBREW_ROOT/opt/libpq/bin" ]; then
-    export PATH="$HOMEBREW_ROOT/opt/libpq/bin:$PATH"
-  fi
+if [ -d "$HOMEBREW_ROOT/opt/libpq/bin" ]; then
+  export PATH="$HOMEBREW_ROOT/opt/libpq/bin:$PATH"
 fi
 
 # krew binaries
