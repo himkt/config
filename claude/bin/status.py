@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import subprocess
 import sys
 
 RESET = "\x1b[0m"
@@ -11,7 +12,6 @@ YELLOW = "\x1b[38;2;255;200;60m"
 RED = "\x1b[38;2;255;0;60m"
 
 ICON_FOLDER = "\U0001F4C2"
-ICON_DOLLAR = "$"
 
 RINGS = ["○", "◔", "◑", "◕", "●"]
 
@@ -46,31 +46,42 @@ def fmt_meter(pct: float, used: int, total: int) -> str:
     return f"{color}{ring(pct)} {size} ({p}%){RESET}"
 
 
+def git_branch(cwd: str) -> str | None:
+    result = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip() or None
+
+
 def main() -> None:
     data = json.loads(sys.stdin.read())
     model = data["model"]["display_name"]
     cwd = data["workspace"]["current_dir"]
-    cost = data["cost"]["total_cost_usd"]
+    location = f"{ICON_FOLDER} {YELLOW}{cwd}{RESET}"
+    branch = git_branch(cwd)
+    if branch:
+        location += f" {DIM}@{RESET} {GREEN}{branch}{RESET}"
 
-    line1 = [
+    segments = [
         f"{BOLD}{WHITE}{model}{RESET}",
-        f"{ICON_FOLDER} {YELLOW}{cwd}{RESET}",
+        location,
     ]
-    cost_color = threshold_color(cost, 50, 100)
-    line2 = [f"{cost_color}$ {cost:.4f}{RESET}"]
 
     try:
         tokens = sum(data["context_window"]["current_usage"].values())
         window_size = data["context_window"]["context_window_size"]
         if window_size > 0:
             pct = tokens / window_size * 100
-            line2.append(fmt_meter(pct, tokens, window_size))
+            segments.append(fmt_meter(pct, tokens, window_size))
     except Exception:
         pass  # NOTE(himkt): usage metrics not available on startup.
 
-    sep = f" {DIM}|{RESET} "
-    print(sep.join(line1))
-    print(sep.join(line2))
+    print(f" {DIM}|{RESET} ".join(segments))
 
 
 if __name__ == "__main__":

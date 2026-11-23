@@ -16,7 +16,7 @@ min_version = "2026.8.14"
 "~/.config/sheldon" = "../sheldon"
 "~/.config/tmux" = "../tmux"
 "~/.config/uv" = "../uv"
-"~/.hermes/config.yaml" = "../hermes/config.yaml"
+"~/.hermes/config.yaml" = { source = "../hermes/config.yaml", mode = "copy" }
 "~/.hermes/skills" = { source = "../skills", mode = "copy" }
 "~/.zshrc" = "../zsh/zshrc"
 
