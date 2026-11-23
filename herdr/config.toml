@@ -6,6 +6,8 @@ auto_switch = false
 
 [ui]
 agent_panel_sort = "spaces"
+pane_borders = "always"
+pane_outer_borders = true
 
 [advanced]
 scrollback_limit_bytes = 100000000000  # 100,000,000,000 (100Gi)
